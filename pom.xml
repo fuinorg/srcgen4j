@@ -1,0 +1,101 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.fuin</groupId>
+        <artifactId>pom</artifactId>
+        <version>2.0.2</version>
+    </parent>
+
+    <groupId>org.fuin.srcgen4j</groupId>
+    <artifactId>srcgen4j</artifactId>
+    <version>0.5.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>srcgen4j</name>
+    <description>Source code generation for Java (Parent)</description>
+    <url>http://www.fuin.org/srcgen4j/</url>
+
+    <scm>
+        <url>https://github.com/fuinorg/srcgen4j/</url>
+        <connection>scm:git:git://github.com/fuinorg/srcgen4j.git</connection>
+        <developerConnection>scm:git:git@github.com:fuinorg/srcgen4j.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/fuinorg/srcgen4j/issues</url>
+    </issueManagement>
+
+    <modules>
+        <module>commons</module>
+        <module>core</module>
+        <module>maven</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <java.release.version>${java.version}</java.release.version>
+
+        <org-fuin-bom.version>1.0.2-SNAPSHOT</org-fuin-bom.version>
+        <objects4j-bom.version>0.11.1-SNAPSHOT</objects4j-bom.version>
+    </properties>
+
+    <dependencyManagement>
+
+        <dependencies>
+
+            <!-- Imported BOMs (shared by the modules) -->
+
+            <dependency>
+                <groupId>org.fuin</groupId>
+                <artifactId>bom</artifactId>
+                <version>${org-fuin-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.fuin.objects4j</groupId>
+                <artifactId>objects4j-bom</artifactId>
+                <version>${objects4j-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Reactor modules -->
+
+            <dependency>
+                <groupId>org.fuin.srcgen4j</groupId>
+                <artifactId>srcgen4j-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.fuin.srcgen4j</groupId>
+                <artifactId>srcgen4j-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <build>
+
+        <plugins>
+
+            <!-- Code coverage for all modules - feeds the aggregated Sonar analysis -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>

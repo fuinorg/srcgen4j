@@ -1,0 +1,115 @@
+/**
+ * Copyright (C) 2015 Michael Schnell. All rights reserved. 
+ * http://www.fuin.org/
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library. If not, see http://www.gnu.org/licenses/.
+ */
+package org.fuin.srcgen4j.core.velocity;
+
+import static org.fuin.utils4j.Utils4J.replaceVars;
+
+import java.io.File;
+import java.util.Map;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+
+import org.fuin.objects4j.core.TrimmedNotEmpty;
+import org.fuin.srcgen4j.commons.AbstractElement;
+import org.fuin.srcgen4j.commons.Config;
+import org.fuin.srcgen4j.commons.GeneratorConfig;
+import org.fuin.srcgen4j.commons.InitializableElement;
+import org.fuin.srcgen4j.commons.SrcGen4JContext;
+
+/**
+ * Minimal configuration for the velocity based generators.
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+public abstract class VelocityGeneratorConfig extends AbstractElement
+        implements InitializableElement<VelocityGeneratorConfig, Config<GeneratorConfig>> {
+
+    @TrimmedNotEmpty
+    @XmlAttribute(name = "templatePath")
+    private String templatePath;
+
+    /**
+     * Default constructor.
+     */
+    public VelocityGeneratorConfig() {
+        super();
+    }
+
+    /**
+     * Constructor with template path.
+     * 
+     * @param templatePath
+     *            Template path.
+     */
+    public VelocityGeneratorConfig(final String templatePath) {
+        super();
+        this.templatePath = templatePath;
+    }
+
+    /**
+     * Returns the template path.
+     * 
+     * @return Template path.
+     */
+    public final String getTemplatePath() {
+        return templatePath;
+    }
+
+    /**
+     * Returns the template directory.
+     * 
+     * @return Template directory or NULL.
+     */
+    public final File getTemplateDir() {
+        if (templatePath == null) {
+            return null;
+        }
+        return new File(templatePath);
+    }
+
+    /**
+     * Sets the template path to a new value.
+     * 
+     * @param templatePath
+     *            Template path to set.
+     */
+    public final void setTemplatePath(final String templatePath) {
+        this.templatePath = templatePath;
+    }
+
+    @Override
+    public final VelocityGeneratorConfig init(final SrcGen4JContext context, final Config<GeneratorConfig> parent,
+            final Map<String, String> vars) {
+        inheritVariables(vars);
+        setTemplatePath(replaceVars(getTemplatePath(), getVarMap()));
+        init(getVarMap());
+        return this;
+    }
+
+    /**
+     * Initialize child objects. May be overwritten by child classes.
+     * 
+     * @param vars
+     *            Variable context.
+     */
+    protected void init(final Map<String, String> vars) {
+        // Empty default implementation
+    }
+
+}

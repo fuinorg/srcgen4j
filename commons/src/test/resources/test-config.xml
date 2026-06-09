@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srcgen4j-config xmlns="http://www.fuin.org/srcgen4j/commons/0.5.0"
+   xmlns:test="http://www.fuin.org/srcgen4j/commons/test">
+	
+	<variables>
+		<variable name="root" value="/var/tmp" />
+		<variable name="project_example_path" value="${root}/example" />
+	</variables>
+	
+	<projects>
+		<project name="example" path="${root}/example">
+			<!-- Maven default folder --> 
+			<folder name="mainJava" path="src/main/java" create="false" override="false" clean="false" />
+			<folder name="mainRes" path="src/main/resources" create="false" override="false" clean="false" />
+			<folder name="genMainJava" path="src-gen/main/java" clean="true" cleanExclude="\..*" />
+			<folder name="genMainRes" path="src-gen/main/resources" create="true" clean="true" />
+			<folder name="testJava" path="src/test/java" create="false" override="false" clean="false" />
+			<folder name="testRes" path="src/test/resources" create="false" override="false" clean="false" />
+			<folder name="genTestJava" path="src-gen/test/java" create="true" clean="true" />
+			<folder name="genTestRes" path="src-gen/test/resources" create="true" clean="true" />
+		</project>
+	</projects>
+	
+	<parsers>
+		<variable name="pep" value="${project_example_path}/parsers" />
+		<parser name="parser1" class="org.fuin.srcgen4j.commons.TestParser">
+			<config>
+				<test:input path="${root}/xtext-ddd/TestModel/src/main/domain" />
+			</config>
+		</parser>
+	</parsers>
+	
+	<generators>
+		<variable name="pep" value="${project_example_path}/generators" />
+		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1" project="example" folder="genMainJava">
+			<!-- Project and folder can be overridden in artifact -->
+			<artifact name="one" project="example" folder="genMainJava">
+				<!-- Example for changing the target folder or even the project based on a path/file regular expression --> 
+				<target pattern=".*//abc//def//ghi//.*//.java" project="example" folder="genMainJava" />				 
+			</artifact>
+			<artifact name="abstract" folder="genMainJava" />
+			<artifact name="manual" folder="mainJava" />
+		</generator>
+	</generators>
+	
+</srcgen4j-config>

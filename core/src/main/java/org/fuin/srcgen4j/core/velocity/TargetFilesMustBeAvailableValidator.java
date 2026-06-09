@@ -1,0 +1,64 @@
+/**
+ * Copyright (C) 2015 Michael Schnell. All rights reserved. 
+ * http://www.fuin.org/
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library. If not, see http://www.gnu.org/licenses/.
+ */
+package org.fuin.srcgen4j.core.velocity;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Validates if one of {@link ParameterizedTemplateModel#getTargetFileListProducerConfig()} and
+ * {@link ParameterizedTemplateModel#getTargetFiles()} is available.
+ */
+public final class TargetFilesMustBeAvailableValidator
+        implements ConstraintValidator<TargetFilesMustBeAvailable, ParameterizedTemplateModel> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TargetFilesMustBeAvailableValidator.class);
+
+    @Override
+    public final void initialize(final TargetFilesMustBeAvailable constraintAnnotation) {
+        // Not used
+    }
+
+    @Override
+    public final boolean isValid(final ParameterizedTemplateModel value, final ConstraintValidatorContext context) {
+
+        if (value.getTargetFileListProducerConfig() == null) {
+            if ((value.getTargetFiles() == null || value.getTargetFiles().isEmpty())) {
+                LOG.debug("Element 'target-files' is mandatory if no element 'target-file-list-producer' is defined");
+                return false;
+            }
+        } else {
+            /*
+             * TODO OSGI/Validator final Set<ConstraintViolation<TargetFileListProducerConfig>> violations = Contract
+             * .validate(value.getTargetFileListProducerConfig()); if (!violations.isEmpty()) {
+             * LOG.debug("Element 'target-file-list-producer' is invalid:"); for (final ConstraintViolation<TargetFileListProducerConfig>
+             * violation : violations) { LOG.error(violation.getMessage()); } return false; }
+             */
+            if (value.getTargetFiles() != null) {
+                LOG.debug("Element 'target-files' cannot exist if element 'target-file-list-producer' is defined");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+}
