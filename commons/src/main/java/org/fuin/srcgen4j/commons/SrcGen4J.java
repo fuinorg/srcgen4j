@@ -27,6 +27,7 @@ import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.utils4j.classpath.Handler;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public final class SrcGen4J {
 
     private final SrcGen4JConfig config;
 
+    @Nullable
     private FileFilter fileFilter;
 
     /**
@@ -74,7 +76,9 @@ public final class SrcGen4J {
                 } else {
                     for (final Folder folder : folders) {
                         final File dir = folder.getCanonicalDir();
-                        if (folder.isClean() && dir.exists()) {
+                        if (dir == null) {
+                            LOG.debug("No canonical directory for folder: {}", folder.getName());
+                        } else if (folder.isClean() && dir.exists()) {
                             LOG.info("Cleaning: {}", dir);
                             cleanDirectory(dir, folder);
                         } else {

@@ -17,10 +17,13 @@
  */
 package org.fuin.srcgen4j.core.base;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.jspecify.annotations.Nullable;
 import org.fuin.utils4j.Utils4J;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +53,7 @@ public final class GeneratedFile {
      * @param logInfo
      *            Addition information to log.
      */
-    public GeneratedFile(final File file, final String logInfo) {
+    public GeneratedFile(final File file, @Nullable final String logInfo) {
         this(file, logInfo, false);
     }
 
@@ -64,7 +67,7 @@ public final class GeneratedFile {
      * @param skip
      *            If the file should NOT be generated TRUE, else FALSE.
      */
-    public GeneratedFile(final File file, final String logInfo, final boolean skip) {
+    public GeneratedFile(final File file, @Nullable final String logInfo, final boolean skip) {
         super();
         this.file = file;
         this.tmpFile = new File(file + ".tmp");
@@ -134,7 +137,7 @@ public final class GeneratedFile {
     }
 
     private String getPath() {
-        return Utils4J.getCanonicalPath(file);
+        return requireNonNull(Utils4J.getCanonicalPath(file));
     }
 
     @Override

@@ -17,6 +17,8 @@
  */
 package org.fuin.srcgen4j.commons;
 
+import static java.util.Objects.requireNonNull;
+
 import java.net.URL;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.Validate;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.utils4j.Utils4J;
 
 /**
@@ -42,6 +44,7 @@ public final class Variable {
     @XmlAttribute
     private String name;
 
+    @Nullable
     @NotEmpty
     @XmlAttribute
     private String value;
@@ -54,11 +57,13 @@ public final class Variable {
     @XmlAttribute(name = "encoding")
     private String encoding;
 
+    @Nullable
     private transient URL url;
 
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     Variable() {
         super();
     }
@@ -116,6 +121,7 @@ public final class Variable {
      * 
      * @return Value or <code>null</code>.
      */
+    @Nullable
     public final String getValue() {
         if ((value == null) && (urlStr != null)) {
             value = Utils4J.readAsString(getURL(), getEncodingOrDefault(), 1024);
@@ -131,7 +137,7 @@ public final class Variable {
     public final URL getURL() {
         if (url == null) {
             try {
-                url = Utils4J.url(urlStr);
+                url = requireNonNull(Utils4J.url(urlStr));
             } catch (final RuntimeException ex) {
                 throw new RuntimeException("Variable '" + getName() + "' has illegal URL: " + urlStr, ex);
             }
@@ -144,6 +150,7 @@ public final class Variable {
      * 
      * @return Encoding or <code>null</code>.
      */
+    @Nullable
     public final String getEncoding() {
         return encoding;
     }

@@ -17,7 +17,7 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * For a given generator/artifact/target was no project found in a generator configuration.

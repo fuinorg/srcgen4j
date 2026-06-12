@@ -57,13 +57,17 @@ public abstract class AbstractParser<CONFIG_TYPE> {
         if (cfg == null) {
             throw new IllegalStateException(
                     "The configuration is expected to be of type '" + concreteConfigClass.getName() + "', but was: null");
-        } else {
-            if (!(concreteConfigClass.isAssignableFrom(cfg.getCfg().getClass()))) {
-                throw new IllegalStateException(
-                        "The configuration is expected to be of type '" + concreteConfigClass.getName() + "', but was: "
-                                + cfg.getCfg().getClass().getName() + " - Did you add the configuration class to the JAXB context?");
-            }
         }
-        return (CONFIG_TYPE) cfg.getCfg();
+        final Object obj = cfg.getCfg();
+        if (obj == null) {
+            throw new IllegalStateException(
+                    "The configuration is expected to be of type '" + concreteConfigClass.getName() + "', but was: null");
+        }
+        if (!(concreteConfigClass.isAssignableFrom(obj.getClass()))) {
+            throw new IllegalStateException(
+                    "The configuration is expected to be of type '" + concreteConfigClass.getName() + "', but was: "
+                            + obj.getClass().getName() + " - Did you add the configuration class to the JAXB context?");
+        }
+        return (CONFIG_TYPE) obj;
     }
 }

@@ -19,7 +19,7 @@ package org.fuin.srcgen4j.commons;
 
 import jakarta.validation.constraints.NotNull;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Parses some kind of model.

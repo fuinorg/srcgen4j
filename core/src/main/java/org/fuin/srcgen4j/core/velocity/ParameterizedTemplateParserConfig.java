@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.core.velocity;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.io.File;
@@ -29,6 +30,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.srcgen4j.commons.AbstractElement;
 import org.fuin.srcgen4j.commons.Config;
 import org.fuin.srcgen4j.commons.GeneratorConfig;
@@ -56,15 +58,18 @@ public class ParameterizedTemplateParserConfig extends AbstractElement
     @XmlAttribute(name = "templateFilter")
     private String templateFilter;
 
+    @Nullable
     @XmlTransient
     private File modelDir;
 
+    @Nullable
     @XmlTransient
     private File templateDir;
 
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     public ParameterizedTemplateParserConfig() {
         super();
     }
@@ -77,6 +82,7 @@ public class ParameterizedTemplateParserConfig extends AbstractElement
      * @param modelFilter
      *            Regular expression for selecting model files.
      */
+    @SuppressWarnings("NullAway.Init") // Remaining fields are populated by JAXB / lazily after construction
     public ParameterizedTemplateParserConfig(final String modelPath, final String modelFilter) {
         super();
         this.modelPath = modelPath;
@@ -97,6 +103,7 @@ public class ParameterizedTemplateParserConfig extends AbstractElement
      * 
      * @return Model directory or NULL.
      */
+    @Nullable
     public final File getModelDir() {
         if ((modelDir == null) && (modelPath != null)) {
             modelDir = Utils4J.getCanonicalFile(new File(modelPath));
@@ -147,6 +154,7 @@ public class ParameterizedTemplateParserConfig extends AbstractElement
      * 
      * @return Template directory or NULL.
      */
+    @Nullable
     public final File getTemplateDir() {
         if ((templateDir == null) && (templatePath != null)) {
             try {
@@ -189,10 +197,10 @@ public class ParameterizedTemplateParserConfig extends AbstractElement
 
     @Override
     public final ParameterizedTemplateParserConfig init(final SrcGen4JContext context, final Config<GeneratorConfig> parent,
-            final Map<String, String> vars) {
+            @Nullable final Map<String, String> vars) {
         inheritVariables(vars);
-        setModelPath(replaceVars(getModelPath(), getVarMap()));
-        setTemplatePath(replaceVars(getTemplatePath(), getVarMap()));
+        setModelPath(requireNonNull(replaceVars(getModelPath(), getVarMap())));
+        setTemplatePath(requireNonNull(replaceVars(getTemplatePath(), getVarMap())));
         return this;
     }
 

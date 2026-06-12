@@ -25,10 +25,12 @@ import java.util.Set;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
-import org.fuin.objects4j.common.Contract;
+import org.jspecify.annotations.Nullable;
+import org.fuin.objects4j.common.ConstraintViolationException;
 import org.fuin.srcgen4j.commons.IncrementalParser;
 import org.fuin.srcgen4j.commons.ParseException;
 import org.fuin.srcgen4j.commons.ParserConfig;
+import org.fuin.srcgen4j.commons.Parsers;
 import org.fuin.srcgen4j.commons.SrcGen4JContext;
 import org.fuin.srcgen4j.core.base.AbstractParser;
 import org.fuin.utils4j.fileprocessor.FileProcessor;
@@ -52,8 +54,10 @@ public final class ParameterizedTemplateParser extends AbstractParser<Parameteri
 
     private IOFileFilter fileFilter;
 
+    @Nullable
     private IncrementalFileHandler incrementalHandler;
 
+    @Nullable
     private FullFileHandler fullHandler;
 
     private IOFileFilter modelFilter;
@@ -65,18 +69,25 @@ public final class ParameterizedTemplateParser extends AbstractParser<Parameteri
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by initialize() before use
     public ParameterizedTemplateParser() {
         super(ParameterizedTemplateParserConfig.class);
     }
 
     @Override
-    public void initialize(final SrcGen4JContext context, final ParserConfig config) {
+    public void initialize(final SrcGen4JContext context, @Nullable final ParserConfig config) {
 
         // This type of parser always needs a configuration
-        Contract.requireArgNotNull("config", config);
+        if (config == null) {
+            throw new ConstraintViolationException("The argument 'config' cannot be null");
+        }
 
+        final Parsers parent = config.getParent();
+        if (parent == null) {
+            throw new IllegalStateException("Parent of parser config is not set: " + config.getName());
+        }
         name = config.getName();
-        varMap = config.getParent().getVarMap();
+        varMap = parent.getVarMap();
 
         LOG.debug("Initialize parser: {}", name);
 
@@ -92,14 +103,20 @@ public final class ParameterizedTemplateParser extends AbstractParser<Parameteri
     @Override
     public final ParameterizedTemplateModels parse() throws ParseException {
         LOG.info("Full parse: {}", name);
-        if (fullHandler == null) {
-            fullHandler = new FullFileHandler(this);
-            final FileProcessor processor = new FileProcessor(fullHandler);
-            processor.process(parserConfig.getModelDir());
-            final ParameterizedTemplateModels models = fullHandler.getTemplates();
+        FullFileHandler handler = fullHandler;
+        if (handler == null) {
+            handler = new FullFileHandler(this);
+            fullHandler = handler;
+            final FileProcessor processor = new FileProcessor(handler);
+            final File modelDir = parserConfig.getModelDir();
+            if (modelDir == null) {
+                throw new ParseException("Model directory is not set");
+            }
+            processor.process(modelDir);
+            final ParameterizedTemplateModels models = handler.getTemplates();
             models.init(context, varMap);
         }
-        return fullHandler.getTemplates();
+        return handler.getTemplates();
     }
 
     @Override
@@ -154,6 +171,7 @@ public final class ParameterizedTemplateParser extends AbstractParser<Parameteri
      * 
      * @return Canonical template directory.
      */
+    @Nullable
     public final File getTemplateDir() {
         return parserConfig.getTemplateDir();
     }

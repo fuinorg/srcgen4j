@@ -31,7 +31,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 
 /**
@@ -113,7 +113,7 @@ public class Generators extends AbstractTarget implements InitializableElement<G
     }
 
     @Override
-    public final Generators init(final SrcGen4JContext context, final SrcGen4JConfig parent, final Map<String, String> vars) {
+    public final Generators init(final SrcGen4JContext context, final SrcGen4JConfig parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
         setProject(replaceVars(getProject(), getVarMap()));
@@ -140,6 +140,9 @@ public class Generators extends AbstractTarget implements InitializableElement<G
     @Nullable
     public final GeneratorConfig findByName(@NotEmpty final String generatorName) throws GeneratorNotFoundException {
         Contract.requireArgNotEmpty("generatorName", generatorName);
+        if (list == null) {
+            throw new GeneratorNotFoundException(generatorName);
+        }
         final int idx = list.indexOf(new GeneratorConfig(generatorName, "dummy", "dummy"));
         if (idx < 0) {
             throw new GeneratorNotFoundException(generatorName);

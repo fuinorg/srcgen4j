@@ -17,6 +17,8 @@
  */
 package org.fuin.srcgen4j.core.emf;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Maps a unique name to it's fully qualified name.
  */
@@ -30,6 +32,7 @@ public interface CodeReferenceRegistry {
      * 
      * @return Fully qualified name of the artifact for use in the source code.
      */
+    @Nullable
     public String getReference(String uniqueName);
 
     /**

@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.commons;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 
 /**
@@ -55,11 +56,13 @@ public class Project extends AbstractNamedElement implements InitializableElemen
     @XmlElement(name = "folder")
     private List<Folder> folders;
 
+    @Nullable
     private transient SrcGen4JConfig parent;
 
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     Project() {
         super();
     }
@@ -165,11 +168,11 @@ public class Project extends AbstractNamedElement implements InitializableElemen
     }
 
     @Override
-    public final Project init(final SrcGen4JContext context, final SrcGen4JConfig parent, final Map<String, String> vars) {
+    public final Project init(final SrcGen4JContext context, final SrcGen4JConfig parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
-        setName(replaceVars(getName(), getVarMap()));
-        path = replaceVars(path, getVarMap());
+        setName(requireNonNull(replaceVars(getName(), getVarMap())));
+        path = requireNonNull(replaceVars(path, getVarMap()));
         if (folders != null) {
             for (final Folder folder : folders) {
                 folder.setParent(this);

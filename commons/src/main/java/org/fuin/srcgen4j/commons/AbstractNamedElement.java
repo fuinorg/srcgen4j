@@ -37,6 +37,7 @@ public abstract class AbstractNamedElement extends AbstractElement {
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     protected AbstractNamedElement() {
         super();
     }

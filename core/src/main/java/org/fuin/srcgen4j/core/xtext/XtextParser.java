@@ -21,7 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.fuin.objects4j.common.Contract;
+import org.jspecify.annotations.Nullable;
+import org.fuin.objects4j.common.ConstraintViolationException;
 import org.fuin.srcgen4j.commons.ParseException;
 import org.fuin.srcgen4j.commons.Parser;
 import org.fuin.srcgen4j.commons.ParserConfig;
@@ -38,15 +39,18 @@ public final class XtextParser extends AbstractEMFParser<XtextParserConfig> impl
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by initialize() before use
     public XtextParser() {
         super(XtextParserConfig.class);
     }
 
     @Override
-    public final void initialize(final SrcGen4JContext context, final ParserConfig config) {
+    public final void initialize(final SrcGen4JContext context, @Nullable final ParserConfig config) {
 
         // Xtext always needs a configuration
-        Contract.requireArgNotNull("config", config);
+        if (config == null) {
+            throw new ConstraintViolationException("The argument 'config' cannot be null");
+        }
 
         this.parserConfig = getConcreteConfig(config);
 

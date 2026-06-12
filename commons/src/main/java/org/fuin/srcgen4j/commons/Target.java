@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 
 /**
@@ -39,6 +39,7 @@ import org.fuin.objects4j.common.Contract;
 @XmlRootElement(name = "target")
 public class Target extends AbstractTarget implements InitializableElement<Target, Artifact> {
 
+    @Nullable
     @NotEmpty
     @XmlAttribute
     private String pattern;
@@ -52,6 +53,7 @@ public class Target extends AbstractTarget implements InitializableElement<Targe
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     Target() {
         super();
     }
@@ -77,6 +79,7 @@ public class Target extends AbstractTarget implements InitializableElement<Targe
      * 
      * @return Current pattern.
      */
+    @Nullable
     @NotEmpty
     public final String getPattern() {
         return pattern;
@@ -125,7 +128,7 @@ public class Target extends AbstractTarget implements InitializableElement<Targe
     }
 
     @Override
-    public final Target init(final SrcGen4JContext context, final Artifact parent, final Map<String, String> vars) {
+    public final Target init(final SrcGen4JContext context, final Artifact parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
         pattern = replaceVars(pattern, getVarMap());

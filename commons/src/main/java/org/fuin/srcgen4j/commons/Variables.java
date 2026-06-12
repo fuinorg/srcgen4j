@@ -33,7 +33,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.Validate;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A container for multiple variable definitions.
@@ -50,6 +50,7 @@ public final class Variables {
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Field is populated by JAXB after construction
     Variables() {
         super();
     }

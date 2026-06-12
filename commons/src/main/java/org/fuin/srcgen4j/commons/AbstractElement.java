@@ -30,7 +30,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.utils4j.Utils4J;
 import org.fuin.utils4j.VariableResolver;
 
@@ -45,6 +45,7 @@ public abstract class AbstractElement {
     @XmlElement(name = "variable")
     private List<Variable> variables;
 
+    @Nullable
     @XmlTransient
     private Map<String, String> varMap;
 

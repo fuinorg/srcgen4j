@@ -22,7 +22,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 
 /**
@@ -38,6 +38,7 @@ public abstract class AbstractNamedTarget extends AbstractTarget {
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     AbstractNamedTarget() {
         super();
     }

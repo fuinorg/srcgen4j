@@ -25,7 +25,9 @@ import java.io.OutputStream;
 
 import jakarta.validation.constraints.NotNull;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
+import org.fuin.srcgen4j.commons.Config;
 import org.fuin.srcgen4j.commons.Folder;
 import org.fuin.srcgen4j.commons.GenerateException;
 import org.fuin.srcgen4j.commons.GeneratedArtifact;
@@ -55,6 +57,7 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated during initialize() / generate()
     protected AbstractGenerator() {
         super();
     }
@@ -70,18 +73,20 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
 
         LOG.debug("Initialize generator: {}", name);
 
-        final Object obj = config.getConfig().getCfg();
-        if (getSpecificConfigClass() == null) {
+        final Config<GeneratorConfig> cfg = config.getConfig();
+        final Object obj = cfg == null ? null : cfg.getCfg();
+        final Class<CONFIG> specificConfigClass = getSpecificConfigClass();
+        if (specificConfigClass == null) {
             if (obj != null) {
                 throw new IllegalStateException("No configuration is expected, but was: " + obj.getClass());
             }
         } else {
             if (obj == null) {
                 throw new IllegalStateException(
-                        "The configuration is expected to be of type '" + getSpecificConfigClass().getName() + "', but was: null");
+                        "The configuration is expected to be of type '" + specificConfigClass.getName() + "', but was: null");
             }
-            if (!getSpecificConfigClass().isAssignableFrom(obj.getClass())) {
-                throw new IllegalStateException("The configuration is expected to be of type '" + getSpecificConfigClass().getName()
+            if (!specificConfigClass.isAssignableFrom(obj.getClass())) {
+                throw new IllegalStateException("The configuration is expected to be of type '" + specificConfigClass.getName()
                         + "', but was: " + obj.getClass().getName());
             }
         }
@@ -137,6 +142,7 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
      */
     // CHECKSTYLE:OFF Empty methods do not violate the 'design for extension'
     // principle
+    @Nullable
     public Class<CONFIG> getSpecificConfigClass() {
         // CHECKSTYLE:ON
         return null;
@@ -148,8 +154,13 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
      * @return Generator configuration or NULL.
      */
     @SuppressWarnings("unchecked")
+    @Nullable
     public final CONFIG getSpecificConfig() {
-        return (CONFIG) config.getConfig().getCfg();
+        final Config<GeneratorConfig> cfg = config.getConfig();
+        if (cfg == null) {
+            return null;
+        }
+        return (CONFIG) cfg.getCfg();
     }
 
     /**
@@ -166,10 +177,16 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
      * 
      * @return File to write to or NULL if nothing should be written.
      */
-    protected final GeneratedFile getTargetFile(final String artifactName, final String filename, final String logInfo) {
+    protected final GeneratedFile getTargetFile(final String artifactName, final String filename, @Nullable final String logInfo) {
 
         final Folder folder = getGeneratorConfig().findTargetFolder(artifactName);
+        if (folder == null) {
+            throw new IllegalStateException("Couldn't find target folder for artifact: " + artifactName);
+        }
         final File dir = folder.getCanonicalDir();
+        if (dir == null) {
+            throw new IllegalStateException("Couldn't determine canonical directory for folder: " + folder.getName());
+        }
         final File file = new File(dir, filename);
 
         // Make sure the folder exists

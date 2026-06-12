@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.srcgen4j.commons.AbstractElement;
 import org.fuin.srcgen4j.commons.ArtifactFactory;
 import org.fuin.srcgen4j.commons.ArtifactFactoryConfig;
@@ -50,6 +50,7 @@ public class EMFGeneratorConfig extends AbstractElement implements Initializable
     @XmlElement(name = "artifact-factory")
     private List<ArtifactFactoryConfig> factoryConfigs;
 
+    @Nullable
     @XmlTransient
     private List<ArtifactFactory<?>> factories;
 
@@ -62,7 +63,7 @@ public class EMFGeneratorConfig extends AbstractElement implements Initializable
 
     @Override
     public final EMFGeneratorConfig init(final SrcGen4JContext context, final Config<GeneratorConfig> parent,
-            final Map<String, String> vars) {
+            @Nullable final Map<String, String> vars) {
 
         inheritVariables(vars);
         if (factoryConfigs != null) {

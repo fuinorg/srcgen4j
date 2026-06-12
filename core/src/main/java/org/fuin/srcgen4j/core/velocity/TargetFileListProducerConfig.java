@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.core.velocity;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.util.Map;
@@ -30,6 +31,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.core.TrimmedNotEmpty;
 import org.fuin.srcgen4j.commons.AbstractElement;
 import org.fuin.srcgen4j.commons.InitializableElement;
@@ -49,19 +51,23 @@ public class TargetFileListProducerConfig extends AbstractElement
     @XmlAttribute(name = "class")
     private String className;
 
+    @Nullable
     @Valid
     @XmlAnyElement(lax = true)
     private Object config;
 
+    @Nullable
     @XmlTransient
     private TargetFileListProducer tflProducer;
 
+    @Nullable
     @XmlTransient
     private ParameterizedTemplateModel parent;
 
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     public TargetFileListProducerConfig() {
         super();
     }
@@ -90,6 +96,7 @@ public class TargetFileListProducerConfig extends AbstractElement
      * 
      * @return Configuration.
      */
+    @Nullable
     public final Object getConfig() {
         return config;
     }
@@ -100,7 +107,7 @@ public class TargetFileListProducerConfig extends AbstractElement
      * @param config
      *            Configuration.
      */
-    public final void setConfig(final Object config) {
+    public final void setConfig(@Nullable final Object config) {
         this.config = config;
     }
 
@@ -109,6 +116,7 @@ public class TargetFileListProducerConfig extends AbstractElement
      * 
      * @return Parent.
      */
+    @Nullable
     public final ParameterizedTemplateModel getParent() {
         return parent;
     }
@@ -126,10 +134,10 @@ public class TargetFileListProducerConfig extends AbstractElement
     @Override
     @SuppressWarnings("unchecked")
     public final TargetFileListProducerConfig init(final SrcGen4JContext context, final ParameterizedTemplateModel parent,
-            final Map<String, String> vars) {
+            @Nullable final Map<String, String> vars) {
         setParent(parent);
         inheritVariables(vars);
-        setClassName(replaceVars(getClassName(), getVarMap()));
+        setClassName(requireNonNull(replaceVars(getClassName(), getVarMap())));
         if (config instanceof InitializableElement) {
             final InitializableElement<?, TargetFileListProducerConfig> ie;
             ie = (InitializableElement<?, TargetFileListProducerConfig>) config;

@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.core.velocity;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.io.File;
@@ -26,6 +27,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.core.TrimmedNotEmpty;
 import org.fuin.srcgen4j.commons.AbstractElement;
 import org.fuin.srcgen4j.commons.Config;
@@ -47,6 +49,7 @@ public abstract class VelocityGeneratorConfig extends AbstractElement
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     public VelocityGeneratorConfig() {
         super();
     }
@@ -76,6 +79,7 @@ public abstract class VelocityGeneratorConfig extends AbstractElement
      * 
      * @return Template directory or NULL.
      */
+    @Nullable
     public final File getTemplateDir() {
         if (templatePath == null) {
             return null;
@@ -95,9 +99,9 @@ public abstract class VelocityGeneratorConfig extends AbstractElement
 
     @Override
     public final VelocityGeneratorConfig init(final SrcGen4JContext context, final Config<GeneratorConfig> parent,
-            final Map<String, String> vars) {
+            @Nullable final Map<String, String> vars) {
         inheritVariables(vars);
-        setTemplatePath(replaceVars(getTemplatePath(), getVarMap()));
+        setTemplatePath(requireNonNull(replaceVars(getTemplatePath(), getVarMap())));
         init(getVarMap());
         return this;
     }

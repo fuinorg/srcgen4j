@@ -37,6 +37,11 @@
         <!-- Compile -->
 
         <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.fuin</groupId>
             <artifactId>utils4j</artifactId>
             <version>${utils4j.version}</version>
@@ -92,20 +97,6 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-        </dependency>
-
-        <!-- to be removed -->
-
-        <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_annotations</artifactId>
-            <version>2.5.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-            <version>4.2.0</version>
         </dependency>
 
         <!-- Test -->

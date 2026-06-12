@@ -17,7 +17,7 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A generator with a given name was not found in the configuration.

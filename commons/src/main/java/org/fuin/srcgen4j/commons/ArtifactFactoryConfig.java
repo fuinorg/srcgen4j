@@ -25,7 +25,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.utils4j.Utils4J;
 
@@ -57,6 +57,7 @@ public final class ArtifactFactoryConfig extends AbstractElement {
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     ArtifactFactoryConfig() { // NOSONAR Ignore not initialized fields
         super();
     }

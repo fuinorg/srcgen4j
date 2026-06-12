@@ -25,6 +25,7 @@ import java.util.Map;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.srcgen4j.commons.SrcGen4JContext;
 import org.fuin.utils4j.Utils4J;
 
@@ -33,6 +34,7 @@ import org.fuin.utils4j.Utils4J;
  */
 public final class ParameterizedTemplateModels {
 
+    @Nullable
     @Valid
     @NotEmpty
     private List<ParameterizedTemplateModel> paramTemplates;
@@ -49,6 +51,7 @@ public final class ParameterizedTemplateModels {
      * 
      * @return Template list.
      */
+    @Nullable
     public final List<ParameterizedTemplateModel> getModelList() {
         return paramTemplates;
     }
@@ -59,7 +62,7 @@ public final class ParameterizedTemplateModels {
      * @param paramTemplates
      *            Template list to set.
      */
-    public final void setParamTemplates(final List<ParameterizedTemplateModel> paramTemplates) {
+    public final void setParamTemplates(@Nullable final List<ParameterizedTemplateModel> paramTemplates) {
         this.paramTemplates = paramTemplates;
     }
 
@@ -82,7 +85,7 @@ public final class ParameterizedTemplateModels {
      * @param list
      *            LIst of templates to add - Cannot be NULL.
      */
-    public final void addParamTemplates(final List<ParameterizedTemplateModel> list) {
+    public final void addParamTemplates(@Nullable final List<ParameterizedTemplateModel> list) {
         if (list != null) {
             for (final ParameterizedTemplateModel template : list) {
                 addParamTemplate(template);
@@ -98,7 +101,7 @@ public final class ParameterizedTemplateModels {
      * @param vars
      *            Variables to use.
      */
-    public final void init(final SrcGen4JContext context, final Map<String, String> vars) {
+    public final void init(final SrcGen4JContext context, @Nullable final Map<String, String> vars) {
         if (paramTemplates != null) {
             for (final ParameterizedTemplateModel paramTemplate : paramTemplates) {
                 paramTemplate.init(context, vars);

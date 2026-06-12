@@ -66,10 +66,12 @@ public final class TargetArgsMatchTemplateArgsValidator
         final List<TargetFile> targetFiles = value.getTargetFiles();
         for (final TargetFile targetFile : targetFiles) {
             final List<Argument> args = targetFile.getArguments();
-            for (final Argument arg : args) {
-                if (!allowedArgs.contains(arg)) {
-                    LOG.debug("Not an allowed argument: '{}'", arg);
-                    return false;
+            if (args != null) {
+                for (final Argument arg : args) {
+                    if (!allowedArgs.contains(arg)) {
+                        LOG.debug("Not an allowed argument: '{}'", arg);
+                        return false;
+                    }
                 }
             }
         }

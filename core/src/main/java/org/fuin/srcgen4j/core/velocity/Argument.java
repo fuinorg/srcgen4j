@@ -17,6 +17,8 @@
  */
 package org.fuin.srcgen4j.core.velocity;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.core.TrimmedNotEmpty;
 import org.fuin.utils4j.Utils4J;
 
@@ -50,6 +53,7 @@ public final class Argument implements Serializable, Comparable<Argument> {
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     public Argument() {
         super();
     }
@@ -122,8 +126,8 @@ public final class Argument implements Serializable, Comparable<Argument> {
      * @param vars
      *            Variables to use.
      */
-    public final void init(final Map<String, String> vars) {
-        value = Utils4J.replaceVars(getValue(), vars);
+    public final void init(@Nullable final Map<String, String> vars) {
+        value = requireNonNull(Utils4J.replaceVars(getValue(), vars));
     }
 
 }

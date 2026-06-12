@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.srcgen4j.commons.ParseException;
 import org.fuin.utils4j.fileprocessor.FileHandler;
 import org.fuin.utils4j.fileprocessor.FileHandlerResult;
@@ -74,7 +75,7 @@ public final class IncrementalFileHandler implements FileHandler {
         return FileHandlerResult.CONTINUE;
     }
 
-    private void logList(final File file, final List<ParameterizedTemplateModel> list) {
+    private void logList(final File file, @Nullable final List<ParameterizedTemplateModel> list) {
         if (list == null || list.isEmpty()) {
             LOG.info("No references found to template: {}", file.getName());
         } else {
@@ -109,12 +110,17 @@ public final class IncrementalFileHandler implements FileHandler {
         this.templates = new ParameterizedTemplateModels();
     }
 
+    @Nullable
     private List<ParameterizedTemplateModel> findReferencesTo(final File templateFile) {
         List<ParameterizedTemplateModel> result = templatesToModelMap.get(templateFile);
         if (result == null) {
             try {
                 final ParameterizedTemplateModels pts = parser.parse();
-                result = pts.findReferencesTo(parser.getTemplateDir(), templateFile);
+                final File templateDir = parser.getTemplateDir();
+                if (templateDir == null) {
+                    throw new IllegalStateException("Template directory is not set");
+                }
+                result = pts.findReferencesTo(templateDir, templateFile);
             } catch (final ParseException ex) {
                 LOG.error("Error parsing model for template: " + templateFile, ex);
             }

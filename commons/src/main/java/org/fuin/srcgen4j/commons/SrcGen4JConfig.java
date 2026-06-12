@@ -32,7 +32,7 @@ import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.objects4j.common.FileExists;
 import org.fuin.objects4j.common.FileExistsValidator;
@@ -315,23 +315,31 @@ public class SrcGen4JConfig {
      * @throws FolderNotFoundException
      *             The folder in the project based on the selection is unknown.
      */
-    public final Folder findTargetFolder(@NotNull final String generatorName, @NotNull final String artifactName, final String targetPath)
+    public final Folder findTargetFolder(@NotNull final String generatorName, @NotNull final String artifactName,
+            @Nullable final String targetPath)
             throws ProjectNameNotDefinedException, ArtifactNotFoundException, FolderNameNotDefinedException, GeneratorNotFoundException,
             ProjectNotFoundException, FolderNotFoundException {
 
         Contract.requireArgNotNull("generatorName", generatorName);
         Contract.requireArgNotNull("artifactName", artifactName);
 
+        if (generators == null) {
+            throw new GeneratorNotFoundException(generatorName);
+        }
         final GeneratorConfig generator = generators.findByName(generatorName);
         if (generator == null) {
             throw new GeneratorNotFoundException(generatorName);
         }
 
-        int idx = generator.getArtifacts().indexOf(new Artifact(artifactName));
+        final List<Artifact> artifacts = generator.getArtifacts();
+        if (artifacts == null) {
+            throw new ArtifactNotFoundException(generatorName, artifactName);
+        }
+        int idx = artifacts.indexOf(new Artifact(artifactName));
         if (idx < 0) {
             throw new ArtifactNotFoundException(generatorName, artifactName);
         }
-        final Artifact artifact = generator.getArtifacts().get(idx);
+        final Artifact artifact = artifacts.get(idx);
 
         final String projectName;
         final String folderName;
@@ -354,17 +362,24 @@ public class SrcGen4JConfig {
             throw new FolderNameNotDefinedException(generatorName, artifactName, targetPattern);
         }
 
+        if (projects == null) {
+            throw new ProjectNotFoundException(generatorName, artifactName, targetPattern, projectName);
+        }
         idx = projects.indexOf(new Project(projectName, "dummy"));
         if (idx < 0) {
             throw new ProjectNotFoundException(generatorName, artifactName, targetPattern, projectName);
         }
         final Project project = projects.get(idx);
 
-        idx = project.getFolders().indexOf(new Folder(folderName, "NotUsed"));
+        final List<Folder> folders = project.getFolders();
+        if (folders == null) {
+            throw new FolderNotFoundException(generatorName, artifactName, targetPattern, projectName, folderName);
+        }
+        idx = folders.indexOf(new Folder(folderName, "NotUsed"));
         if (idx < 0) {
             throw new FolderNotFoundException(generatorName, artifactName, targetPattern, projectName, folderName);
         }
-        return project.getFolders().get(idx);
+        return folders.get(idx);
 
     }
 
@@ -381,7 +396,13 @@ public class SrcGen4JConfig {
         Contract.requireArgNotNull("parserName", parserName);
 
         final List<GeneratorConfig> list = new ArrayList<>();
+        if (generators == null) {
+            return list;
+        }
         final List<GeneratorConfig> gcList = generators.getList();
+        if (gcList == null) {
+            return list;
+        }
         for (final GeneratorConfig gc : gcList) {
             if (gc.getParser().equals(parserName)) {
                 list.add(gc);

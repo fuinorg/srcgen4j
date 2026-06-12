@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.commons;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.io.File;
@@ -30,7 +31,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.io.filefilter.RegexFileFilter;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a folder in a target folder.
@@ -82,6 +83,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     Folder() { // NOSONAR Ignore not initialized fields
         super();
     }
@@ -120,7 +122,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
      *            Regular expression of files to exclude from cleaning.
      */
     Folder(@NotNull final Project parent, @NotNull final String name, @NotNull final String path, final boolean create,
-            final boolean override, final String overrideExclude, final boolean clean, final String cleanExclude) {
+            final boolean override, @Nullable final String overrideExclude, final boolean clean, @Nullable final String cleanExclude) {
         super(name);
         this.parent = parent;
         this.path = path;
@@ -376,11 +378,11 @@ public final class Folder extends AbstractNamedElement implements InitializableE
     }
 
     @Override
-    public final Folder init(final SrcGen4JContext context, final Project parent, final Map<String, String> vars) {
+    public final Folder init(final SrcGen4JContext context, final Project parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
-        setName(replaceVars(getName(), getVarMap()));
-        path = replaceVars(path, getVarMap());
+        setName(requireNonNull(replaceVars(getName(), getVarMap())));
+        path = requireNonNull(replaceVars(path, getVarMap()));
         return this;
     }
 

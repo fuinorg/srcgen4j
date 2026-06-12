@@ -17,6 +17,8 @@
  */
 package org.fuin.srcgen4j.core.velocity;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.io.Reader;
 import java.io.Serializable;
@@ -37,6 +39,7 @@ import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.objects4j.core.TrimmedNotEmpty;
 import org.fuin.srcgen4j.commons.JaxbHelper;
@@ -68,24 +71,29 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
     @TrimmedNotEmpty
     private String template;
 
+    @Nullable
     @Valid
     @XmlElementWrapper(name = "arguments")
     @XmlElement(name = "argument")
     private List<Argument> arguments;
 
+    @Nullable
     @Valid
     @XmlElement(name = "target-file")
     private List<TargetFile> targetFiles;
 
+    @Nullable
     @Valid
     @XmlElement(name = "target-file-list-producer")
     private TargetFileListProducerConfig tflProducerConfig;
 
+    @Nullable
     private transient File file;
 
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     public ParameterizedTemplateModel() {
         super();
     }
@@ -154,6 +162,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * 
      * @return Arguments and their default values defined for the template.
      */
+    @Nullable
     public final List<Argument> getArguments() {
         return arguments;
     }
@@ -164,7 +173,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * @param arguments
      *            Arguments and their default values defined for the template or NULL.
      */
-    public final void setArguments(final List<Argument> arguments) {
+    public final void setArguments(@Nullable final List<Argument> arguments) {
         this.arguments = arguments;
     }
 
@@ -186,6 +195,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * 
      * @return Target files.
      */
+    @Nullable
     public final List<TargetFile> getTargetFiles() {
         return targetFiles;
     }
@@ -196,7 +206,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * @param targetFiles
      *            Target file list to set or NULL.
      */
-    public final void setTargetFiles(final List<TargetFile> targetFiles) {
+    public final void setTargetFiles(@Nullable final List<TargetFile> targetFiles) {
         this.targetFiles = targetFiles;
     }
 
@@ -207,6 +217,9 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      */
     public final List<TargetFile> createTargetFileList() {
         if (tflProducerConfig == null) {
+            if (targetFiles == null) {
+                throw new IllegalStateException("Neither a target file list producer nor a target file list is set: " + template);
+            }
             LOG.info("Using target file list: {} elements", targetFiles.size());
             return targetFiles;
         }
@@ -220,6 +233,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * 
      * @return Configuration.
      */
+    @Nullable
     public final TargetFileListProducerConfig getTargetFileListProducerConfig() {
         return tflProducerConfig;
     }
@@ -311,6 +325,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * 
      * @return Template file or NULL.
      */
+    @Nullable
     public final File getFile() {
         return file;
     }
@@ -321,7 +336,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * @param file
      *            Template file or NULL.
      */
-    public final void setFile(final File file) {
+    public final void setFile(@Nullable final File file) {
         this.file = file;
     }
 
@@ -333,10 +348,10 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * @param vars
      *            Variables to use.
      */
-    public final void init(final SrcGen4JContext context, final Map<String, String> vars) {
+    public final void init(final SrcGen4JContext context, @Nullable final Map<String, String> vars) {
 
         if (template != null) {
-            template = Utils4J.replaceVars(template, vars);
+            template = requireNonNull(Utils4J.replaceVars(template, vars));
         }
         if (arguments != null) {
             for (final Argument argument : arguments) {
@@ -364,7 +379,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * @return If the template is referenced TRUE else FALSE.
      */
     public final boolean hasReferenceTo(final File templateDir, final File templateFile) {
-        final String p1 = Utils4J.getCanonicalPath(new File(templateDir, template));
+        final String p1 = requireNonNull(Utils4J.getCanonicalPath(new File(templateDir, template)));
         final String p2 = Utils4J.getCanonicalPath(templateFile);
         return p1.equals(p2);
     }

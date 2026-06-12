@@ -61,6 +61,9 @@ public final class EMFGenerator extends AbstractEMFGenerator<EMFGeneratorConfig>
     public final void init() {
 
         final EMFGeneratorConfig config = getSpecificConfig();
+        if (config == null) {
+            throw new IllegalStateException("Specific configuration was not set");
+        }
 
         // Add factories interested in resource sets
         final List<ArtifactFactory<ResourceSet>> rsFactories = config.getFactories(ResourceSet.class);

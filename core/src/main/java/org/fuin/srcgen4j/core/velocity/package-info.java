@@ -2,12 +2,15 @@
 /**
  * Velocity related source code generation.
  */
+@NullMarked
 @XmlSchema(namespace = NAMESPACE, xmlns = {
         @XmlNs(prefix = NS_PREFIX, namespaceURI = NAMESPACE) }, elementFormDefault = XmlNsForm.QUALIFIED)
 package org.fuin.srcgen4j.core.velocity;
 
 import static org.fuin.srcgen4j.core.velocity.SrcGen4JCoreVeloNamespace.NAMESPACE;
 import static org.fuin.srcgen4j.core.velocity.SrcGen4JCoreVeloNamespace.NS_PREFIX;
+
+import org.jspecify.annotations.NullMarked;
 
 import jakarta.xml.bind.annotation.XmlNs;
 import jakarta.xml.bind.annotation.XmlNsForm;

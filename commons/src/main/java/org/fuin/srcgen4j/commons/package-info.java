@@ -10,12 +10,15 @@
  * You should have received a copy of the GNU Lesser General Public License along with this library. If not, see
  * http://www.gnu.org/licenses/.
  */
+@NullMarked
 @XmlSchema(namespace = NAMESPACE, xmlns = {
         @XmlNs(prefix = NS_PREFIX, namespaceURI = NAMESPACE) }, elementFormDefault = XmlNsForm.QUALIFIED)
 package org.fuin.srcgen4j.commons;
 
 import static org.fuin.srcgen4j.commons.SrcGen4JCommonsNamespace.NAMESPACE;
 import static org.fuin.srcgen4j.commons.SrcGen4JCommonsNamespace.NS_PREFIX;
+
+import org.jspecify.annotations.NullMarked;
 
 import jakarta.xml.bind.annotation.XmlNs;
 import jakarta.xml.bind.annotation.XmlNsForm;

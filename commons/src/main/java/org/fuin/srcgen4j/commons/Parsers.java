@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 
 /**
@@ -91,7 +91,7 @@ public class Parsers extends AbstractElement implements InitializableElement<Par
     }
 
     @Override
-    public final Parsers init(final SrcGen4JContext context, final SrcGen4JConfig parent, final Map<String, String> vars) {
+    public final Parsers init(final SrcGen4JContext context, final SrcGen4JConfig parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
         if (list != null) {

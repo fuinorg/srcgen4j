@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.commons;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.util.Map;
@@ -30,7 +31,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.utils4j.Utils4J;
 import org.slf4j.Logger;
@@ -66,6 +67,7 @@ public class ParserConfig extends AbstractNamedElement implements InitializableE
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     ParserConfig() {
         super();
     }
@@ -125,12 +127,12 @@ public class ParserConfig extends AbstractNamedElement implements InitializableE
     }
 
     @Override
-    public final ParserConfig init(final SrcGen4JContext context, final Parsers parent, final Map<String, String> vars) {
+    public final ParserConfig init(final SrcGen4JContext context, final Parsers parent, @Nullable final Map<String, String> vars) {
         this.context = context;
         this.parent = parent;
         inheritVariables(vars);
-        setName(replaceVars(getName(), getVarMap()));
-        this.className = replaceVars(className, getVarMap());
+        setName(requireNonNull(replaceVars(getName(), getVarMap())));
+        this.className = requireNonNull(replaceVars(className, getVarMap()));
         if (config != null) {
             config.init(context, this, getVarMap());
         }

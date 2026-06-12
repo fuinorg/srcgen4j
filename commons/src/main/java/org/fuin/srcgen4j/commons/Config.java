@@ -24,7 +24,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAnyElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Parser and Generator specific configurations are wrapped with a "config" tag. Otherwise the "xs:any" causes problems together with other
@@ -61,7 +61,7 @@ public final class Config<PARENT> implements InitializableElement<Config<PARENT>
 
     @SuppressWarnings("unchecked")
     @Override
-    public final Config<PARENT> init(final SrcGen4JContext context, final PARENT parent, final Map<String, String> vars) {
+    public final Config<PARENT> init(final SrcGen4JContext context, final PARENT parent, @Nullable final Map<String, String> vars) {
         if (cfg instanceof InitializableElement) {
             final InitializableElement<?, Config<PARENT>> ie;
             ie = (InitializableElement<?, Config<PARENT>>) cfg;

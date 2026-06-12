@@ -17,6 +17,8 @@
  */
 package org.fuin.srcgen4j.core.velocity;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.objects4j.core.TrimmedNotEmpty;
 import org.fuin.utils4j.Utils4J;
@@ -42,6 +45,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
 
     private static final long serialVersionUID = 1L;
 
+    @Nullable
     @TrimmedNotEmpty
     @XmlAttribute
     private String path;
@@ -50,6 +54,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
     @XmlAttribute
     private String name;
 
+    @Nullable
     @Valid
     @XmlElement(name = "argument")
     private List<Argument> arguments;
@@ -57,6 +62,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
     /**
      * Default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     TargetFile() {
         super();
     }
@@ -71,7 +77,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      * @param args
      *            Arguments for the template or NULL.
      */
-    public TargetFile(final String path, final String name, final Argument... args) {
+    public TargetFile(@Nullable final String path, final String name, final Argument... args) {
         super();
         Contract.requireArgNotNull("name", name);
         this.path = path;
@@ -91,6 +97,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      * 
      * @return Path or NULL.
      */
+    @Nullable
     public final String getPath() {
         return path;
     }
@@ -121,6 +128,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      * 
      * @return Arguments for the template or NULL.
      */
+    @Nullable
     public final List<Argument> getArguments() {
         return arguments;
     }
@@ -177,9 +185,9 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      * @param vars
      *            Variables to use.
      */
-    public final void init(final Map<String, String> vars) {
+    public final void init(@Nullable final Map<String, String> vars) {
         path = Utils4J.replaceVars(path, vars);
-        name = Utils4J.replaceVars(name, vars);
+        name = requireNonNull(Utils4J.replaceVars(name, vars));
         if (arguments != null) {
             for (final Argument argument : arguments) {
                 argument.init(vars);

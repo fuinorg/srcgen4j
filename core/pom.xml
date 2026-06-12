@@ -29,8 +29,6 @@
 
     <properties>
         <!-- Not managed by the fuin.org BOM -->
-        <checker-qual.version>4.2.0</checker-qual.version>
-        <error_prone_annotations.version>2.5.1</error_prone_annotations.version>
         <org.eclipse.core.runtime.version>3.31.0</org.eclipse.core.runtime.version>
         <org.eclipse.emf.ecore.change.version>2.16.0</org.eclipse.emf.ecore.change.version>
         <org.eclipse.emf.ecore.version>2.36.0</org.eclipse.emf.ecore.version>
@@ -41,6 +39,11 @@
     <dependencies>
 
         <!-- Compile -->
+
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.fuin.srcgen4j</groupId>
@@ -67,20 +70,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-        </dependency>
-
-        <!-- to be removed -->
-
-        <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_annotations</artifactId>
-            <version>${error_prone_annotations.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-            <version>${checker-qual.version}</version>
         </dependency>
 
         <!-- Technology JARs - Add this dependencies to your POM if you need it -->

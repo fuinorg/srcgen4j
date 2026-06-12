@@ -36,6 +36,7 @@ import org.fuin.srcgen4j.commons.SrcGen4JContext;
 import org.fuin.utils4j.Utils4J;
 import org.fuin.utils4j.jaxb.JaxbUtils;
 import org.fuin.utils4j.jaxb.UnmarshallerBuilder;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.StaticLoggerBinder;
@@ -59,18 +60,21 @@ public final class SrcGen4JMojo extends AbstractMojo {
     /**
      * The current maven project.
      */
+    @SuppressWarnings("NullAway.Init") // Injected by Maven
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
     /**
      * The configuration file.
      */
+    @SuppressWarnings("NullAway.Init") // Injected by Maven
     @Parameter(defaultValue = "${basedir}/srcgen4j-config.xml", required = true)
     private File configFile;
 
     /**
      * A list of JAXB classes to be bound to the JAXB context.
      */
+    @Nullable
     @Parameter
     private List<String> jaxbClasses;
 

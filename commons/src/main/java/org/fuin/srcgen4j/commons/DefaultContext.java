@@ -29,6 +29,7 @@ import java.util.Set;
 
 import jakarta.validation.constraints.NotNull;
 
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,14 +144,17 @@ public final class DefaultContext implements SrcGen4JContext, FileMarkerCapable 
         final Iterator<File> fileIt = markers.keySet().iterator();
         while (fileIt.hasNext()) {
             final Set<DefaultFileMarker> set = markers.get(fileIt.next());
-            for (final DefaultFileMarker marker : set) {
-                all.add(marker);
+            if (set != null) {
+                for (final DefaultFileMarker marker : set) {
+                    all.add(marker);
+                }
             }
         }
         return all.iterator();
     }
 
     @Override
+    @Nullable
     public final Iterator<? extends FileMarker> getMarkerIterator(final File file) {
         final Set<DefaultFileMarker> set = markers.get(file);
         if (set == null) {

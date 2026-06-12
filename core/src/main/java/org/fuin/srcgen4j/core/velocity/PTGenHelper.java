@@ -17,6 +17,8 @@
  */
 package org.fuin.srcgen4j.core.velocity;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 
 import jakarta.xml.bind.JAXBContext;
@@ -61,7 +63,7 @@ public final class PTGenHelper {
                                             ParameterizedTemplateParserConfig.class, ParameterizedTemplateGeneratorConfig.class))
                                     .build(),
                             configFile);
-            config.init(context, Utils4J.getCanonicalFile(configFile.getParentFile()));
+            config.init(context, requireNonNull(Utils4J.getCanonicalFile(configFile.getParentFile())));
             return config;
         } catch (final JAXBException ex) {
             throw new UnmarshalObjectException("Error reading the configuration: " + configFile, ex);

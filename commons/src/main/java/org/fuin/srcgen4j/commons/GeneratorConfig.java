@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.commons;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.utils4j.Utils4J;
 import org.slf4j.Logger;
@@ -81,6 +82,7 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
     /**
      * Package visible default constructor for deserialization.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     GeneratorConfig() { // NOSONAR Ignore not initialized fields
         super();
     }
@@ -249,11 +251,11 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
     }
 
     @Override
-    public final GeneratorConfig init(final SrcGen4JContext context, final Generators parent, final Map<String, String> vars) {
+    public final GeneratorConfig init(final SrcGen4JContext context, final Generators parent, @Nullable final Map<String, String> vars) {
         this.context = context;
         this.parent = parent;
         inheritVariables(vars);
-        setName(replaceVars(getName(), getVarMap()));
+        setName(requireNonNull(replaceVars(getName(), getVarMap())));
         setProject(replaceVars(getProject(), getVarMap()));
         setFolder(replaceVars(getFolder(), getVarMap()));
         if (artifacts != null) {
@@ -301,6 +303,7 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
      * 
      * @return Target folder.
      */
+    @Nullable
     public final Folder findTargetFolder(final String artifactName) {
         if (parent == null) {
             throw new IllegalStateException("Parent for generator config is not set: " + getName());
@@ -313,6 +316,7 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
      * 
      * @return Current context.
      */
+    @Nullable
     public final SrcGen4JContext getContext() {
         return context;
     }

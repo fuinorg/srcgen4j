@@ -21,7 +21,7 @@ import java.util.Map;
 
 import jakarta.validation.constraints.NotNull;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Used by elements that require initialization with parent and variables.

@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.commons;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 
 /**
@@ -181,10 +182,10 @@ public final class Artifact extends AbstractNamedTarget implements Initializable
     }
 
     @Override
-    public final Artifact init(final SrcGen4JContext context, final GeneratorConfig parent, final Map<String, String> vars) {
+    public final Artifact init(final SrcGen4JContext context, final GeneratorConfig parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
-        setName(replaceVars(getName(), getVarMap()));
+        setName(requireNonNull(replaceVars(getName(), getVarMap())));
         setProject(replaceVars(getProject(), getVarMap()));
         setFolder(replaceVars(getFolder(), getVarMap()));
         if (targets != null) {

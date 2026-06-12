@@ -20,6 +20,8 @@ package org.fuin.srcgen4j.core.emf;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Map based implementation of the code reference registry.
  */
@@ -36,6 +38,7 @@ public final class SimpleCodeReferenceRegistry implements CodeReferenceRegistry 
     }
 
     @Override
+    @Nullable
     public final String getReference(final String uniqueName) {
         return map.get(uniqueName);
     }

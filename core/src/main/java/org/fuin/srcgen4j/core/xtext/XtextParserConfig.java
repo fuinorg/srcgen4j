@@ -17,6 +17,7 @@
  */
 package org.fuin.srcgen4j.core.xtext;
 
+import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
 import java.io.File;
@@ -33,6 +34,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.eclipse.emf.common.util.URI;
+import org.jspecify.annotations.Nullable;
 import org.fuin.srcgen4j.commons.AbstractElement;
 import org.fuin.srcgen4j.commons.Config;
 import org.fuin.srcgen4j.commons.InitializableElement;
@@ -60,21 +62,26 @@ public class XtextParserConfig extends AbstractElement implements InitializableE
     @XmlAttribute(name = "setupClass")
     private String setupClassName;
 
+    @Nullable
     @XmlTransient
     private SrcGen4JContext context;
 
+    @Nullable
     @XmlTransient
     private List<File> modelDirs;
 
+    @Nullable
     @XmlTransient
     private List<URI> modelResources;
 
+    @Nullable
     @XmlTransient
     private Class<?> setupClass;
 
     /**
      * Default constructor.
      */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
     public XtextParserConfig() {
         super();
     }
@@ -87,6 +94,7 @@ public class XtextParserConfig extends AbstractElement implements InitializableE
      * @param modelExt
      *            Model file extension.
      */
+    @SuppressWarnings("NullAway.Init") // Remaining fields are populated by JAXB / lazily after construction
     public XtextParserConfig(final String modelPath, final String modelExt) {
         super();
         this.modelPath = modelPath;
@@ -151,10 +159,11 @@ public class XtextParserConfig extends AbstractElement implements InitializableE
     }
 
     @Override
-    public final XtextParserConfig init(final SrcGen4JContext context, final Config<ParserConfig> parent, final Map<String, String> vars) {
+    public final XtextParserConfig init(final SrcGen4JContext context, final Config<ParserConfig> parent,
+            @Nullable final Map<String, String> vars) {
         this.context = context;
         inheritVariables(vars);
-        setModelPath(replaceVars(getModelPath(), getVarMap()));
+        setModelPath(requireNonNull(replaceVars(getModelPath(), getVarMap())));
         return this;
     }
 
@@ -168,6 +177,9 @@ public class XtextParserConfig extends AbstractElement implements InitializableE
             return setupClass;
         }
         LOG.info("Creating setup class: {}", setupClassName);
+        if (context == null) {
+            throw new IllegalStateException("Context was not set: " + setupClassName);
+        }
         try {
             setupClass = Class.forName(setupClassName, true, context.getClassLoader());
         } catch (final ClassNotFoundException ex) {
@@ -206,7 +218,7 @@ public class XtextParserConfig extends AbstractElement implements InitializableE
      * @return File.
      */
     public static File asFile(final String str) {
-        return Utils4J.getCanonicalFile(new File(str));
+        return requireNonNull(Utils4J.getCanonicalFile(new File(str)));
     }
 
     /**
@@ -238,6 +250,7 @@ public class XtextParserConfig extends AbstractElement implements InitializableE
      * 
      * @return Directory list or NULL.
      */
+    @Nullable
     public final List<File> getModelDirs() {
         if ((modelDirs == null) && (modelPath != null)) {
             modelDirs = paths().stream().filter(XtextParserConfig::isFile).map(XtextParserConfig::asFile).collect(Collectors.toList());
@@ -250,6 +263,7 @@ public class XtextParserConfig extends AbstractElement implements InitializableE
      * 
      * @return List of resources or NULL.
      */
+    @Nullable
     public final List<URI> getModelResources() {
         if ((modelResources == null) && (modelPath != null)) {
             modelResources = new ArrayList<>();

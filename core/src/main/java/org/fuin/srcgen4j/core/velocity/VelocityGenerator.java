@@ -27,6 +27,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
+import org.jspecify.annotations.Nullable;
 import org.fuin.srcgen4j.commons.GenerateException;
 import org.fuin.srcgen4j.core.base.AbstractGenerator;
 import org.fuin.srcgen4j.core.base.GeneratedFile;
@@ -49,11 +50,20 @@ public abstract class VelocityGenerator<MODEL> extends AbstractGenerator<MODEL, 
 
     private VelocityEngine ve;
 
+    @Nullable
     private File templateDir;
 
     /**
+     * Default constructor.
+     */
+    @SuppressWarnings("NullAway.Init") // Fields are populated by generate() before use
+    protected VelocityGenerator() {
+        super();
+    }
+
+    /**
      * Returns an initialized velocity engine.
-     * 
+     *
      * @return Engine - Never NULL after {@link #generate(boolean)} was called.
      */
     protected final VelocityEngine getVE() {
@@ -62,14 +72,15 @@ public abstract class VelocityGenerator<MODEL> extends AbstractGenerator<MODEL, 
 
     /**
      * Returns the template directory.
-     * 
+     *
      * @return Source directory.
      */
+    @Nullable
     public final File getTemplateDir() {
         return templateDir;
     }
 
-    private static VelocityEngine createVelocityEngine(final File templateDir) {
+    private static VelocityEngine createVelocityEngine(@Nullable final File templateDir) {
         final VelocityEngine ve = new VelocityEngine();
         if (templateDir == null) {
             ve.addProperty("resource.loader", "class");
@@ -129,7 +140,11 @@ public abstract class VelocityGenerator<MODEL> extends AbstractGenerator<MODEL, 
 
     @Override
     public final void generate(final boolean incremental) throws GenerateException {
-        this.templateDir = Utils4J.getCanonicalFile(getSpecificConfig().getTemplateDir());
+        final VelocityGeneratorConfig specificConfig = getSpecificConfig();
+        if (specificConfig == null) {
+            throw new IllegalStateException("Specific configuration was not set");
+        }
+        this.templateDir = Utils4J.getCanonicalFile(specificConfig.getTemplateDir());
         this.ve = createVelocityEngine(templateDir);
 
         LOG.debug("Template directory: {}", templateDir);
