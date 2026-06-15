@@ -72,6 +72,12 @@ class EMFGeneratorTest {
         parser.initialize(CONTEXT, parserConfig);
         final ResourceSet resourceSet = parser.parse();
 
+        // The parser must mark the explicitly loaded model resources as "primary"
+        assertThat(resourceSet.getResources()).isNotEmpty();
+        for (final org.eclipse.emf.ecore.resource.Resource resource : resourceSet.getResources()) {
+            assertThat(PrimaryResources.isPrimary(resource)).isTrue();
+        }
+
         final EMFGenerator testee = new EMFGenerator();
         testee.initialize(generatorConfig);
 

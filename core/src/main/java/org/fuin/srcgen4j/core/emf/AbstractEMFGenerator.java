@@ -24,6 +24,7 @@ import java.util.Map;
 import jakarta.validation.constraints.NotNull;
 
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.fuin.srcgen4j.commons.GenerateException;
 import org.fuin.srcgen4j.commons.Generator;
@@ -67,7 +68,13 @@ public abstract class AbstractEMFGenerator<CONFIG> extends AbstractGenerator<Res
                 total++;
                 if (wants(notifier)) {
                     wants++;
-                    generate(context, notifier, incremental, preparationRun);
+                    // Non-primary elements (e.g. dependency models loaded lazily while resolving cross
+                    // references) must not produce artifacts. They are still processed during the
+                    // preparation run so that references (imports) to them can be registered.
+                    final boolean primary = !(notifier instanceof EObject) || PrimaryResources.isPrimary((EObject) notifier);
+                    if (preparationRun || primary) {
+                        generate(context, notifier, incremental, preparationRun);
+                    }
                 }
             }
 

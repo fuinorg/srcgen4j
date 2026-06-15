@@ -56,6 +56,8 @@ public abstract class AbstractEMFParser<CONFIG_TYPE> extends AbstractParser<CONF
 
     private ResourceSet resourceSet = new ResourceSetImpl();
 
+    private final Set<URI> primaryResourceUris = new HashSet<>();
+
     private boolean error = false;
 
     @Nullable
@@ -119,9 +121,14 @@ public abstract class AbstractEMFParser<CONFIG_TYPE> extends AbstractParser<CONF
         // Drop previous resource set
         resourceSet = new ResourceSetImpl();
         error = false;
+        primaryResourceUris.clear();
 
         parseDirs();
         parseResources();
+
+        // Remember the explicitly loaded resources as "primary". Resources that are pulled in later
+        // (e.g. dependency models loaded lazily while resolving cross references) are not primary.
+        PrimaryResources.install(resourceSet, primaryResourceUris);
 
     }
 
@@ -141,6 +148,7 @@ public abstract class AbstractEMFParser<CONFIG_TYPE> extends AbstractParser<CONF
         } else {
             for (final URI modelResource : modelResources) {
                 final Resource resource = resourceSet.getResource(modelResource, true);
+                primaryResourceUris.add(modelResource);
                 final EList<Diagnostic> diagnostics = resource.getErrors();
                 if (diagnostics.isEmpty()) {
                     LOG.debug("Parsed {}", modelResource);
@@ -194,9 +202,14 @@ public abstract class AbstractEMFParser<CONFIG_TYPE> extends AbstractParser<CONF
             throw new IllegalStateException("No file extensions for EMF model files set!");
         }
         return dir.listFiles(file ->  {
-                final boolean pointFile = file.getName().startsWith(".");
+                // Files and directories starting with a "." are excluded. This also keeps hidden
+                // helper directories like the dependency model cache ".dependencies-cache" out of
+                // the source model scan.
+                if (file.getName().startsWith(".")) {
+                    return false;
+                }
                 final String extension = FilenameUtils.getExtension(file.getName());
-                return (!pointFile && extensions.contains(extension)) || file.isDirectory();
+                return extensions.contains(extension) || file.isDirectory();
         });
     }
 
@@ -214,8 +227,9 @@ public abstract class AbstractEMFParser<CONFIG_TYPE> extends AbstractParser<CONF
         } else {
             for (final File file : files) {
                 if (file.isFile()) {
-                    final Resource resource = resourceSet
-                            .getResource(URI.createFileURI(requireNonNull(Utils4J.getCanonicalPath(file))), true);
+                    final URI fileUri = URI.createFileURI(requireNonNull(Utils4J.getCanonicalPath(file)));
+                    final Resource resource = resourceSet.getResource(fileUri, true);
+                    primaryResourceUris.add(fileUri);
                     final EList<Diagnostic> diagnostics = resource.getErrors();
                     if (diagnostics.isEmpty()) {
                         LOG.debug("Parsed {}", file);
