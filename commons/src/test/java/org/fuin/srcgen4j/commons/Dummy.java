@@ -1,4 +1,3 @@
-// CHECKSTYLE:OFF
 package org.fuin.srcgen4j.commons;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,4 +21,3 @@ public class Dummy {
     }
 
 }
-// CHECKSTYLE:ON

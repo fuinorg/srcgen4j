@@ -29,8 +29,6 @@ import com.openpojo.validation.rule.impl.SetterMustExistRule;
  */
 public class ConfigTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -39,7 +37,5 @@ public class ConfigTest extends AbstractTest {
         validator.validate(pc);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

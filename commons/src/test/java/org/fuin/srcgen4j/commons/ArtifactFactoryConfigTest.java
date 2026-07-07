@@ -33,8 +33,6 @@ import org.xmlunit.assertj3.XmlAssert;
  */
 public class ArtifactFactoryConfigTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testMarshal() throws Exception {
 
@@ -89,7 +87,5 @@ public class ArtifactFactoryConfigTest extends AbstractTest {
         assertThat(factory).isInstanceOf(TestArtifactFactory.class);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

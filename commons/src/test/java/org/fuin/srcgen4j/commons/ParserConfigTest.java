@@ -38,8 +38,6 @@ import com.openpojo.validation.Validator;
  */
 public class ParserConfigTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -117,7 +115,5 @@ public class ParserConfigTest extends AbstractTest {
         assertThat(testInput.getPath()).isEqualTo("a/b/c");
 
     }
-
-    // CHECKSTYLE:ON
 
 }

@@ -44,8 +44,6 @@ import com.openpojo.validation.Validator;
  */
 public class VariableTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -107,7 +105,5 @@ public class VariableTest {
         assertThat(testee.getValue()).isEqualTo("1");
 
     }
-
-    // CHECKSTYLE:ON
 
 }

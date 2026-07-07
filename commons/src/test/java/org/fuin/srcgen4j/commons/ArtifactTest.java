@@ -39,8 +39,6 @@ import com.openpojo.validation.Validator;
  */
 public class ArtifactTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     /**
      * Basic POJO test.
      */
@@ -217,7 +215,5 @@ public class ArtifactTest extends AbstractTest {
         generators.setFolder(null);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

@@ -31,8 +31,6 @@ import com.openpojo.validation.rule.impl.SetterMustExistRule;
  */
 public class GeneratedArtifactTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -59,7 +57,5 @@ public class GeneratedArtifactTest extends AbstractTest {
         assertThat(testee.getData()).isEqualTo(source);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

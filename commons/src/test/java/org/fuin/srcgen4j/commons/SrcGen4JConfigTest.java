@@ -43,8 +43,6 @@ import com.openpojo.validation.Validator;
  */
 public class SrcGen4JConfigTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -333,7 +331,5 @@ public class SrcGen4JConfigTest extends AbstractTest {
             reader.close();
         }
     }
-
-    // CHECKSTYLE:ON
 
 }

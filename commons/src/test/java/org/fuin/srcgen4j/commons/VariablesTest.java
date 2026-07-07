@@ -37,8 +37,6 @@ import com.openpojo.validation.Validator;
  */
 public class VariablesTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -76,7 +74,5 @@ public class VariablesTest {
         assertThat(testee.asList()).containsOnly(new Variable("abc", "def"));
 
     }
-
-    // CHECKSTYLE:ON
 
 }

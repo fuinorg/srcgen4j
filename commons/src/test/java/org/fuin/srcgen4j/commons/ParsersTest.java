@@ -39,8 +39,6 @@ import com.openpojo.validation.Validator;
  */
 public class ParsersTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -110,7 +108,5 @@ public class ParsersTest extends AbstractTest {
         assertThat(parser.getName()).isEqualTo("A NAME");
 
     }
-
-    // CHECKSTYLE:ON
 
 }

@@ -45,8 +45,6 @@ import com.openpojo.validation.Validator;
  */
 public class AbstractElementTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 

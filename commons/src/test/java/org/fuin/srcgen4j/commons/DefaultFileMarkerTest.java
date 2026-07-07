@@ -34,8 +34,6 @@ import com.openpojo.validation.rule.impl.NoPublicFieldsRule;
  */
 public class DefaultFileMarkerTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public void testPojo() {
         final PojoClass pc = PojoClassFactory.getPojoClass(DefaultFileMarker.class);
@@ -103,7 +101,5 @@ public class DefaultFileMarkerTest {
         assertThat(testee.getLength()).isEqualTo(length);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

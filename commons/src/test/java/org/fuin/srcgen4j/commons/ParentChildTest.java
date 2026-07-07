@@ -33,8 +33,6 @@ import org.junit.jupiter.api.Test;
  */
 public class ParentChildTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testVariableInheritance() throws Exception {
 

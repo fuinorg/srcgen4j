@@ -1,4 +1,3 @@
-// CHECKSTYLE:OFF
 package a.b.b;
 
 import org.fuin.srcgen4j.commons.Parser;
@@ -30,4 +29,3 @@ public class Parser1 implements Parser<String> {
     }
 
 }
-// CHECKSTYLE:ON

@@ -39,8 +39,6 @@ import com.openpojo.validation.Validator;
  */
 public class FolderTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Disabled("Fails with: Illegal reflective access by com.openpojo.reflection.impl.PojoFieldImpl to field java.util.regex.Pattern.ALL_FLAGS")
     @Test
     public final void testPojoStructureAndBehavior() {
@@ -131,7 +129,5 @@ public class FolderTest extends AbstractTest {
         // VERIFY
         assertThat(dir).isEqualTo("a/b/c/d");
     }
-
-    // CHECKSTYLE:ON
 
 }

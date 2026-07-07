@@ -1,4 +1,3 @@
-// CHECKSTYLE:OFF
 package org.fuin.srcgen4j.commons;
 
 import java.util.Collections;
@@ -35,4 +34,3 @@ public class ParentElement extends AbstractElement {
     }
 
 }
-// CHECKSTYLE:ON

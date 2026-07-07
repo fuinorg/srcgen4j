@@ -31,8 +31,6 @@ import org.junit.jupiter.api.Test;
  */
 public class DefaultContextTest {
 
-    // CHECKSTYLE:OFF
-
     private DefaultContext testee;
 
     @BeforeEach
@@ -242,7 +240,5 @@ public class DefaultContextTest {
         assertThat(markerIterator).isNull();
 
     }
-
-    // CHECKSTYLE:ON
 
 }

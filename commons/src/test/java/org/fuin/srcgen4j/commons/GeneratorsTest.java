@@ -39,8 +39,6 @@ import com.openpojo.validation.Validator;
  */
 public class GeneratorsTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -125,7 +123,5 @@ public class GeneratorsTest extends AbstractTest {
         assertThat(generator.getFolder()).isEqualTo("abc");
 
     }
-
-    // CHECKSTYLE:ON
 
 }

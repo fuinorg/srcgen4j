@@ -38,8 +38,6 @@ import com.openpojo.validation.Validator;
  */
 public class ProjectTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -155,7 +153,5 @@ public class ProjectTest extends AbstractTest {
         assertThat(testee.getFolders().get(idx)).isSameAs(folder);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

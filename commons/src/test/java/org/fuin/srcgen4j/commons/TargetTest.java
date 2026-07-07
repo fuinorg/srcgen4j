@@ -45,8 +45,6 @@ import com.openpojo.validation.test.impl.SetterTester;
  */
 public class TargetTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     public final void testPojoStructureAndBehavior() {
 
@@ -182,7 +180,5 @@ public class TargetTest extends AbstractTest {
         generators.setFolder(null);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

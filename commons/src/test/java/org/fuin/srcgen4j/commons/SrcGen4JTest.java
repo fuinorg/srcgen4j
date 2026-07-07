@@ -33,8 +33,6 @@ import a.b.c.Parser2;
  */
 public class SrcGen4JTest {
 
-    // CHECKSTYLE:OFF
-
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public final void testExecute() throws ParseException, GenerateException {
@@ -97,7 +95,5 @@ public class SrcGen4JTest {
         assertThat(generator3.getModel()).isEqualTo(parser2.getModel());
 
     }
-
-    // CHECKSTYLE:ON
 
 }

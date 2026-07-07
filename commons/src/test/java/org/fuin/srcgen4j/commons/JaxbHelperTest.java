@@ -44,8 +44,6 @@ import com.openpojo.validation.rule.impl.SetterMustExistRule;
  */
 public class JaxbHelperTest extends AbstractTest {
 
-    // CHECKSTYLE:OFF Tests
-
     private JaxbHelper testee;
 
     @BeforeEach
@@ -182,7 +180,5 @@ public class JaxbHelperTest extends AbstractTest {
         validator.validate(pc);
 
     }
-
-    // CHECKSTYLE:ON
 
 }

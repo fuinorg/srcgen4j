@@ -1,4 +1,3 @@
-// CHECKSTYLE:OFF
 package a.b.b;
 
 import org.fuin.srcgen4j.commons.Generator;
@@ -29,4 +28,3 @@ public class Generator1 implements Generator<String> {
     }
 
 }
-// CHECKSTYLE:ON
