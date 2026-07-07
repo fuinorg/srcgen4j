@@ -28,6 +28,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.jspecify.annotations.Nullable;
@@ -44,6 +45,12 @@ public abstract class AbstractElement {
     @Valid
     @XmlElement(name = "variable")
     private List<Variable> variables;
+
+    @Nullable
+    @Valid
+    @XmlElementWrapper(name = "replacers")
+    @XmlElement(name = "replacer")
+    private List<Replacer> replacers;
 
     @Nullable
     @XmlTransient
@@ -65,9 +72,17 @@ public abstract class AbstractElement {
         if (variables != null) {
             for (Variable variable : variables) {
                 final Map<String, String> vars = varMap;
-                varMap.put(variable.getName(), Utils4J.replaceVars(variable.getValue(), vars));
+                final String v = variable.getValue();
+                if (v != null) {
+                    varMap.put(variable.getName(), Utils4J.replaceVars(v, vars));
+                }
             }
             varMap = new VariableResolver(varMap).getResolved();
+        }
+        if (replacers != null) {
+            for (final Replacer replacer : replacers) {
+                replacer.init(varMap);
+            }
         }
     }
 
@@ -99,12 +114,35 @@ public abstract class AbstractElement {
 
     /**
      * Returns a list of variables.
-     * 
+     *
      * @return Variables.
      */
     @Nullable
     public final List<Variable> getVariables() {
         return variables;
+    }
+
+    /**
+     * Adds a replacer to the element.
+     *
+     * @param replacer
+     *            Replacer to add.
+     */
+    public final void addReplacer(@NotNull final Replacer replacer) {
+        if (replacers == null) {
+            replacers = new ArrayList<>();
+        }
+        replacers.add(replacer);
+    }
+
+    /**
+     * Returns a list of replacers.
+     *
+     * @return Replacers.
+     */
+    @Nullable
+    public final List<Replacer> getReplacers() {
+        return replacers;
     }
 
 }

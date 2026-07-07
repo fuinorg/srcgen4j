@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srcgen4j-config xmlns="http://www.fuin.org/srcgen4j/commons/0.5.0">
+
+	<variables>
+		<variable name="root" value="/var/tmp" />
+	</variables>
+
+	<replacers>
+		<replacer name="pkg" expression="org\.old\.(.*)" replacement="org.new.$1" />
+		<replacer name="rooted" extension="java" expression="${root}/(.*)" replacement="${root}/gen/$1" />
+	</replacers>
+
+</srcgen4j-config>

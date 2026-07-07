@@ -18,6 +18,7 @@
 package org.fuin.srcgen4j.commons;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.fuin.srcgen4j.commons.TestUtils.NS_SG4JC;
 import static org.fuin.srcgen4j.commons.TestUtils.createPojoValidator;
@@ -25,6 +26,7 @@ import static org.fuin.utils4j.jaxb.JaxbUtils.XML_PREFIX;
 import static org.fuin.utils4j.jaxb.JaxbUtils.marshal;
 import static org.fuin.utils4j.jaxb.JaxbUtils.unmarshal;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -141,32 +143,63 @@ public class ReplacerTest {
     }
 
     @Test
-    public final void testConstructInvalidExpression() {
-        assertThatThrownBy(() -> new Replacer("bad", "a[", "b")).isInstanceOf(IllegalArgumentException.class)
+    public final void testInit() {
+
+        // PREPARE
+        final Replacer testee = new Replacer("pkg", "${ext}", "org\\.old\\.(.*)", "org.new.$1");
+        final Map<String, String> vars = Map.of("ext", "java");
+
+        // TEST
+        final Replacer result = testee.init(vars);
+
+        // VERIFY
+        assertThat(result).isSameAs(testee);
+        assertThat(testee.getName()).isEqualTo("pkg");
+        assertThat(testee.getExtension()).isEqualTo("java");
+        assertThat(testee.getExpression()).isEqualTo("org\\.old\\.(.*)");
+        assertThat(testee.getReplacement()).isEqualTo("org.new.$1");
+        // The (recompiled) expression is still usable after init
+        assertThat(testee.replace("org.old.Foo")).isEqualTo("org.new.Foo");
+
+    }
+
+    @Test
+    public final void testConstructorDefersValidation() {
+
+        // Like Target, the constructor only stores the values. An (as yet unresolved) invalid
+        // expression or replacement therefore does not fail on construction, only on init/use.
+        assertThatNoException().isThrownBy(() -> new Replacer("bad", "a[", "$9"));
+        assertThatNoException().isThrownBy(() -> new Replacer("vars", "${root}\\.(.*)", "${root}.$1"));
+
+    }
+
+    @Test
+    public final void testInitInvalidExpression() {
+        assertThatThrownBy(() -> new Replacer("bad", "a[", "b").init(Map.of())).isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("'expression' is not a valid regular expression");
     }
 
     @Test
-    public final void testConstructReplacementDanglingEscape() {
-        assertThatThrownBy(() -> new Replacer("bad", "a", "b\\")).isInstanceOf(IllegalArgumentException.class)
+    public final void testInitReplacementDanglingEscape() {
+        assertThatThrownBy(() -> new Replacer("bad", "a", "b\\").init(Map.of())).isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("'replacement' is not a valid replacement string");
     }
 
     @Test
-    public final void testConstructReplacementIllegalGroupReference() {
-        assertThatThrownBy(() -> new Replacer("bad", "a", "$x")).isInstanceOf(IllegalArgumentException.class)
+    public final void testInitReplacementIllegalGroupReference() {
+        assertThatThrownBy(() -> new Replacer("bad", "a", "$x").init(Map.of())).isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("'replacement' is not a valid replacement string");
     }
 
     @Test
-    public final void testConstructReplacementUnknownNumberedGroup() {
-        assertThatThrownBy(() -> new Replacer("bad", "abc", "$1")).isInstanceOf(IllegalArgumentException.class)
+    public final void testInitReplacementUnknownNumberedGroup() {
+        assertThatThrownBy(() -> new Replacer("bad", "abc", "$1").init(Map.of())).isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("there is no group 1 in the expression");
     }
 
     @Test
-    public final void testConstructReplacementUnknownNamedGroup() {
-        assertThatThrownBy(() -> new Replacer("bad", "(a)", "${missing}")).isInstanceOf(IllegalArgumentException.class)
+    public final void testInitReplacementUnknownNamedGroup() {
+        assertThatThrownBy(() -> new Replacer("bad", "(a)", "${missing}").init(Map.of())).isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("there is no group with name 'missing' in the expression");
     }
 

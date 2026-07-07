@@ -17,6 +17,9 @@
  */
 package org.fuin.srcgen4j.commons;
 
+import static java.util.Objects.requireNonNull;
+import static org.fuin.utils4j.Utils4J.replaceVars;
+
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -75,9 +78,10 @@ public final class Replacer {
      * @param name
      *            Name of the replacer.
      * @param expression
-     *            Pattern used to find the text to replace. Must be a valid regular expression.
+     *            Pattern used to find the text to replace. Compiled and validated as a regular expression when
+     *            {@link #init(Map)} is called (or lazily on the first {@link #replace(String)}).
      * @param replacement
-     *            Replacement pattern. Must be a valid replacement string for the expression.
+     *            Replacement pattern. Validated as a valid replacement string for the expression when {@link #init(Map)} is called.
      */
     public Replacer(@NotEmpty final String name, @NotEmpty final String expression, @NotEmpty final String replacement) {
         this(name, null, expression, replacement);
@@ -91,9 +95,10 @@ public final class Replacer {
      * @param extension
      *            Optional extension to allow further customization.
      * @param expression
-     *            Pattern used to find the text to replace. Must be a valid regular expression.
+     *            Pattern used to find the text to replace. Compiled and validated as a regular expression when
+     *            {@link #init(Map)} is called (or lazily on the first {@link #replace(String)}).
      * @param replacement
-     *            Replacement pattern. Must be a valid replacement string for the expression.
+     *            Replacement pattern. Validated as a valid replacement string for the expression when {@link #init(Map)} is called.
      */
     public Replacer(@NotEmpty final String name, @Nullable final String extension, @NotEmpty final String expression,
             @NotEmpty final String replacement) {
@@ -104,9 +109,7 @@ public final class Replacer {
         this.name = name;
         this.extension = extension;
         this.expression = expression;
-        this.expressionPattern = compile("expression", expression);
         this.replacement = replacement;
-        requireValidReplacement("replacement", replacement, this.expressionPattern);
     }
 
     /**
@@ -161,6 +164,24 @@ public final class Replacer {
     public final String replace(@NotNull final String input) {
         Contract.requireArgNotNull("input", input);
         return compiledExpression().matcher(input).replaceAll(replacement);
+    }
+
+    /**
+     * Replaces variables (if defined) in the extension, expression and replacement, then compiles the expression and validates the
+     * replacement against it. The name is left unchanged as it identifies the replacer.
+     *
+     * @param vars
+     *            Variables to use.
+     *
+     * @return This instance.
+     */
+    public final Replacer init(@Nullable final Map<String, String> vars) {
+        extension = replaceVars(extension, vars);
+        expression = requireNonNull(replaceVars(expression, vars));
+        replacement = requireNonNull(replaceVars(replacement, vars));
+        expressionPattern = compile("expression", expression);
+        requireValidReplacement("replacement", replacement, expressionPattern);
+        return this;
     }
 
     private Pattern compiledExpression() {

@@ -56,7 +56,20 @@
       <xs:element type="projectType" name="project" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
-  
+
+  <xs:complexType name="replacerType">
+    <xs:attribute type="xs:string" name="name" use="required"/>
+    <xs:attribute type="xs:string" name="extension" use="optional"/>
+    <xs:attribute type="xs:string" name="expression" use="required"/>
+    <xs:attribute type="xs:string" name="replacement" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="replacersType">
+    <xs:sequence>
+      <xs:element type="replacerType" name="replacer" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="anyConfigType">
     <xs:sequence>
       <xs:any minOccurs="0" maxOccurs="unbounded">
@@ -126,6 +139,7 @@
     <xs:sequence>
       <xs:element ref="variables" minOccurs="0" maxOccurs="1" />
       <xs:element type="projectsType" name="projects" minOccurs="1" maxOccurs="1" />
+      <xs:element type="replacersType" name="replacers" minOccurs="0" maxOccurs="1" />
       <xs:element type="parsersType" name="parsers"  minOccurs="1" maxOccurs="1" />
       <xs:element type="generatorsType" name="generators"  minOccurs="1" maxOccurs="1" />
     </xs:sequence>
