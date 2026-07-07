@@ -1,0 +1,4 @@
+# Normalize line endings across all platforms.
+# Git auto-detects text vs. binary; text files are stored as LF in the
+# repository (checkin) and checked out as LF everywhere (checkout).
+* text=auto eol=lf
