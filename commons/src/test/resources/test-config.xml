@@ -37,15 +37,7 @@
 	
 	<generators>
 		<variable name="pep" value="${project_example_path}/generators" />
-		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1" project="example" folder="genMainJava">
-			<!-- Project and folder can be overridden in artifact -->
-			<artifact name="one" project="example" folder="genMainJava">
-				<!-- Example for changing the target folder or even the project based on a path/file regular expression --> 
-				<target pattern=".*//abc//def//ghi//.*//.java" project="example" folder="genMainJava" />				 
-			</artifact>
-			<artifact name="abstract" folder="genMainJava" />
-			<artifact name="manual" folder="mainJava" />
-		</generator>
+		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1" />
 	</generators>
 	
 </srcgen4j-config>

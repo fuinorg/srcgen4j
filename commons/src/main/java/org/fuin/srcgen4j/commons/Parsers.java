@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -72,7 +71,7 @@ public class Parsers extends AbstractElement implements InitializableElement<Par
      * @param parser
      *            Parser to add.
      */
-    public final void addParser(@NotNull final ParserConfig parser) {
+    public final void addParser(final ParserConfig parser) {
         Contract.requireArgNotNull("parser", parser);
         if (list == null) {
             list = new ArrayList<>();

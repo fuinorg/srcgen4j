@@ -20,8 +20,6 @@ package org.fuin.srcgen4j.commons;
 import java.io.File;
 import java.util.Iterator;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -42,7 +40,7 @@ public interface FileMarkerCapable {
      * @return New marker instance or NULL if the file was not found in the context.
      */
     @Nullable
-    public FileMarker addMarker(@NotNull File file, @NotNull FileMarkerSeverity severity, @NotNull String message);
+    public FileMarker addMarker(File file, FileMarkerSeverity severity, String message);
 
     /**
      * Adds a line marker to a file.
@@ -59,7 +57,7 @@ public interface FileMarkerCapable {
      * @return New marker instance or NULL if the file was not found in the context.
      */
     @Nullable
-    public FileMarker addMarker(@NotNull File file, @NotNull FileMarkerSeverity severity, @NotNull String message, int line);
+    public FileMarker addMarker(File file, FileMarkerSeverity severity, String message, int line);
 
     /**
      * Adds a position marker to a file.
@@ -78,7 +76,7 @@ public interface FileMarkerCapable {
      * @return New marker instance or NULL if the file was not found in the context.
      */
     @Nullable
-    public FileMarker addMarker(@NotNull File file, @NotNull FileMarkerSeverity severity, @NotNull String message, int start, int length);
+    public FileMarker addMarker(File file, FileMarkerSeverity severity, String message, int start, int length);
 
     /**
      * Removes the given marker from a file. Does nothing if the file was not found in the context.
@@ -88,7 +86,7 @@ public interface FileMarkerCapable {
      * @param marker
      *            Marker to remove.
      */
-    public void removeMarker(@NotNull File file, @NotNull FileMarker marker);
+    public void removeMarker(File file, FileMarker marker);
 
     /**
      * Removes all markers associated with a file. Does nothing if the file was not found in the context.
@@ -96,7 +94,7 @@ public interface FileMarkerCapable {
      * @param file
      *            File to remove all markers from.
      */
-    public void removeAllMarkers(@NotNull File file);
+    public void removeAllMarkers(File file);
 
     /**
      * Returns an iterator for all markers associated with a file.
@@ -107,7 +105,7 @@ public interface FileMarkerCapable {
      * @return Iterator or NULL if the file was not found in the context or has no markers.
      */
     @Nullable
-    public Iterator<? extends FileMarker> getMarkerIterator(@NotNull File file);
+    public Iterator<? extends FileMarker> getMarkerIterator(File file);
 
     /**
      * Removes all markers from all files.

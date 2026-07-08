@@ -20,6 +20,10 @@ public class HelloPropertiesTstGen implements ArtifactFactory<ResourceSet> {
 
     private String artifact;
 
+    private String project;
+
+    private String folder;
+
     private boolean incremental = true;
 
     @Override
@@ -30,6 +34,8 @@ public class HelloPropertiesTstGen implements ArtifactFactory<ResourceSet> {
     @Override
     public final void init(final ArtifactFactoryConfig config) {
         this.artifact = config.getArtifact();
+        this.project = config.getProject();
+        this.folder = config.getFolder();
         this.incremental = config.isIncremental();
     }
 
@@ -53,7 +59,7 @@ public class HelloPropertiesTstGen implements ArtifactFactory<ResourceSet> {
             }
         }
 
-        return Collections.singletonList(new GeneratedArtifact(artifact, "hello.properties", sb.toString().getBytes()));
+        return Collections.singletonList(new GeneratedArtifact(artifact, "hello.properties", sb.toString().getBytes(), project, folder));
 
     }
 

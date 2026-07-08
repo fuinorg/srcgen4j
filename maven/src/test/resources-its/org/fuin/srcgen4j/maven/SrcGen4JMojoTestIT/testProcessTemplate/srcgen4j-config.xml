@@ -24,12 +24,11 @@
 	</parsers>
 	
 	<generators>
-		<generator name="gen1" class="org.fuin.srcgen4j.core.velocity.ParameterizedTemplateGenerator" 
-		           parser="parse1" project="example">
+		<generator name="gen1" class="org.fuin.srcgen4j.core.velocity.ParameterizedTemplateGenerator"
+		           parser="parse1">
 		    <config>
 				<velo:parameterized-template-generator templatePath="${templatesPath}" />
 			</config>
-			<artifact name="file" folder="srcGenFolder" />
 		</generator>
 	</generators>
 	

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -149,7 +148,7 @@ public class Project extends AbstractNamedElement implements InitializableElemen
      * @param folder
      *            Folder to add.
      */
-    public final void addFolder(@NotNull final Folder folder) {
+    public final void addFolder(final Folder folder) {
         Contract.requireArgNotNull("folder", folder);
         if (folders == null) {
             folders = new ArrayList<>();

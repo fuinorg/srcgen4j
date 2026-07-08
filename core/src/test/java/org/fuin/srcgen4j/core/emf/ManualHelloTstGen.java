@@ -23,6 +23,10 @@ public final class ManualHelloTstGen implements ArtifactFactory<Greeting> {
 
     private String artifact;
 
+    private String project;
+
+    private String folder;
+
     private boolean incremental = true;
 
     @Override
@@ -33,6 +37,8 @@ public final class ManualHelloTstGen implements ArtifactFactory<Greeting> {
     @Override
     public final void init(final ArtifactFactoryConfig config) {
         this.artifact = config.getArtifact();
+        this.project = config.getProject();
+        this.folder = config.getFolder();
         this.incremental = config.isIncremental();
     }
 
@@ -49,7 +55,7 @@ public final class ManualHelloTstGen implements ArtifactFactory<Greeting> {
             final Map<String, String> vars = new HashMap<>();
             vars.put("name", greeting.getName());
             return Collections.singletonList(new GeneratedArtifact(artifact, "a/b/c/Hello" + greeting.getName() + ".java",
-                    Utils4J.replaceVars(src, vars).getBytes()));
+                    Utils4J.replaceVars(src, vars).getBytes(), project, folder));
         } catch (final IOException ex) {
             throw new RuntimeException(ex);
         }

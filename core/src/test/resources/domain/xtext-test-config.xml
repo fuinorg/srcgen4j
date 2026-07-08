@@ -25,19 +25,19 @@
 	</parsers>
 	
 	<generators>
-		<generator name="gen1" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="ptp" project="current">
+		<generator name="gen1" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="ptp">
 		    <config>
 				<emf:emf-generator-config>
-					<emf:artifact-factory artifact="abstractHello" class="org.fuin.srcgen4j.core.emf.AbstractHelloTstGen">
+					<emf:artifact-factory artifact="abstractHello" class="org.fuin.srcgen4j.core.emf.AbstractHelloTstGen"
+					                      project="current" folder="testGenMainJava">
 						<variable name="package" value="a.b.c" />
 					</emf:artifact-factory>
-					<emf:artifact-factory artifact="manualHello" class="org.fuin.srcgen4j.core.emf.ManualHelloTstGen" />
-					<emf:artifact-factory artifact="helloProps" incremental="false" class="org.fuin.srcgen4j.core.emf.HelloPropertiesTstGen" />
+					<emf:artifact-factory artifact="manualHello" class="org.fuin.srcgen4j.core.emf.ManualHelloTstGen"
+					                      project="current" folder="testMainJava" />
+					<emf:artifact-factory artifact="helloProps" incremental="false" class="org.fuin.srcgen4j.core.emf.HelloPropertiesTstGen"
+					                      project="current" folder="testGenMainRes" />
 				</emf:emf-generator-config>
 			</config>
-			<artifact name="abstractHello" folder="testGenMainJava" />
-			<artifact name="manualHello" folder="testMainJava" />
-			<artifact name="helloProps" folder="testGenMainRes" />
 		</generator>
 	</generators>
 	

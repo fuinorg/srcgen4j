@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -91,7 +90,6 @@ public abstract class AbstractElement {
      * 
      * @return Unmodifiable map of variables.
      */
-    @NotNull
     public final Map<String, String> getVarMap() {
         if (varMap == null) {
             return Collections.emptyMap();
@@ -105,7 +103,7 @@ public abstract class AbstractElement {
      * @param variable
      *            Variable to add.
      */
-    public final void addVariable(@NotNull final Variable variable) {
+    public final void addVariable(final Variable variable) {
         if (variables == null) {
             variables = new ArrayList<>();
         }
@@ -128,7 +126,7 @@ public abstract class AbstractElement {
      * @param replacer
      *            Replacer to add.
      */
-    public final void addReplacer(@NotNull final Replacer replacer) {
+    public final void addReplacer(final Replacer replacer) {
         if (replacers == null) {
             replacers = new ArrayList<>();
         }

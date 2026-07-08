@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -161,7 +160,7 @@ public final class Replacer {
      *
      * @return Result after applying <code>replaceAll(expression, replacement)</code> on the input.
      */
-    public final String replace(@NotNull final String input) {
+    public final String replace(final String input) {
         Contract.requireArgNotNull("input", input);
         return compiledExpression().matcher(input).replaceAll(replacement);
     }

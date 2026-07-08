@@ -20,8 +20,6 @@ package org.fuin.srcgen4j.commons;
 import java.io.File;
 import java.util.Set;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.apache.commons.io.filefilter.IOFileFilter;
 
 /**
@@ -37,7 +35,6 @@ public interface IncrementalParser<MODEL> extends Parser<MODEL> {
      * 
      * @return File filter.
      */
-    @NotNull
     public IOFileFilter getFileFilter();
 
     /**
@@ -51,7 +48,6 @@ public interface IncrementalParser<MODEL> extends Parser<MODEL> {
      * @throws ParseException
      *             Error during parse process.
      */
-    @NotNull
-    public MODEL parse(@NotNull Set<File> files) throws ParseException;
+    public MODEL parse(Set<File> files) throws ParseException;
 
 }

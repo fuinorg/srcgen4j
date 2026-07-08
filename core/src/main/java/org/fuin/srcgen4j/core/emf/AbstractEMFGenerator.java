@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -108,7 +106,7 @@ public abstract class AbstractEMFGenerator<CONFIG> extends AbstractGenerator<Res
      * @throws GenerateException
      *             Error when generating.
      */
-    protected void beforeGenerate(@NotNull final Map<String, Object> context, final boolean incremental, final boolean preparationRun)
+    protected void beforeGenerate(final Map<String, Object> context, final boolean incremental, final boolean preparationRun)
             throws GenerateException {
         // May be overwritten by sub classes
     }
@@ -126,7 +124,7 @@ public abstract class AbstractEMFGenerator<CONFIG> extends AbstractGenerator<Res
      * @throws GenerateException
      *             Error when generating.
      */
-    protected void afterGenerate(@NotNull final Map<String, Object> context, final boolean incremental, final boolean preparationRun)
+    protected void afterGenerate(final Map<String, Object> context, final boolean incremental, final boolean preparationRun)
             throws GenerateException {
         // May be overwritten by sub classes
     }
@@ -139,7 +137,7 @@ public abstract class AbstractEMFGenerator<CONFIG> extends AbstractGenerator<Res
      * 
      * @return If the {@link #generate(Map, Notifier, boolean, boolean)} method should be called TRUE, else FALSE.
      */
-    protected abstract boolean wants(@NotNull Notifier notifier);
+    protected abstract boolean wants(Notifier notifier);
 
     /**
      * Generates the appropriate content for a given notifier.
@@ -156,7 +154,7 @@ public abstract class AbstractEMFGenerator<CONFIG> extends AbstractGenerator<Res
      * @throws GenerateException
      *             Error when generating.
      */
-    protected abstract void generate(@NotNull Map<String, Object> context, @NotNull Notifier notifier, boolean incremental,
+    protected abstract void generate(Map<String, Object> context, Notifier notifier, boolean incremental,
             final boolean preparationRun) throws GenerateException;
 
 }

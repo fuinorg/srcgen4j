@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -190,7 +189,7 @@ public class SrcGen4JConfig {
      * @param parser
      *            Parser to add.
      */
-    public final void addParser(@NotNull final ParserConfig parser) {
+    public final void addParser(final ParserConfig parser) {
         Contract.requireArgNotNull("parser", parser);
         if (parsers == null) {
             parsers = new Parsers();
@@ -256,7 +255,7 @@ public class SrcGen4JConfig {
      * 
      * @return This instance.
      */
-    public final SrcGen4JConfig init(@NotNull final SrcGen4JContext context, @NotNull @FileExists @IsDirectory final File rootDir) {
+    public final SrcGen4JConfig init(final SrcGen4JContext context, @FileExists @IsDirectory final File rootDir) {
 
         Contract.requireArgNotNull("context", context);
         Contract.requireArgNotNull(ROOT_DIR_VAR, rootDir);
@@ -288,127 +287,37 @@ public class SrcGen4JConfig {
     }
 
     /**
-     * Returns a target directory for a given combination of generator name and artifact name.
-     * 
-     * @param generatorName
-     *            Name of the generator.
-     * @param artifactName
-     *            Name of the artifact.
-     * 
-     * @return Target file based on the configuration.
-     * 
-     * @throws GeneratorNotFoundException
-     *             The given generator name was not found in the configuration.
-     * @throws ArtifactNotFoundException
-     *             The given artifact was not found in the generator.
-     * @throws ProjectNameNotDefinedException
-     *             No project name is bound to the given combination.
-     * @throws FolderNameNotDefinedException
-     *             No folder name is bound to the given combination.
-     * @throws ProjectNotFoundException
-     *             The project name based on the selection is unknown.
-     * @throws FolderNotFoundException
-     *             The folder in the project based on the selection is unknown.
+     * Resolves the folder for a given project name and folder name.
+     *
+     * @param projectName
+     *            Name of the target project.
+     * @param folderName
+     *            Name of the target folder inside the project.
+     *
+     * @return Folder or NULL if the project or the folder could not be found.
      */
-    public final Folder findTargetFolder(@NotNull final String generatorName, @NotNull final String artifactName)
-            throws ProjectNameNotDefinedException, ArtifactNotFoundException, FolderNameNotDefinedException, GeneratorNotFoundException,
-            ProjectNotFoundException, FolderNotFoundException {
+    @Nullable
+    public final Folder findFolder(final String projectName, final String folderName) {
 
-        Contract.requireArgNotNull("generatorName", generatorName);
-        Contract.requireArgNotNull("artifactName", artifactName);
-
-        return findTargetFolder(generatorName, artifactName, null);
-
-    }
-
-    /**
-     * Returns a target directory for a given combination of generator name, artifact name and target sub path.
-     * 
-     * @param generatorName
-     *            Name of the generator.
-     * @param artifactName
-     *            Name of the artifact.
-     * @param targetPath
-     *            Current path and file.
-     * 
-     * @return Target file based on the configuration.
-     * 
-     * @throws GeneratorNotFoundException
-     *             The given generator name was not found in the configuration.
-     * @throws ArtifactNotFoundException
-     *             The given artifact was not found in the generator.
-     * @throws ProjectNameNotDefinedException
-     *             No project name is bound to the given combination.
-     * @throws FolderNameNotDefinedException
-     *             No folder name is bound to the given combination.
-     * @throws ProjectNotFoundException
-     *             The project name based on the selection is unknown.
-     * @throws FolderNotFoundException
-     *             The folder in the project based on the selection is unknown.
-     */
-    public final Folder findTargetFolder(@NotNull final String generatorName, @NotNull final String artifactName,
-            @Nullable final String targetPath)
-            throws ProjectNameNotDefinedException, ArtifactNotFoundException, FolderNameNotDefinedException, GeneratorNotFoundException,
-            ProjectNotFoundException, FolderNotFoundException {
-
-        Contract.requireArgNotNull("generatorName", generatorName);
-        Contract.requireArgNotNull("artifactName", artifactName);
-
-        if (generators == null) {
-            throw new GeneratorNotFoundException(generatorName);
-        }
-        final GeneratorConfig generator = generators.findByName(generatorName);
-        if (generator == null) {
-            throw new GeneratorNotFoundException(generatorName);
-        }
-
-        final List<Artifact> artifacts = generator.getArtifacts();
-        if (artifacts == null) {
-            throw new ArtifactNotFoundException(generatorName, artifactName);
-        }
-        int idx = artifacts.indexOf(new Artifact(artifactName));
-        if (idx < 0) {
-            throw new ArtifactNotFoundException(generatorName, artifactName);
-        }
-        final Artifact artifact = artifacts.get(idx);
-
-        final String projectName;
-        final String folderName;
-        final String targetPattern;
-        final Target target = artifact.findTargetFor(targetPath);
-        if (target == null) {
-            projectName = artifact.getDefProject();
-            folderName = artifact.getDefFolder();
-            targetPattern = null;
-        } else {
-            projectName = target.getDefProject();
-            folderName = target.getDefFolder();
-            targetPattern = target.getPattern();
-        }
-
-        if (projectName == null) {
-            throw new ProjectNameNotDefinedException(generatorName, artifactName, targetPattern);
-        }
-        if (folderName == null) {
-            throw new FolderNameNotDefinedException(generatorName, artifactName, targetPattern);
-        }
+        Contract.requireArgNotNull("projectName", projectName);
+        Contract.requireArgNotNull("folderName", folderName);
 
         if (projects == null) {
-            throw new ProjectNotFoundException(generatorName, artifactName, targetPattern, projectName);
+            return null;
         }
-        idx = projects.indexOf(new Project(projectName, "dummy"));
+        int idx = projects.indexOf(new Project(projectName, "dummy"));
         if (idx < 0) {
-            throw new ProjectNotFoundException(generatorName, artifactName, targetPattern, projectName);
+            return null;
         }
         final Project project = projects.get(idx);
 
         final List<Folder> folders = project.getFolders();
         if (folders == null) {
-            throw new FolderNotFoundException(generatorName, artifactName, targetPattern, projectName, folderName);
+            return null;
         }
         idx = folders.indexOf(new Folder(folderName, "NotUsed"));
         if (idx < 0) {
-            throw new FolderNotFoundException(generatorName, artifactName, targetPattern, projectName, folderName);
+            return null;
         }
         return folders.get(idx);
 
@@ -422,8 +331,7 @@ public class SrcGen4JConfig {
      * 
      * @return List of generators.
      */
-    @NotNull
-    public final List<GeneratorConfig> findGeneratorsForParser(@NotNull final String parserName) {
+    public final List<GeneratorConfig> findGeneratorsForParser(final String parserName) {
         Contract.requireArgNotNull("parserName", parserName);
 
         final List<GeneratorConfig> list = new ArrayList<>();
@@ -454,9 +362,8 @@ public class SrcGen4JConfig {
      * 
      * @return New initialized configuration instance.
      */
-    @NotNull
-    public static SrcGen4JConfig createMavenStyleSingleProject(@NotNull final SrcGen4JContext context, @NotNull final String projectName,
-            @NotNull @FileExists @IsDirectory final File rootDir) {
+    public static SrcGen4JConfig createMavenStyleSingleProject(final SrcGen4JContext context, final String projectName,
+            @FileExists @IsDirectory final File rootDir) {
 
         Contract.requireArgNotNull("context", context);
         Contract.requireArgNotNull(ROOT_DIR_VAR, rootDir);

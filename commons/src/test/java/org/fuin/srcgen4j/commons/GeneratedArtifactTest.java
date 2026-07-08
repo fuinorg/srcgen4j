@@ -47,14 +47,18 @@ public class GeneratedArtifactTest extends AbstractTest {
         final String name = "abc";
         final String pathAndName = "def";
         final byte[] source = "ghi".getBytes();
+        final String project = "prj";
+        final String folder = "fld";
 
         // TEST
-        final GeneratedArtifact testee = new GeneratedArtifact(name, pathAndName, source);
+        final GeneratedArtifact testee = new GeneratedArtifact(name, pathAndName, source, project, folder);
 
         // VERIFY
         assertThat(testee.getName()).isEqualTo(name);
         assertThat(testee.getPathAndName()).isEqualTo(pathAndName);
         assertThat(testee.getData()).isEqualTo(source);
+        assertThat(testee.getProject()).isEqualTo(project);
+        assertThat(testee.getFolder()).isEqualTo(folder);
 
     }
 

@@ -37,7 +37,7 @@ class TargetFileTest {
         final Argument arg2 = new Argument("key2", "value2");
         final String path = "path";
         final String name = "name";
-        final TargetFile testee = new TargetFile(path, name, arg1, arg2);
+        final TargetFile testee = new TargetFile("current", "testJava", path, name, arg1, arg2);
         final JAXBContext jaxbContext = JAXBContext.newInstance(TargetFile.class, Argument.class);
         final JaxbHelper helper = new JaxbHelper();
 
@@ -46,6 +46,8 @@ class TargetFileTest {
         final TargetFile copy = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(), xml);
 
         // VERIFY
+        assertThat(copy.getProject()).isEqualTo(testee.getProject());
+        assertThat(copy.getFolder()).isEqualTo(testee.getFolder());
         assertThat(copy.getPath()).isEqualTo(testee.getPath());
         assertThat(copy.getName()).isEqualTo(testee.getName());
         assertThat(copy.getArguments().size()).isEqualTo(2);

@@ -96,36 +96,14 @@
     </xs:sequence>
   </xs:complexType>
   
-  <xs:complexType name="targetType">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-        <xs:attribute type="xs:string" name="pattern" use="required"/>
-        <xs:attribute type="xs:string" name="project" use="optional"/>
-        <xs:attribute type="xs:string" name="folder" use="optional"/>
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-  
-  <xs:complexType name="artifactType" mixed="true">
-    <xs:sequence>
-      <xs:element type="targetType" name="target" minOccurs="0" />
-    </xs:sequence>
-    <xs:attribute type="xs:string" name="name" use="required"/>
-    <xs:attribute type="xs:string" name="project" use="optional"/>
-    <xs:attribute type="xs:string" name="folder" use="optional"/>
-  </xs:complexType>
-  
   <xs:complexType name="generatorType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
       <xs:element type="anyConfigType" name="config" minOccurs="0" maxOccurs="1" />
-      <xs:element type="artifactType" name="artifact" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute type="xs:string" name="name" use="required"/>
     <xs:attribute type="xs:string" name="class" use="required"/>
     <xs:attribute type="xs:string" name="parser" use="required"/>
-    <xs:attribute type="xs:string" name="project" use="optional"/>
-    <xs:attribute type="xs:string" name="folder" use="optional"/>
   </xs:complexType>
   
   <xs:complexType name="generatorsType">
@@ -151,6 +129,8 @@
       </xs:sequence>
     <xs:attribute type="xs:string" name="artifact" use="required" />
     <xs:attribute type="xs:string" name="class" use="required" />
+    <xs:attribute type="xs:string" name="project" use="required" />
+    <xs:attribute type="xs:string" name="folder" use="required" />
     <xs:attribute type="xs:boolean" name="incremental" use="optional" />
   </xs:complexType>
 

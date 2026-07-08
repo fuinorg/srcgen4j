@@ -19,8 +19,6 @@ package org.fuin.srcgen4j.commons;
 
 import java.util.Map;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -45,7 +43,6 @@ public interface InitializableElement<ELEMENT, PARENT> {
      * 
      * @return This instance.
      */
-    @NotNull
-    public ELEMENT init(@NotNull SrcGen4JContext context, @NotNull PARENT parent, @Nullable Map<String, String> vars);
+    public ELEMENT init(SrcGen4JContext context, PARENT parent, @Nullable Map<String, String> vars);
 
 }

@@ -19,7 +19,6 @@ package org.fuin.srcgen4j.commons;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -127,19 +126,8 @@ public class SrcGen4JConfigTest extends AbstractTest {
             assertThat(testee.getGenerators().getList()).hasSize(1);
             final GeneratorConfig gen = testee.getGenerators().getList().get(0);
             assertThat(gen.getName()).isEqualTo("gen1");
-            assertThat(gen.getProject()).isEqualTo("example");
-            assertThat(gen.getFolder()).isEqualTo("genMainJava");
-            assertThat(gen.getArtifacts()).hasSize(3);
-            assertThat(gen.getArtifacts()).contains(new Artifact("one"), new Artifact("abstract"), new Artifact("manual"));
-            int idx = gen.getArtifacts().indexOf(new Artifact("one"));
-            assertThat(idx).isNotNegative();
-            final Artifact one = gen.getArtifacts().get(idx);
-            assertThat(one.getTargets()).isNotNull();
-            assertThat(one.getTargets()).hasSize(1);
-            final Target target = one.getTargets().get(0);
-            assertThat(target.getPattern()).isEqualTo(".*//abc//def//ghi//.*//.java");
-            assertThat(target.getProject()).isEqualTo("example");
-            assertThat(target.getFolder()).isEqualTo("genMainJava");
+            assertThat(gen.getClassName()).isEqualTo("org.fuin.srcgen4j.commons.TestGenerator");
+            assertThat(gen.getParser()).isEqualTo("parser1");
 
         } finally {
             reader.close();
@@ -201,11 +189,7 @@ public class SrcGen4JConfigTest extends AbstractTest {
         final SrcGen4JConfig testee = new SrcGen4JConfig();
 
         final Variables vars = new Variables(new Variable("project.name", "1"), new Variable("project.path", "2"),
-                new Variable("generator.name", "3"), new Variable("generator.project", "4"), new Variable("generator.folder", "5"),
-                new Variable("folder.name", "6"), new Variable("folder.path", "7"), new Variable("artifact.name", "8"),
-                new Variable("artifact.project", "9"), new Variable("artifact.folder", "10"), new Variable("target.pattern", "11"),
-                new Variable("target.project", "12"), new Variable("target.folder", "13"), new Variable("generators.project", "14"),
-                new Variable("generators.folder", "15"));
+                new Variable("generator.name", "3"), new Variable("folder.name", "6"), new Variable("folder.path", "7"));
 
         final List<Project> projects = new ArrayList<Project>();
         final Project project = new Project("${project.name}", "${project.path}");
@@ -213,14 +197,10 @@ public class SrcGen4JConfigTest extends AbstractTest {
         project.addFolder(new Folder("${folder.name}", "${folder.path}"));
 
         final List<GeneratorConfig> genList = new ArrayList<GeneratorConfig>();
-        final GeneratorConfig generator = new GeneratorConfig("${generator.name}", "CLASS", "PARSER", "${generator.project}",
-                "${generator.folder}");
+        final GeneratorConfig generator = new GeneratorConfig("${generator.name}", "CLASS", "PARSER");
         genList.add(generator);
-        final Artifact artifact = new Artifact("${artifact.name}", "${artifact.project}", "${artifact.folder}");
-        generator.addArtifact(artifact);
-        artifact.addTarget(new Target("${target.pattern}", "${target.project}", "${target.folder}"));
 
-        final Generators generators = new Generators("${generators.project}", "${generators.folder}");
+        final Generators generators = new Generators();
         generators.addVariable(new Variable("a", "1"));
         generators.setList(genList);
 
@@ -242,23 +222,11 @@ public class SrcGen4JConfigTest extends AbstractTest {
 
         assertThat(testee.getGenerators()).isNotNull();
         assertThat(testee.getGenerators().getVarMap()).contains(entry("a", "1"));
-        assertThat(testee.getGenerators().getProject()).isEqualTo("14");
-        assertThat(testee.getGenerators().getFolder()).isEqualTo("15");
         assertThat(testee.getGenerators().getList()).isNotNull();
         assertThat(testee.getGenerators().getList()).hasSize(1);
 
         final GeneratorConfig resultGenerator = testee.getGenerators().getList().get(0);
         assertThat(resultGenerator.getName()).isEqualTo("3");
-        assertThat(resultGenerator.getProject()).isEqualTo("4");
-        assertThat(resultGenerator.getFolder()).isEqualTo("5");
-        final Artifact resultArtifact = resultGenerator.getArtifacts().get(0);
-        assertThat(resultArtifact.getName()).isEqualTo("8");
-        assertThat(resultArtifact.getProject()).isEqualTo("9");
-        assertThat(resultArtifact.getFolder()).isEqualTo("10");
-        final Target resultTarget = resultArtifact.getTargets().get(0);
-        assertThat(resultTarget.getPattern()).isEqualTo("11");
-        assertThat(resultTarget.getProject()).isEqualTo("12");
-        assertThat(resultTarget.getFolder()).isEqualTo("13");
 
     }
 
@@ -320,41 +288,6 @@ public class SrcGen4JConfigTest extends AbstractTest {
         // VERIFY
         // Test makes sure the "init(File)" does not throw NullPointerException
         // if nothing is set
-
-    }
-
-    @Test
-    public void testFindTargetPositive() throws Exception {
-
-        // PREPARE
-        final SrcGen4JConfig testee = load("findTarget.xml");
-        testee.init(new DefaultContext(), new File("."));
-
-        // TEST
-        final Folder folder = testee.findTargetFolder("gen1", "arti1",
-                "a/b/c/MyClass.java");
-
-        // VERIFY
-        assertThat(folder.getPath()).isEqualTo("src/main/java");
-        assertThat(folder.getParent().getPath())
-                .isEqualTo("/var/tmp/myproject");
-
-    }
-
-    @Test
-    public void testFindTargetFolderNotFoundException() throws Exception {
-
-        // PREPARE
-        final SrcGen4JConfig testee = load("findTarget.xml");
-        testee.init(new DefaultContext(), new File("."));
-
-        // TEST
-        try {
-            testee.findTargetFolder("gen1", "arti1", "Unknown.java");
-            fail("The file should lead to arti1's folder 'folder3' that is not defined");
-        } catch (final FolderNotFoundException ex) {
-            // VERIFIED
-        }
 
     }
 

@@ -18,7 +18,6 @@
 package org.fuin.srcgen4j.commons;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 import org.fuin.objects4j.common.Contract;
 
@@ -33,24 +32,37 @@ public final class GeneratedArtifact {
 
     private final byte[] data;
 
+    private final String project;
+
+    private final String folder;
+
     /**
      * Constructor with all data.
-     * 
+     *
      * @param name
      *            Unique artifact name.
      * @param pathAndName
      *            Relative path and filename to write the source code to.
      * @param data
      *            Generated data.
+     * @param project
+     *            Name of the target project.
+     * @param folder
+     *            Name of the target folder inside the project.
      */
-    public GeneratedArtifact(@NotEmpty final String name, @NotEmpty final String pathAndName, @NotNull final byte[] data) {
+    public GeneratedArtifact(@NotEmpty final String name, @NotEmpty final String pathAndName, final byte[] data,
+            @NotEmpty final String project, @NotEmpty final String folder) {
         super();
         Contract.requireArgNotEmpty("name", name);
         Contract.requireArgNotEmpty("pathAndName", pathAndName);
         Contract.requireArgNotNull("data", data);
+        Contract.requireArgNotEmpty("project", project);
+        Contract.requireArgNotEmpty("folder", folder);
         this.name = name;
         this.pathAndName = pathAndName;
         this.data = data;
+        this.project = project;
+        this.folder = folder;
     }
 
     /**
@@ -78,14 +90,33 @@ public final class GeneratedArtifact {
      * 
      * @return Data.
      */
-    @NotNull
     public final byte[] getData() {
         return data;
     }
 
+    /**
+     * Returns the name of the target project.
+     *
+     * @return Project name.
+     */
+    @NotEmpty
+    public final String getProject() {
+        return project;
+    }
+
+    /**
+     * Returns the name of the target folder inside the project.
+     *
+     * @return Folder name.
+     */
+    @NotEmpty
+    public final String getFolder() {
+        return folder;
+    }
+
     @Override
     public final String toString() {
-        return pathAndName + " [" + name + "]";
+        return project + "/" + folder + "/" + pathAndName + " [" + name + "]";
     }
 
 }

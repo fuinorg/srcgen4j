@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.fuin.srcgen4j.commons.ArtifactFactory;
@@ -102,7 +100,7 @@ public final class EMFGenerator extends AbstractEMFGenerator<EMFGeneratorConfig>
     }
 
     @Override
-    protected final void generate(@NotNull final Map<String, Object> context, @NotNull final Notifier notifier, final boolean incremental,
+    protected final void generate(final Map<String, Object> context, final Notifier notifier, final boolean incremental,
             final boolean preparationRun) throws GenerateException {
 
         LOG.debug("Generate from {}", Notifier.class.getSimpleName());
@@ -128,7 +126,7 @@ public final class EMFGenerator extends AbstractEMFGenerator<EMFGeneratorConfig>
     }
 
     @Override
-    protected final void afterGenerate(@NotNull final Map<String, Object> context, final boolean incremental, final boolean preparationRun)
+    protected final void afterGenerate(final Map<String, Object> context, final boolean incremental, final boolean preparationRun)
             throws GenerateException {
 
         LOG.debug("Generate from {}", ResourceSet.class.getSimpleName());

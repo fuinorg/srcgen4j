@@ -96,7 +96,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
      * @param path
      *            path to set.
      */
-    public Folder(@NotNull final String name, @NotNull final String path) {
+    public Folder(final String name, final String path) {
         super(name);
         this.path = path;
     }
@@ -121,7 +121,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
      * @param cleanExclude
      *            Regular expression of files to exclude from cleaning.
      */
-    Folder(@NotNull final Project parent, @NotNull final String name, @NotNull final String path, final boolean create,
+    Folder(final Project parent, final String name, final String path, final boolean create,
             final boolean override, @Nullable final String overrideExclude, final boolean clean, @Nullable final String cleanExclude) {
         super(name);
         this.parent = parent;
@@ -138,7 +138,6 @@ public final class Folder extends AbstractNamedElement implements InitializableE
      * 
      * @return Current path.
      */
-    @NotNull
     public final String getPath() {
         return path;
     }

@@ -17,8 +17,6 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
  * Generates something using a given model.
  * 
@@ -34,7 +32,7 @@ public interface Generator<MODEL> {
      * @param config
      *            Configuration to use.
      */
-    public void initialize(@NotNull GeneratorConfig config);
+    public void initialize(GeneratorConfig config);
 
     /**
      * Generates something using the initially given configuration and model.
@@ -47,6 +45,6 @@ public interface Generator<MODEL> {
      * @throws GenerateException
      *             Error when generating.
      */
-    public void generate(@NotNull MODEL model, boolean incremental) throws GenerateException;
+    public void generate(MODEL model, boolean incremental) throws GenerateException;
 
 }

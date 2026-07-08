@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -183,7 +182,7 @@ public class ParameterizedTemplateModel implements Serializable, Comparable<Para
      * @param argument
      *            Arguments to add.
      */
-    public final void addArgument(@NotNull final Argument argument) {
+    public final void addArgument(final Argument argument) {
         if (arguments == null) {
             arguments = new ArrayList<Argument>();
         }

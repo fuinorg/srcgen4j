@@ -45,6 +45,14 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
 
     private static final long serialVersionUID = 1L;
 
+    @TrimmedNotEmpty
+    @XmlAttribute
+    private String project;
+
+    @TrimmedNotEmpty
+    @XmlAttribute
+    private String folder;
+
     @Nullable
     @TrimmedNotEmpty
     @XmlAttribute
@@ -69,7 +77,11 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
 
     /**
      * Constructor with all data.
-     * 
+     *
+     * @param project
+     *            Name of the target project - Cannot be NULL.
+     * @param folder
+     *            Name of the target folder inside the project - Cannot be NULL.
      * @param path
      *            Path without filename or NULL.
      * @param name
@@ -77,9 +89,13 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      * @param args
      *            Arguments for the template or NULL.
      */
-    public TargetFile(@Nullable final String path, final String name, final Argument... args) {
+    public TargetFile(final String project, final String folder, @Nullable final String path, final String name, final Argument... args) {
         super();
+        Contract.requireArgNotNull("project", project);
+        Contract.requireArgNotNull("folder", folder);
         Contract.requireArgNotNull("name", name);
+        this.project = project;
+        this.folder = folder;
         this.path = path;
         this.name = name;
 
@@ -93,8 +109,26 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
     }
 
     /**
+     * Returns the name of the target project.
+     *
+     * @return Project name.
+     */
+    public final String getProject() {
+        return project;
+    }
+
+    /**
+     * Returns the name of the target folder inside the project.
+     *
+     * @return Folder name.
+     */
+    public final String getFolder() {
+        return folder;
+    }
+
+    /**
      * Returns the relative path of the target file.
-     * 
+     *
      * @return Path or NULL.
      */
     @Nullable
@@ -186,6 +220,8 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      *            Variables to use.
      */
     public final void init(@Nullable final Map<String, String> vars) {
+        project = requireNonNull(Utils4J.replaceVars(project, vars));
+        folder = requireNonNull(Utils4J.replaceVars(folder, vars));
         path = Utils4J.replaceVars(path, vars);
         name = requireNonNull(Utils4J.replaceVars(name, vars));
         if (arguments != null) {

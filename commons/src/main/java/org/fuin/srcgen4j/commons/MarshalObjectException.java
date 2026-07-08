@@ -17,8 +17,6 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
  * Error writing an object to XML.
  */
@@ -34,7 +32,7 @@ public final class MarshalObjectException extends Exception {
      * @param cause
      *            Cause.
      */
-    public MarshalObjectException(@NotNull final String message, @NotNull final Throwable cause) {
+    public MarshalObjectException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

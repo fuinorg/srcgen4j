@@ -20,8 +20,6 @@ package org.fuin.srcgen4j.commons;
 import static java.util.Objects.requireNonNull;
 import static org.fuin.utils4j.Utils4J.replaceVars;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
@@ -45,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "generator")
-public final class GeneratorConfig extends AbstractNamedTarget implements InitializableElement<GeneratorConfig, Generators> {
+public final class GeneratorConfig extends AbstractNamedElement implements InitializableElement<GeneratorConfig, Generators> {
 
     private static final Logger LOG = LoggerFactory.getLogger(GeneratorConfig.class);
 
@@ -56,11 +54,6 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
     @NotNull
     @XmlAttribute(name = "parser")
     private String parser;
-
-    @Nullable
-    @Valid
-    @XmlElement(name = "artifact")
-    private List<Artifact> artifacts;
 
     @Nullable
     @Valid
@@ -89,7 +82,7 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
 
     /**
      * Constructor with name.
-     * 
+     *
      * @param name
      *            Name to set.
      * @param className
@@ -98,26 +91,7 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
      *            Unique name of the parser that delivers the input for this generator to set.
      */
     public GeneratorConfig(@NotEmpty final String name, @NotEmpty final String className, @NotEmpty final String parser) {
-        this(name, className, parser, null, null);
-    }
-
-    /**
-     * Constructor with name, project and folder.
-     * 
-     * @param name
-     *            Name to set.
-     * @param className
-     *            Full qualified name of the generator class to set.
-     * @param parser
-     *            Unique name of the parser that delivers the input for this generator to set.
-     * @param project
-     *            Project to set.
-     * @param folder
-     *            Folder to set.
-     */
-    public GeneratorConfig(@NotEmpty final String name, @NotEmpty final String className, @NotEmpty final String parser, // NOSONAR
-            @Nullable final String project, @Nullable final String folder) {
-        super(name, project, folder);
+        super(name);
         Contract.requireArgNotNull("className", className);
         Contract.requireArgNotNull("parser", parser);
         this.className = className;
@@ -142,40 +116,6 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
     @NotEmpty
     public final String getParser() {
         return parser;
-    }
-
-    /**
-     * Returns the list of artifacts.
-     * 
-     * @return Artifacts.
-     */
-    @Nullable
-    public final List<Artifact> getArtifacts() {
-        return artifacts;
-    }
-
-    /**
-     * Sets the list of artifacts.
-     * 
-     * @param artifacts
-     *            Artifacts.
-     */
-    public final void setArtifacts(@Nullable final List<Artifact> artifacts) {
-        this.artifacts = artifacts;
-    }
-
-    /**
-     * Adds a artifact to the list. If the list does not exist it's created.
-     * 
-     * @param artifact
-     *            Artifact to add.
-     */
-    public final void addArtifact(@NotNull final Artifact artifact) {
-        Contract.requireArgNotNull("artifact", artifact);
-        if (artifacts == null) {
-            artifacts = new ArrayList<>();
-        }
-        artifacts.add(artifact);
     }
 
     /**
@@ -218,51 +158,12 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
         this.parent = parent;
     }
 
-    /**
-     * Returns the defined project from this object or any of it's parents.
-     * 
-     * @return Project.
-     */
-    @Nullable
-    public final String getDefProject() {
-        if (getProject() == null) {
-            if (parent == null) {
-                return null;
-            }
-            return parent.getProject();
-        }
-        return getProject();
-    }
-
-    /**
-     * Returns the defined folder from this object or any of it's parents.
-     * 
-     * @return Folder.
-     */
-    @Nullable
-    public final String getDefFolder() {
-        if (getFolder() == null) {
-            if (parent == null) {
-                return null;
-            }
-            return parent.getFolder();
-        }
-        return getFolder();
-    }
-
     @Override
     public final GeneratorConfig init(final SrcGen4JContext context, final Generators parent, @Nullable final Map<String, String> vars) {
         this.context = context;
         this.parent = parent;
         inheritVariables(vars);
         setName(requireNonNull(replaceVars(getName(), getVarMap())));
-        setProject(replaceVars(getProject(), getVarMap()));
-        setFolder(replaceVars(getFolder(), getVarMap()));
-        if (artifacts != null) {
-            for (final Artifact artifact : artifacts) {
-                artifact.init(context, this, getVarMap());
-            }
-        }
         if (config != null) {
             config.init(context, this, getVarMap());
         }
@@ -296,19 +197,25 @@ public final class GeneratorConfig extends AbstractNamedTarget implements Initia
     }
 
     /**
-     * Returns the appropriate folder for a given artifact.
-     * 
-     * @param artifactName
-     *            Unique name of the artifact to return a target folder for.
-     * 
-     * @return Target folder.
+     * Resolves the folder for a given project and folder name using the root configuration.
+     *
+     * @param projectName
+     *            Name of the target project.
+     * @param folderName
+     *            Name of the target folder inside the project.
+     *
+     * @return Target folder or NULL if it could not be found.
      */
     @Nullable
-    public final Folder findTargetFolder(final String artifactName) {
+    public final Folder findFolder(final String projectName, final String folderName) {
         if (parent == null) {
-            throw new IllegalStateException("Parent for generator config is not set: " + getName());
+            throw new IllegalStateException("Parent (generators) for generator config is not set: " + getName());
         }
-        return parent.findTargetFolder(getName(), artifactName);
+        final SrcGen4JConfig config = parent.getParent();
+        if (config == null) {
+            throw new IllegalStateException("Root configuration for generator config is not set: " + getName());
+        }
+        return config.findFolder(projectName, folderName);
     }
 
     /**

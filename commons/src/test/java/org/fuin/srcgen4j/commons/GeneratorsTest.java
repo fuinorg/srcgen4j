@@ -53,18 +53,17 @@ public class GeneratorsTest extends AbstractTest {
 
         // PREPARE
         final JAXBContext jaxbContext = JAXBContext.newInstance(Generators.class);
-        final Generators testee = new Generators("abc", "def");
+        final Generators testee = new Generators();
         testee.addVariable(new Variable("a", "1"));
-        testee.addGenerator(new GeneratorConfig("NAME", "a.b.c.D", "PARSER", "PROJECT", "FOLDER"));
+        testee.addGenerator(new GeneratorConfig("NAME", "a.b.c.D", "PARSER"));
 
         // TEST
         final String result = new JaxbHelper(false).write(testee, jaxbContext);
 
         // VERIFY
         XmlAssert.assertThat(result)
-                .and(XML + "<sg4jc:generators project=\"abc\" folder=\"def\" xmlns:sg4jc=\"" + NS_SG4JC + "\">"
-                        + "<sg4jc:variable value=\"1\" name=\"a\"/>" + "<sg4jc:generator class=\"a.b.c.D\" parser=\"PARSER\" name=\"NAME\""
-                        + " project=\"PROJECT\" folder=\"FOLDER\"/>" + "</sg4jc:generators>")
+                .and(XML + "<sg4jc:generators xmlns:sg4jc=\"" + NS_SG4JC + "\">" + "<sg4jc:variable value=\"1\" name=\"a\"/>"
+                        + "<sg4jc:generator class=\"a.b.c.D\" parser=\"PARSER\" name=\"NAME\"/>" + "</sg4jc:generators>")
                 .areIdentical();
 
     }
@@ -77,21 +76,17 @@ public class GeneratorsTest extends AbstractTest {
 
         // TEST
         final Generators testee = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(),
-                "<ns2:generators project=\"abc\" folder=\"def\" xmlns=\"" + NS_SG4JC + "\" xmlns:ns2=\"" + NS_SG4JC + "\">"
-                        + "<ns2:generator name=\"NAME\" project=\"PROJECT\" folder=\"FOLDER\"/>" + "<variable name=\"a\" value=\"1\"/>"
+                "<ns2:generators xmlns=\"" + NS_SG4JC + "\" xmlns:ns2=\"" + NS_SG4JC + "\">"
+                        + "<ns2:generator name=\"NAME\" class=\"a.b.c.D\" parser=\"PARSER\"/>" + "<variable name=\"a\" value=\"1\"/>"
                         + "</ns2:generators>");
         testee.init(new DefaultContext(), null, new HashMap<>());
 
         // VERIFY
         assertThat(testee).isNotNull();
         assertThat(testee.getVarMap()).containsOnly(entry("a", "1"));
-        assertThat(testee.getProject()).isEqualTo("abc");
-        assertThat(testee.getFolder()).isEqualTo("def");
         assertThat(testee.getList()).isNotNull();
         assertThat(testee.getList()).hasSize(1);
         assertThat(testee.getList().get(0).getName()).isEqualTo("NAME");
-        assertThat(testee.getList().get(0).getProject()).isEqualTo("PROJECT");
-        assertThat(testee.getList().get(0).getFolder()).isEqualTo("FOLDER");
 
     }
 
@@ -100,27 +95,19 @@ public class GeneratorsTest extends AbstractTest {
 
         // PREPARE
         final SrcGen4JConfig parent = new SrcGen4JConfig();
-        final Generators testee = new Generators("A${a}A", "${b}2B");
-        testee.addGenerator(new GeneratorConfig("A ${x}", "CLASS", "PARSER", "${y}B", "a${z}c"));
+        final Generators testee = new Generators();
+        testee.addGenerator(new GeneratorConfig("A ${x}", "CLASS", "PARSER"));
 
         final Map<String, String> vars = new HashMap<String, String>();
-        vars.put("a", "1");
-        vars.put("b", "B");
         vars.put("x", "NAME");
-        vars.put("y", "PRJ");
-        vars.put("z", "b");
 
         // TEST
         testee.init(new DefaultContext(), parent, vars);
 
         // VERIFY
         assertThat(testee.getParent()).isSameAs(parent);
-        assertThat(testee.getProject()).isEqualTo("A1A");
-        assertThat(testee.getFolder()).isEqualTo("B2B");
         final GeneratorConfig generator = testee.getList().get(0);
         assertThat(generator.getName()).isEqualTo("A NAME");
-        assertThat(generator.getProject()).isEqualTo("PRJB");
-        assertThat(generator.getFolder()).isEqualTo("abc");
 
     }
 
