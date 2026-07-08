@@ -27,7 +27,6 @@ import jakarta.validation.Valid;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.jspecify.annotations.Nullable;
@@ -47,7 +46,6 @@ public abstract class AbstractElement {
 
     @Nullable
     @Valid
-    @XmlElementWrapper(name = "replacers")
     @XmlElement(name = "replacer")
     private List<Replacer> replacers;
 

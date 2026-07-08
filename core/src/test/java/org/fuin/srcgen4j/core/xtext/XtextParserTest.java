@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -30,6 +31,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.fuin.srcgen4j.commons.DefaultContext;
 import org.fuin.srcgen4j.commons.ParserConfig;
 import org.fuin.srcgen4j.commons.SrcGen4JConfig;
+import org.fuin.srcgen4j.core.SchemaHelper;
 import org.fuin.srcgen4j.core.emf.EMFGeneratorConfig;
 import org.fuin.utils4j.classpath.Handler;
 import org.fuin.utils4j.jaxb.JaxbUtils;
@@ -55,20 +57,10 @@ public class XtextParserTest {
         final File dir = new File("src/test/resources/domain");
         final File file = new File(dir, "xtext-test-config.xml");
         final JAXBContext jaxbContext = JAXBContext.newInstance(SrcGen4JConfig.class, XtextParserConfig.class, EMFGeneratorConfig.class);
-        final SrcGen4JConfig srcGen4JConfig = JaxbUtils
-                .unmarshal(
-                        new UnmarshallerBuilder()
-                                .withContext(jaxbContext)
-/* TODO FIX: "Cannot resolve the name 'sg4jc:variableType' to a(n) 'type definition' component"
-   See: https://github.com/fuinorg/srcgen4j-core/issues/2
-                                .addClasspathSchemas(
-                                        "/srcgen4j-commons-0_5_0.xsd",
-                                        "/srcgen4j-core-base-0_5_0.xsd",
-                                        "/srcgen4j-core-emf-0_5_0.xsd",
-                                        "/srcgen4j-core-xtext-0_5_0.xsd")
- */
-                                .build(),
-                        file);
+        final Unmarshaller unmarshaller = new UnmarshallerBuilder().withContext(jaxbContext).build();
+        // Validate against the XSDs (see SchemaHelper - the commons schema must be first because the emf schema imports it).
+        unmarshaller.setSchema(SchemaHelper.createCoreSchema());
+        final SrcGen4JConfig srcGen4JConfig = JaxbUtils.unmarshal(unmarshaller, file);
         srcGen4JConfig.init(context, new File("."));
         final ParserConfig config = srcGen4JConfig.getParsers().getList().get(0);
 
