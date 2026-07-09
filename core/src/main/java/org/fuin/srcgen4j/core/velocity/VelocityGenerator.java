@@ -107,18 +107,18 @@ public abstract class VelocityGenerator<MODEL> extends AbstractGenerator<MODEL, 
      *            Name of the template to use.
      * @param filename
      *            Filename relative to the target directory.
-     * @param project
-     *            Name of the target project.
+     * @param module
+     *            Name of the target module.
      * @param folder
-     *            Name of the target folder inside the project.
+     *            Name of the target folder inside the module.
      *
      * @throws GenerateException
      *             Error merging the template
      */
     protected final void merge(final VelocityContext context, final String artifactName, final String templateName, final String filename,
-            final String project, final String folder) throws GenerateException {
+            final String module, final String folder) throws GenerateException {
 
-        final GeneratedFile genFile = getTargetFile(new GeneratedArtifact(artifactName, filename, new byte[] {}, project, folder),
+        final GeneratedFile genFile = getTargetFile(new GeneratedArtifact(artifactName, filename, new byte[] {}, module, folder),
                 templateName);
         if (genFile.isSkip()) {
             LOG.debug("Omitted already existing file: {} [{}]", genFile, templateName);

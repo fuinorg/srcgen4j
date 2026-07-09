@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Configuration that maps generator output to projects.
+ * Configuration that maps generator output to modules.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "srcgen4j-config")
@@ -59,9 +59,9 @@ public class SrcGen4JConfig {
 
     @Nullable
     @Valid
-    @XmlElementWrapper(name = "projects")
-    @XmlElement(name = "project")
-    private List<Project> projects;
+    @XmlElementWrapper(name = "modules")
+    @XmlElement(name = "module")
+    private List<Module> modules;
 
     @Nullable
     @Valid
@@ -118,23 +118,23 @@ public class SrcGen4JConfig {
     }
 
     /**
-     * Returns a list of projects.
+     * Returns a list of modules.
      * 
-     * @return Projects.
+     * @return Modules.
      */
     @Nullable
-    public final List<Project> getProjects() {
-        return projects;
+    public final List<Module> getModules() {
+        return modules;
     }
 
     /**
-     * Sets a list of projects.
+     * Sets a list of modules.
      * 
-     * @param projects
-     *            Projects.
+     * @param modules
+     *            Modules.
      */
-    public final void setProjects(@Nullable final List<Project> projects) {
-        this.projects = projects;
+    public final void setModules(@Nullable final List<Module> modules) {
+        this.modules = modules;
     }
 
     /**
@@ -240,9 +240,9 @@ public class SrcGen4JConfig {
         if (variables != null) {
             variables.init(varMap);
         }
-        if (projects != null) {
-            for (final Project project : projects) {
-                project.init(context, this, varMap);
+        if (modules != null) {
+            for (final Module module : modules) {
+                module.init(context, this, varMap);
             }
         }
         if (generators != null) {
@@ -256,31 +256,31 @@ public class SrcGen4JConfig {
     }
 
     /**
-     * Resolves the folder for a given project name and folder name.
+     * Resolves the folder for a given module name and folder name.
      *
-     * @param projectName
-     *            Name of the target project.
+     * @param moduleName
+     *            Name of the target module.
      * @param folderName
-     *            Name of the target folder inside the project.
+     *            Name of the target folder inside the module.
      *
-     * @return Folder or NULL if the project or the folder could not be found.
+     * @return Folder or NULL if the module or the folder could not be found.
      */
     @Nullable
-    public final Folder findFolder(final String projectName, final String folderName) {
+    public final Folder findFolder(final String moduleName, final String folderName) {
 
-        Contract.requireArgNotNull("projectName", projectName);
+        Contract.requireArgNotNull("moduleName", moduleName);
         Contract.requireArgNotNull("folderName", folderName);
 
-        if (projects == null) {
+        if (modules == null) {
             return null;
         }
-        int idx = projects.indexOf(new Project(projectName, "dummy"));
+        int idx = modules.indexOf(new Module(moduleName, "dummy"));
         if (idx < 0) {
             return null;
         }
-        final Project project = projects.get(idx);
+        final Module module = modules.get(idx);
 
-        final List<Folder> folders = project.getFolders();
+        final List<Folder> folders = module.getFolders();
         if (folders == null) {
             return null;
         }
@@ -320,32 +320,32 @@ public class SrcGen4JConfig {
     }
 
     /**
-     * Creates a new configuration with a single project and a Maven directory structure.
+     * Creates a new configuration with a single module and a Maven directory structure.
      * 
      * @param context
      *            Current context.
-     * @param projectName
-     *            Name of the one and only project.
+     * @param moduleName
+     *            Name of the one and only module.
      * @param rootDir
      *            Root directory that is available as variable 'srcgen4jRootDir'.
      * 
      * @return New initialized configuration instance.
      */
-    public static SrcGen4JConfig createMavenStyleSingleProject(final SrcGen4JContext context, final String projectName,
+    public static SrcGen4JConfig createMavenStyleSingleModule(final SrcGen4JContext context, final String moduleName,
             @FileExists @IsDirectory final File rootDir) {
 
         Contract.requireArgNotNull("context", context);
         Contract.requireArgNotNull(ROOT_DIR_VAR, rootDir);
         FileExistsValidator.requireArgValid(ROOT_DIR_VAR, rootDir);
         IsDirectoryValidator.requireArgValid(ROOT_DIR_VAR, rootDir);
-        Contract.requireArgNotNull("projectName", projectName);
+        Contract.requireArgNotNull("moduleName", moduleName);
 
         final SrcGen4JConfig config = new SrcGen4JConfig();
-        final List<Project> projects = new ArrayList<>();
-        final Project project = new Project(projectName, ".");
-        project.setMaven(true);
-        projects.add(project);
-        config.setProjects(projects);
+        final List<Module> modules = new ArrayList<>();
+        final Module module = new Module(moduleName, ".");
+        module.setMaven(true);
+        modules.add(module);
+        config.setModules(modules);
         config.init(context, rootDir);
         return config;
     }

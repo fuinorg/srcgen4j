@@ -46,7 +46,7 @@ class TargetFileTest {
         final TargetFile copy = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(), xml);
 
         // VERIFY
-        assertThat(copy.getProject()).isEqualTo(testee.getProject());
+        assertThat(copy.getModule()).isEqualTo(testee.getModule());
         assertThat(copy.getFolder()).isEqualTo(testee.getFolder());
         assertThat(copy.getPath()).isEqualTo(testee.getPath());
         assertThat(copy.getName()).isEqualTo(testee.getName());

@@ -43,7 +43,7 @@ public abstract class AbstractNamedElement extends AbstractElement {
     }
 
     /**
-     * Constructor with name, project and folder.
+     * Constructor with name, module and folder.
      * 
      * @param name
      *            Name to set.

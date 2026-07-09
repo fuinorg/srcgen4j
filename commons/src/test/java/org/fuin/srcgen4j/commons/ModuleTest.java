@@ -34,14 +34,14 @@ import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 
 /**
- * Tests for {@link Project}.
+ * Tests for {@link Module}.
  */
-public class ProjectTest extends AbstractTest {
+public class ModuleTest extends AbstractTest {
 
     @Test
     public final void testPojoStructureAndBehavior() {
 
-        final PojoClass pc = PojoClassFactory.getPojoClass(Project.class);
+        final PojoClass pc = PojoClassFactory.getPojoClass(Module.class);
         final Validator validator = createPojoValidatorBuilder().build();
         validator.validate(pc);
 
@@ -51,8 +51,8 @@ public class ProjectTest extends AbstractTest {
     public final void testMarshal() throws Exception {
 
         // PREPARE
-        final JAXBContext jaxbContext = JAXBContext.newInstance(Project.class, Folder.class);
-        final Project testee = new Project("abc", "def");
+        final JAXBContext jaxbContext = JAXBContext.newInstance(Module.class, Folder.class);
+        final Module testee = new Module("abc", "def");
         testee.setMaven(true);
         testee.addFolder(new Folder("NAME", "PATH"));
 
@@ -60,8 +60,8 @@ public class ProjectTest extends AbstractTest {
         final String result = new JaxbHelper(false).write(testee, jaxbContext);
 
         // VERIFY
-        XmlAssert.assertThat(result).and(XML + "<sg4jc:project path=\"def\" maven=\"true\" name=\"abc\" " + "xmlns:sg4jc=\"" + NS_SG4JC
-                + "\">" + "<sg4jc:folder path=\"PATH\" name=\"NAME\"/></sg4jc:project>").areIdentical();
+        XmlAssert.assertThat(result).and(XML + "<sg4jc:module path=\"def\" maven=\"true\" name=\"abc\" " + "xmlns:sg4jc=\"" + NS_SG4JC
+                + "\">" + "<sg4jc:folder path=\"PATH\" name=\"NAME\"/></sg4jc:module>").areIdentical();
 
     }
 
@@ -69,12 +69,12 @@ public class ProjectTest extends AbstractTest {
     public final void testUnmarshal() throws Exception {
 
         // PREPARE
-        final JAXBContext jaxbContext = JAXBContext.newInstance(Project.class, Folder.class);
+        final JAXBContext jaxbContext = JAXBContext.newInstance(Module.class, Folder.class);
 
         // TEST
-        final Project testee = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(),
-                "<project name=\"abc\" path=\"def\" maven=\"true\" xmlns=\"" + NS_SG4JC
-                        + "\"><folder name=\"NAME\" path=\"PATH\"/></project>");
+        final Module testee = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(),
+                "<module name=\"abc\" path=\"def\" maven=\"true\" xmlns=\"" + NS_SG4JC
+                        + "\"><folder name=\"NAME\" path=\"PATH\"/></module>");
 
         // VERIFY
         assertThat(testee).isNotNull();
@@ -93,7 +93,7 @@ public class ProjectTest extends AbstractTest {
 
         // PREPARE
         final SrcGen4JConfig parent = new SrcGen4JConfig();
-        final Project testee = new Project("A${x}", "${y}B");
+        final Module testee = new Module("A${x}", "${y}B");
         testee.addFolder(new Folder("${a}name", "folder${b}"));
 
         final Map<String, String> vars = new HashMap<String, String>();
@@ -120,7 +120,7 @@ public class ProjectTest extends AbstractTest {
 
         // PREPARE
         final SrcGen4JConfig parent = new SrcGen4JConfig();
-        final Project testee = new Project("A", "B");
+        final Module testee = new Module("A", "B");
 
         // TEST
         testee.init(new DefaultContext(), parent, new HashMap<String, String>());
@@ -138,7 +138,7 @@ public class ProjectTest extends AbstractTest {
 
         // PREPARE
         final SrcGen4JConfig parent = new SrcGen4JConfig();
-        final Project testee = new Project("A", "B");
+        final Module testee = new Module("A", "B");
         final Folder folder = new Folder("mainJava", "different");
         testee.addFolder(folder);
 

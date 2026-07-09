@@ -30,7 +30,7 @@ public final class TestArtifactFactory implements ArtifactFactory<Object> {
 
     private String artifact;
 
-    private String project;
+    private String module;
 
     private String folder;
 
@@ -47,14 +47,14 @@ public final class TestArtifactFactory implements ArtifactFactory<Object> {
     @Override
     public final void init(final ArtifactFactoryConfig config) {
         this.artifact = config.getArtifact();
-        this.project = config.getProject();
+        this.module = config.getModule();
         this.folder = config.getFolder();
     }
 
     @Override
     public final List<GeneratedArtifact> create(@NotNull final Object modelObject, @NotNull final Map<String, Object> context,
             final boolean preparationRun) throws GenerateException {
-        return Collections.singletonList(new GeneratedArtifact(artifact, "b/c/d.txt", "abcd".getBytes(), project, folder));
+        return Collections.singletonList(new GeneratedArtifact(artifact, "b/c/d.txt", "abcd".getBytes(), module, folder));
     }
 
 }

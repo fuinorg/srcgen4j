@@ -98,7 +98,7 @@ public class FolderTest extends AbstractTest {
     public final void testInit() {
 
         // PREPARE
-        final Project parent = new Project();
+        final Module parent = new Module();
         final Folder testee = new Folder("A${x}", "${y}B");
 
         final Map<String, String> vars = new HashMap<String, String>();
@@ -119,9 +119,9 @@ public class FolderTest extends AbstractTest {
     public final void testGetDirectory() {
 
         // PREPARE
-        final Project project = new Project("PRJ", "a/b");
+        final Module module = new Module("PRJ", "a/b");
         final Folder testee = new Folder("FOL", "c/d");
-        testee.setParent(project);
+        testee.setParent(module);
 
         // TEST
         final String dir = testee.getDirectory();

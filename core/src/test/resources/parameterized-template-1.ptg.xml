@@ -6,12 +6,12 @@
 		<argument key="pkg" value="-" />
 	</arguments>
 	
-	<target-file project="current" folder="testJava" path="a" name="A.java">
+	<target-file module="current" folder="testJava" path="a" name="A.java">
 		<argument key="name" value="A" />
 		<argument key="pkg" value="a" />
 	</target-file>
 
-	<target-file project="current" folder="testJava" path="b" name="B.java">
+	<target-file module="current" folder="testJava" path="b" name="B.java">
 		<argument key="name" value="B" />
 		<argument key="pkg" value="b" />
 	</target-file>

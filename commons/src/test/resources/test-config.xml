@@ -7,8 +7,8 @@
 		<variable name="project_example_path" value="${root}/example" />
 	</variables>
 	
-	<projects>
-		<project name="example" path="${root}/example">
+	<modules>
+		<module name="example" path="${root}/example">
 			<!-- Maven default folder --> 
 			<folder name="mainJava" path="src/main/java" create="false" override="false" clean="false" />
 			<folder name="mainRes" path="src/main/resources" create="false" override="false" clean="false" />
@@ -18,8 +18,8 @@
 			<folder name="testRes" path="src/test/resources" create="false" override="false" clean="false" />
 			<folder name="genTestJava" path="src-gen/test/java" create="true" clean="true" />
 			<folder name="genTestRes" path="src-gen/test/resources" create="true" clean="true" />
-		</project>
-	</projects>
+		</module>
+	</modules>
 
 	<parsers>
 		<variable name="pep" value="${project_example_path}/parsers" />

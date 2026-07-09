@@ -42,7 +42,7 @@
     </xs:simpleContent>
   </xs:complexType>
   
-  <xs:complexType name="projectType">
+  <xs:complexType name="moduleType">
     <xs:sequence>
       <xs:element type="folderType" name="folder" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
@@ -51,9 +51,9 @@
     <xs:attribute type="xs:boolean" name="maven" use="optional" default="true"/>
   </xs:complexType>
   
-  <xs:complexType name="projectsType">
+  <xs:complexType name="modulesType">
     <xs:sequence>
-      <xs:element type="projectType" name="project" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element type="moduleType" name="module" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
 
@@ -103,7 +103,7 @@
   <xs:complexType name="configType">
     <xs:sequence>
       <xs:element ref="variables" minOccurs="0" maxOccurs="1" />
-      <xs:element type="projectsType" name="projects" minOccurs="1" maxOccurs="1" />
+      <xs:element type="modulesType" name="modules" minOccurs="1" maxOccurs="1" />
       <xs:element type="parsersType" name="parsers"  minOccurs="1" maxOccurs="1" />
       <xs:element type="generatorsType" name="generators"  minOccurs="1" maxOccurs="1" />
     </xs:sequence>
@@ -115,7 +115,7 @@
       </xs:sequence>
     <xs:attribute type="xs:string" name="artifact" use="required" />
     <xs:attribute type="xs:string" name="class" use="required" />
-    <xs:attribute type="xs:string" name="project" use="optional" />
+    <xs:attribute type="xs:string" name="module" use="optional" />
     <xs:attribute type="xs:string" name="folder" use="optional" />
     <xs:attribute type="xs:boolean" name="incremental" use="optional" />
   </xs:complexType>

@@ -94,9 +94,9 @@ public class SrcGen4JConfigTest extends AbstractTest {
             assertThat(var1.getName()).isEqualTo("project_example_path");
             assertThat(var1.getValue()).isEqualTo("${root}/example");
 
-            assertThat(testee.getProjects()).isNotNull();
-            assertThat(testee.getProjects()).hasSize(1);
-            final Project prj = testee.getProjects().get(0);
+            assertThat(testee.getModules()).isNotNull();
+            assertThat(testee.getModules()).hasSize(1);
+            final Module prj = testee.getModules().get(0);
             assertThat(prj.getName()).isEqualTo("example");
             assertThat(prj.getPath()).isEqualTo("${root}/example");
             assertThat(prj.getFolders()).hasSize(8);
@@ -128,10 +128,10 @@ public class SrcGen4JConfigTest extends AbstractTest {
         final Variables vars = new Variables(new Variable("project.name", "1"), new Variable("project.path", "2"),
                 new Variable("generator.name", "3"), new Variable("folder.name", "6"), new Variable("folder.path", "7"));
 
-        final List<Project> projects = new ArrayList<Project>();
-        final Project project = new Project("${project.name}", "${project.path}");
-        projects.add(project);
-        project.addFolder(new Folder("${folder.name}", "${folder.path}"));
+        final List<Module> modules = new ArrayList<Module>();
+        final Module module = new Module("${project.name}", "${project.path}");
+        modules.add(module);
+        module.addFolder(new Folder("${folder.name}", "${folder.path}"));
 
         final List<GeneratorConfig> genList = new ArrayList<GeneratorConfig>();
         final GeneratorConfig generator = new GeneratorConfig("${generator.name}", "CLASS", "PARSER");
@@ -142,7 +142,7 @@ public class SrcGen4JConfigTest extends AbstractTest {
         generators.setList(genList);
 
         testee.setVariables(vars);
-        testee.setProjects(projects);
+        testee.setModules(modules);
         testee.setGenerators(generators);
 
         // TEST
@@ -150,10 +150,10 @@ public class SrcGen4JConfigTest extends AbstractTest {
 
         // VERIFY
 
-        final Project resultProject = testee.getProjects().get(0);
-        assertThat(resultProject.getName()).isEqualTo("1");
-        assertThat(resultProject.getPath()).isEqualTo("2");
-        final Folder resultFolder = resultProject.getFolders().get(0);
+        final Module resultModule = testee.getModules().get(0);
+        assertThat(resultModule.getName()).isEqualTo("1");
+        assertThat(resultModule.getPath()).isEqualTo("2");
+        final Folder resultFolder = resultModule.getFolders().get(0);
         assertThat(resultFolder.getName()).isEqualTo("6");
         assertThat(resultFolder.getPath()).isEqualTo("7");
 
@@ -229,23 +229,23 @@ public class SrcGen4JConfigTest extends AbstractTest {
     }
 
     @Test
-    public void testCreateMavenStyleSingleProject() {
+    public void testCreateMavenStyleSingleModule() {
 
         // PREPARE
-        final String projectName = "NAME";
+        final String moduleName = "NAME";
 
         // TEST
-        SrcGen4JConfig config = SrcGen4JConfig.createMavenStyleSingleProject(
-                new DefaultContext(), projectName, new File("."));
+        SrcGen4JConfig config = SrcGen4JConfig.createMavenStyleSingleModule(
+                new DefaultContext(), moduleName, new File("."));
 
         // VERIFY
-        assertThat(config.getProjects()).hasSize(1);
-        final Project project = config.getProjects().get(0);
-        assertThat(project.getName()).isEqualTo(projectName);
-        assertThat(project.getPath()).isEqualTo(".");
-        assertThat(project.isMaven()).isTrue();
-        assertThat(project.getFolders()).hasSize(8);
-        assertThat(project.getFolders()).contains(new Folder("mainJava", ""),
+        assertThat(config.getModules()).hasSize(1);
+        final Module module = config.getModules().get(0);
+        assertThat(module.getName()).isEqualTo(moduleName);
+        assertThat(module.getPath()).isEqualTo(".");
+        assertThat(module.isMaven()).isTrue();
+        assertThat(module.getFolders()).hasSize(8);
+        assertThat(module.getFolders()).contains(new Folder("mainJava", ""),
                 new Folder("mainRes", ""), new Folder("genMainJava", ""),
                 new Folder("genMainRes", ""), new Folder("testJava", ""),
                 new Folder("testRes", ""), new Folder("genTestJava", ""),

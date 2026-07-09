@@ -11,9 +11,9 @@
 		<variable name="escapes" value="\r\n\t" />
 	</variables>
 	
-	<projects>
-		<project name="example" path="${root}/example" maven="true" />
-	</projects>
+	<modules>
+		<module name="example" path="${root}/example" maven="true" />
+	</modules>
 	
 	<parsers>
 		<variable name="a" value="${a}/parsers1" />

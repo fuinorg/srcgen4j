@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "folder")
-public final class Folder extends AbstractNamedElement implements InitializableElement<Folder, Project> {
+public final class Folder extends AbstractNamedElement implements InitializableElement<Folder, Module> {
 
     @NotNull
     @XmlAttribute
@@ -78,7 +78,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
     private transient RegexFileFilter cleanExcludeFilter;
 
     @Nullable
-    private transient Project parent;
+    private transient Module parent;
 
     /**
      * Package visible default constructor for deserialization.
@@ -121,7 +121,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
      * @param cleanExclude
      *            Regular expression of files to exclude from cleaning.
      */
-    Folder(final Project parent, final String name, final String path, final boolean create,
+    Folder(final Module parent, final String name, final String path, final boolean create,
             final boolean override, @Nullable final String overrideExclude, final boolean clean, @Nullable final String cleanExclude) {
         super(name);
         this.parent = parent;
@@ -362,7 +362,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
      * @return Parent.
      */
     @Nullable
-    public final Project getParent() {
+    public final Module getParent() {
         return parent;
     }
 
@@ -372,12 +372,12 @@ public final class Folder extends AbstractNamedElement implements InitializableE
      * @param parent
      *            Parent or <code>null</code>.
      */
-    final void setParent(final Project parent) {
+    final void setParent(final Module parent) {
         this.parent = parent;
     }
 
     @Override
-    public final Folder init(final SrcGen4JContext context, final Project parent, @Nullable final Map<String, String> vars) {
+    public final Folder init(final SrcGen4JContext context, final Module parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
         setName(requireNonNull(replaceVars(getName(), getVarMap())));
@@ -386,7 +386,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
     }
 
     /**
-     * Returns the full path from project and folder.
+     * Returns the full path from module and folder.
      * 
      * @return Path.
      */
@@ -399,7 +399,7 @@ public final class Folder extends AbstractNamedElement implements InitializableE
     }
 
     /**
-     * Returns the full path from project and folder.
+     * Returns the full path from module and folder.
      * 
      * @return Directory.
      */

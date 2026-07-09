@@ -45,7 +45,7 @@ public class ArtifactFactoryConfigTest extends AbstractTest {
 
         // VERIFY
         XmlAssert.assertThat(result)
-                .and(XML + "<sg4jc:artifact-factory artifact=\"abc\" class=\"a.b.c.X\" project=\"prj\" folder=\"fld\"" + " xmlns:sg4jc=\""
+                .and(XML + "<sg4jc:artifact-factory artifact=\"abc\" class=\"a.b.c.X\" module=\"prj\" folder=\"fld\"" + " xmlns:sg4jc=\""
                         + NS_SG4JC + "\"/>")
                 .areIdentical();
 
@@ -59,19 +59,19 @@ public class ArtifactFactoryConfigTest extends AbstractTest {
 
         // TEST
         final ArtifactFactoryConfig testee = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(),
-                "<artifact-factory artifact=\"abc\" class=\"a.b.c.X\" project=\"prj\" folder=\"fld\"" + " xmlns=\"" + NS_SG4JC + "\"/>");
+                "<artifact-factory artifact=\"abc\" class=\"a.b.c.X\" module=\"prj\" folder=\"fld\"" + " xmlns=\"" + NS_SG4JC + "\"/>");
 
         // VERIFY
         assertThat(testee).isNotNull();
         assertThat(testee.getArtifact()).isEqualTo("abc");
         assertThat(testee.getFactoryClassName()).isEqualTo("a.b.c.X");
-        assertThat(testee.getProject()).isEqualTo("prj");
+        assertThat(testee.getModule()).isEqualTo("prj");
         assertThat(testee.getFolder()).isEqualTo("fld");
 
     }
 
     @Test
-    public final void testUnmarshalWithoutProjectAndFolder() throws Exception {
+    public final void testUnmarshalWithoutModuleAndFolder() throws Exception {
 
         // PREPARE
         final JAXBContext jaxbContext = JAXBContext.newInstance(ArtifactFactoryConfig.class);
@@ -80,11 +80,11 @@ public class ArtifactFactoryConfigTest extends AbstractTest {
         final ArtifactFactoryConfig testee = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(),
                 "<artifact-factory artifact=\"abc\" class=\"a.b.c.X\"" + " xmlns=\"" + NS_SG4JC + "\"/>");
 
-        // VERIFY project and folder are optional
+        // VERIFY module and folder are optional
         assertThat(testee).isNotNull();
         assertThat(testee.getArtifact()).isEqualTo("abc");
         assertThat(testee.getFactoryClassName()).isEqualTo("a.b.c.X");
-        assertThat(testee.getProject()).isNull();
+        assertThat(testee.getModule()).isNull();
         assertThat(testee.getFolder()).isNull();
 
     }

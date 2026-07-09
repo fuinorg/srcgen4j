@@ -63,14 +63,14 @@ public final class SrcGen4J {
     }
 
     private void cleanFolders() {
-        final List<Project> projects = config.getProjects();
-        if ((projects == null) || (projects.isEmpty())) {
-            LOG.warn("No projects configured!");
+        final List<Module> modules = config.getModules();
+        if ((modules == null) || (modules.isEmpty())) {
+            LOG.warn("No modules configured!");
         } else {
-            for (final Project project : projects) {
-                final List<Folder> folders = project.getFolders();
+            for (final Module module : modules) {
+                final List<Folder> folders = module.getFolders();
                 if ((folders == null) || (folders.isEmpty())) {
-                    LOG.warn("No project folders configured for: {}", project.getName());
+                    LOG.warn("No module folders configured for: {}", module.getName());
                 } else {
                     for (final Folder folder : folders) {
                         final File dir = folder.getCanonicalDir();

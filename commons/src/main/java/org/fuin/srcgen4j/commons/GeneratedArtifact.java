@@ -32,7 +32,7 @@ public final class GeneratedArtifact {
 
     private final byte[] data;
 
-    private final String project;
+    private final String module;
 
     private final String folder;
 
@@ -45,23 +45,23 @@ public final class GeneratedArtifact {
      *            Relative path and filename to write the source code to.
      * @param data
      *            Generated data.
-     * @param project
-     *            Name of the target project.
+     * @param module
+     *            Name of the target module.
      * @param folder
-     *            Name of the target folder inside the project.
+     *            Name of the target folder inside the module.
      */
     public GeneratedArtifact(@NotEmpty final String name, @NotEmpty final String pathAndName, final byte[] data,
-            @NotEmpty final String project, @NotEmpty final String folder) {
+            @NotEmpty final String module, @NotEmpty final String folder) {
         super();
         Contract.requireArgNotEmpty("name", name);
         Contract.requireArgNotEmpty("pathAndName", pathAndName);
         Contract.requireArgNotNull("data", data);
-        Contract.requireArgNotEmpty("project", project);
+        Contract.requireArgNotEmpty("module", module);
         Contract.requireArgNotEmpty("folder", folder);
         this.name = name;
         this.pathAndName = pathAndName;
         this.data = data;
-        this.project = project;
+        this.module = module;
         this.folder = folder;
     }
 
@@ -95,17 +95,17 @@ public final class GeneratedArtifact {
     }
 
     /**
-     * Returns the name of the target project.
+     * Returns the name of the target module.
      *
-     * @return Project name.
+     * @return Module name.
      */
     @NotEmpty
-    public final String getProject() {
-        return project;
+    public final String getModule() {
+        return module;
     }
 
     /**
-     * Returns the name of the target folder inside the project.
+     * Returns the name of the target folder inside the module.
      *
      * @return Folder name.
      */
@@ -116,7 +116,7 @@ public final class GeneratedArtifact {
 
     @Override
     public final String toString() {
-        return project + "/" + folder + "/" + pathAndName + " [" + name + "]";
+        return module + "/" + folder + "/" + pathAndName + " [" + name + "]";
     }
 
 }

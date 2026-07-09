@@ -174,10 +174,10 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
      */
     protected final GeneratedFile getTargetFile(final GeneratedArtifact artifact, @Nullable final String logInfo) {
 
-        final Folder folder = getGeneratorConfig().findFolder(artifact.getProject(), artifact.getFolder());
+        final Folder folder = getGeneratorConfig().findFolder(artifact.getModule(), artifact.getFolder());
         if (folder == null) {
-            throw new IllegalStateException("Couldn't find target folder '" + artifact.getFolder() + "' in project '"
-                    + artifact.getProject() + "' for artifact: " + artifact.getName());
+            throw new IllegalStateException("Couldn't find target folder '" + artifact.getFolder() + "' in module '"
+                    + artifact.getModule() + "' for artifact: " + artifact.getName());
         }
         final File dir = folder.getCanonicalDir();
         if (dir == null) {

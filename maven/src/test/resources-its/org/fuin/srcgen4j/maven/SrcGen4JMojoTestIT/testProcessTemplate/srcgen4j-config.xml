@@ -6,11 +6,11 @@
 		<variable name="templatesPath" value="${rootDir}/templates" />
 	</variables>
 	
-	<projects>
-		<project name="example" path="${rootDir}" maven="false">
+	<modules>
+		<module name="example" path="${rootDir}" maven="false">
 			<folder name="srcGenFolder" path="srcGen" create="true" override="true" clean="true" />
-		</project>
-	</projects>
+		</module>
+	</modules>
 	
 	<parsers>
 		<parser name="parse1" class="org.fuin.srcgen4j.core.velocity.ParameterizedTemplateParser">

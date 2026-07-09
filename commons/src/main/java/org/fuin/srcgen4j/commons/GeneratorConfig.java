@@ -197,17 +197,17 @@ public final class GeneratorConfig extends AbstractNamedElement implements Initi
     }
 
     /**
-     * Resolves the folder for a given project and folder name using the root configuration.
+     * Resolves the folder for a given module and folder name using the root configuration.
      *
-     * @param projectName
-     *            Name of the target project.
+     * @param moduleName
+     *            Name of the target module.
      * @param folderName
-     *            Name of the target folder inside the project.
+     *            Name of the target folder inside the module.
      *
      * @return Target folder or NULL if it could not be found.
      */
     @Nullable
-    public final Folder findFolder(final String projectName, final String folderName) {
+    public final Folder findFolder(final String moduleName, final String folderName) {
         if (parent == null) {
             throw new IllegalStateException("Parent (generators) for generator config is not set: " + getName());
         }
@@ -215,7 +215,7 @@ public final class GeneratorConfig extends AbstractNamedElement implements Initi
         if (config == null) {
             throw new IllegalStateException("Root configuration for generator config is not set: " + getName());
         }
-        return config.findFolder(projectName, folderName);
+        return config.findFolder(moduleName, folderName);
     }
 
     /**

@@ -47,7 +47,7 @@
 		<xs:sequence>
 			<xs:element type="argumentType" name="argument" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
-		<xs:attribute type="xs:string" name="project" use="required" />
+		<xs:attribute type="xs:string" name="module" use="required" />
 		<xs:attribute type="xs:string" name="folder" use="required" />
 		<xs:attribute type="xs:string" name="path" use="required" />
 		<xs:attribute type="xs:string" name="name" use="required" />

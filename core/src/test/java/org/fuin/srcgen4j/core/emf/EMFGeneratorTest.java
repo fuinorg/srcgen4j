@@ -112,13 +112,13 @@ class EMFGeneratorTest {
                                  xmlns:xtext="http://www.fuin.org/srcgen4j/core/xtext/0.5.0"
                                  xmlns:emf="http://www.fuin.org/srcgen4j/core/emf/0.5.0">
                 
-                	<projects>
-                		<project name="current" path="." maven="false">
+                	<modules>
+                		<module name="current" path="." maven="false">
                 			<folder name="testGenMainJava" path="target/xtest-test" create="true" override="true" clean="false" />
                 			<folder name="testMainJava" path="target/xtest-test" create="true" override="true" clean="false" />
                 			<folder name="testGenMainRes" path="target/xtest-test" create="true" override="true" clean="false" />
-                		</project>
-                	</projects>
+                		</module>
+                	</modules>
                 
                 	<parsers>
                 		<parser name="ptp" class="org.fuin.srcgen4j.core.xtext.XtextParser">
@@ -134,13 +134,13 @@ class EMFGeneratorTest {
                 		    <config>
                 				<emf:emf-generator-config>
                 					<emf:artifact-factory artifact="abstractHello" class="org.fuin.srcgen4j.core.emf.AbstractHelloTstGen"
-                					                      project="current" folder="testGenMainJava">
+                					                      module="current" folder="testGenMainJava">
                 						<variable name="package" value="a.b.c" />
                 					</emf:artifact-factory>
                 					<emf:artifact-factory artifact="manualHello" class="org.fuin.srcgen4j.core.emf.ManualHelloTstGen"
-                					                      project="current" folder="testMainJava" />
+                					                      module="current" folder="testMainJava" />
                 					<emf:artifact-factory artifact="helloProps" incremental="false" class="org.fuin.srcgen4j.core.emf.HelloPropertiesTstGen"
-                					                      project="current" folder="testGenMainRes" />
+                					                      module="current" folder="testGenMainRes" />
                 				</emf:emf-generator-config>
                 			</config>
                 		</generator>

@@ -8,11 +8,11 @@
 		<variable name="testRes" value="src/test/resources" />
 	</variables>
 	
-	<projects>
-		<project name="current" path="." maven="false">
+	<modules>
+		<module name="current" path="." maven="false">
 			<folder name="testJava" path="target/test-data" create="true" override="true" clean="false" />
-		</project>
-	</projects>
+		</module>
+	</modules>
 	
 	<parsers>
 		<parser name="ptp" class="org.fuin.srcgen4j.core.velocity.ParameterizedTemplateParser">

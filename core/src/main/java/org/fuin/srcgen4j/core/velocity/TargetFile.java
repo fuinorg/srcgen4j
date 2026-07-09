@@ -47,7 +47,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
 
     @TrimmedNotEmpty
     @XmlAttribute
-    private String project;
+    private String module;
 
     @TrimmedNotEmpty
     @XmlAttribute
@@ -78,10 +78,10 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
     /**
      * Constructor with all data.
      *
-     * @param project
-     *            Name of the target project - Cannot be NULL.
+     * @param module
+     *            Name of the target module - Cannot be NULL.
      * @param folder
-     *            Name of the target folder inside the project - Cannot be NULL.
+     *            Name of the target folder inside the module - Cannot be NULL.
      * @param path
      *            Path without filename or NULL.
      * @param name
@@ -89,12 +89,12 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      * @param args
      *            Arguments for the template or NULL.
      */
-    public TargetFile(final String project, final String folder, @Nullable final String path, final String name, final Argument... args) {
+    public TargetFile(final String module, final String folder, @Nullable final String path, final String name, final Argument... args) {
         super();
-        Contract.requireArgNotNull("project", project);
+        Contract.requireArgNotNull("module", module);
         Contract.requireArgNotNull("folder", folder);
         Contract.requireArgNotNull("name", name);
-        this.project = project;
+        this.module = module;
         this.folder = folder;
         this.path = path;
         this.name = name;
@@ -109,16 +109,16 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
     }
 
     /**
-     * Returns the name of the target project.
+     * Returns the name of the target module.
      *
-     * @return Project name.
+     * @return Module name.
      */
-    public final String getProject() {
-        return project;
+    public final String getModule() {
+        return module;
     }
 
     /**
-     * Returns the name of the target folder inside the project.
+     * Returns the name of the target folder inside the module.
      *
      * @return Folder name.
      */
@@ -220,7 +220,7 @@ public final class TargetFile implements Serializable, Comparable<TargetFile> {
      *            Variables to use.
      */
     public final void init(@Nullable final Map<String, String> vars) {
-        project = requireNonNull(Utils4J.replaceVars(project, vars));
+        module = requireNonNull(Utils4J.replaceVars(module, vars));
         folder = requireNonNull(Utils4J.replaceVars(folder, vars));
         path = Utils4J.replaceVars(path, vars);
         name = requireNonNull(Utils4J.replaceVars(name, vars));

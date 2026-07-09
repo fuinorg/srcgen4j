@@ -83,7 +83,7 @@ public final class ParameterizedTemplateGenerator extends VelocityGenerator<Para
             }
         }
 
-        merge(context, ARTIFACT_NAME, model.getTemplate(), targetFile.getPathAndName(), targetFile.getProject(), targetFile.getFolder());
+        merge(context, ARTIFACT_NAME, model.getTemplate(), targetFile.getPathAndName(), targetFile.getModule(), targetFile.getFolder());
     }
 
 }
