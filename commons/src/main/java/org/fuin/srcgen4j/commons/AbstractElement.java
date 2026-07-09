@@ -45,11 +45,6 @@ public abstract class AbstractElement {
     private List<Variable> variables;
 
     @Nullable
-    @Valid
-    @XmlElement(name = "replacer")
-    private List<Replacer> replacers;
-
-    @Nullable
     @XmlTransient
     private Map<String, String> varMap;
 
@@ -75,11 +70,6 @@ public abstract class AbstractElement {
                 }
             }
             varMap = new VariableResolver(varMap).getResolved();
-        }
-        if (replacers != null) {
-            for (final Replacer replacer : replacers) {
-                replacer.init(varMap);
-            }
         }
     }
 
@@ -116,29 +106,6 @@ public abstract class AbstractElement {
     @Nullable
     public final List<Variable> getVariables() {
         return variables;
-    }
-
-    /**
-     * Adds a replacer to the element.
-     *
-     * @param replacer
-     *            Replacer to add.
-     */
-    public final void addReplacer(final Replacer replacer) {
-        if (replacers == null) {
-            replacers = new ArrayList<>();
-        }
-        replacers.add(replacer);
-    }
-
-    /**
-     * Returns a list of replacers.
-     *
-     * @return Replacers.
-     */
-    @Nullable
-    public final List<Replacer> getReplacers() {
-        return replacers;
     }
 
 }

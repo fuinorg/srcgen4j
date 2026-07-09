@@ -163,42 +163,6 @@ public class AbstractElementTest {
 
     }
 
-    @Test
-    public final void testMarshalReplacers() throws Exception {
-
-        // PREPARE
-        final MyElement testee = new MyElement();
-        testee.addReplacer(new Replacer("pkg", "org\\.old\\.(.*)", "org.new.$1"));
-
-        // TEST
-        final String result = marshal(testee, MyElement.class);
-
-        // VERIFY the replacer is an inline element (no "replacers" wrapper)
-        XmlAssert.assertThat(result)
-                .and(XML_PREFIX + "<ns2:my-element xmlns:sg4jc=\"" + NS_SG4JC + "\"" + " xmlns:ns2=\"" + NS_TEST + "\">"
-                        + "<sg4jc:replacer name=\"pkg\" expression=\"org\\.old\\.(.*)\" replacement=\"org.new.$1\"/>" + "</ns2:my-element>")
-                .areIdentical();
-
-    }
-
-    @Test
-    public final void testUnmarshalReplacers() throws Exception {
-
-        // TEST
-        final MyElement testee = unmarshal(new UnmarshallerBuilder().addClassesToBeBound(MyElement.class).build(),
-                "<ns2:my-element xmlns=\"" + NS_SG4JC + "\"" + " xmlns:ns2=\"" + NS_TEST + "\">"
-                        + "<replacer name=\"pkg\" expression=\"org\\.old\\.(.*)\" replacement=\"org.new.$1\"/>" + "</ns2:my-element>");
-
-        // VERIFY
-        assertThat(testee).isNotNull();
-        assertThat(testee.getReplacers()).hasSize(1);
-        final Replacer replacer = testee.getReplacers().get(0);
-        assertThat(replacer.getName()).isEqualTo("pkg");
-        assertThat(replacer.getExpression()).isEqualTo("org\\.old\\.(.*)");
-        assertThat(replacer.getReplacement()).isEqualTo("org.new.$1");
-
-    }
-
     /**
      * Test class.
      */

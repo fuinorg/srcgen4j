@@ -32,7 +32,6 @@ import jakarta.xml.bind.JAXBContext;
 import org.fuin.utils4j.jaxb.JaxbUtils;
 import org.fuin.utils4j.jaxb.UnmarshallerBuilder;
 import org.junit.jupiter.api.Test;
-import org.xmlunit.assertj3.XmlAssert;
 
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.impl.PojoClassFactory;
@@ -108,20 +107,6 @@ public class SrcGen4JConfigTest extends AbstractTest {
             assertThat(idxGenMainJava).isNotNegative();
             assertThat(prj.getFolders().get(idxGenMainJava).getCleanExclude()).isEqualTo("\\..*");
 
-            final List<Replacer> replacers = testee.getReplacers();
-            assertThat(replacers).isNotNull();
-            assertThat(replacers).hasSize(2);
-            final Replacer replacer0 = replacers.get(0);
-            assertThat(replacer0.getName()).isEqualTo("pkg");
-            assertThat(replacer0.getExtension()).isNull();
-            assertThat(replacer0.getExpression()).isEqualTo("org\\.old\\.(.*)");
-            assertThat(replacer0.getReplacement()).isEqualTo("org.new.$1");
-            final Replacer replacer1 = replacers.get(1);
-            assertThat(replacer1.getName()).isEqualTo("header");
-            assertThat(replacer1.getExtension()).isEqualTo("java");
-            assertThat(replacer1.getExpression()).isEqualTo("(.*)");
-            assertThat(replacer1.getReplacement()).isEqualTo("X$1");
-
             assertThat(testee.getGenerators()).isNotNull();
             assertThat(testee.getGenerators().getList()).hasSize(1);
             final GeneratorConfig gen = testee.getGenerators().getList().get(0);
@@ -132,54 +117,6 @@ public class SrcGen4JConfigTest extends AbstractTest {
         } finally {
             reader.close();
         }
-    }
-
-    @Test
-    public final void testMarshalReplacers() throws Exception {
-
-        // PREPARE
-        final SrcGen4JConfig testee = new SrcGen4JConfig();
-        final List<Replacer> replacers = new ArrayList<>();
-        replacers.add(new Replacer("pkg", "org\\.old\\.(.*)", "org.new.$1"));
-        replacers.add(new Replacer("header", "java", "(.*)", "X$1"));
-        testee.setReplacers(replacers);
-
-        // TEST
-        final String result = JaxbUtils.marshal(testee, SrcGen4JConfig.class);
-
-        // VERIFY the list is wrapped in "replacers" and each element is named "replacer"
-        final Map<String, String> ns = Map.of("sg", NS_SG4JC);
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .nodesByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer").hasSize(2);
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[1]/@name").isEqualTo("pkg");
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[1]/@expression").isEqualTo("org\\.old\\.(.*)");
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[1]/@replacement").isEqualTo("org.new.$1");
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[2]/@extension").isEqualTo("java");
-
-    }
-
-    @Test
-    public final void testInitReplacers() throws Exception {
-
-        // PREPARE
-        final SrcGen4JConfig testee = load("test-replacers.xml");
-
-        // TEST
-        testee.init(new DefaultContext(), new File("."));
-
-        // VERIFY variables in the replacer's expression and replacement are resolved
-        final List<Replacer> replacers = testee.getReplacers();
-        assertThat(replacers).hasSize(2);
-        final Replacer rooted = replacers.get(1);
-        assertThat(rooted.getExtension()).isEqualTo("java");
-        assertThat(rooted.getExpression()).isEqualTo("/var/tmp/(.*)");
-        assertThat(rooted.getReplacement()).isEqualTo("/var/tmp/gen/$1");
-        assertThat(rooted.replace("/var/tmp/Foo")).isEqualTo("/var/tmp/gen/Foo");
-
     }
 
     @Test
@@ -314,18 +251,6 @@ public class SrcGen4JConfigTest extends AbstractTest {
                 new Folder("testRes", ""), new Folder("genTestJava", ""),
                 new Folder("genTestRes", ""));
 
-    }
-
-    private SrcGen4JConfig load(final String resourceName) throws Exception {
-        final JAXBContext jaxbContext = JAXBContext
-                .newInstance(SrcGen4JConfig.class);
-        final Reader reader = new InputStreamReader(
-                getClass().getClassLoader().getResourceAsStream(resourceName));
-        try {
-            return JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(), reader);
-        } finally {
-            reader.close();
-        }
     }
 
 }

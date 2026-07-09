@@ -28,9 +28,8 @@
 		<generator name="gen1" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="ptp">
 		    <config>
 				<emf:emf-generator-config>
-					<!-- variables and replacers are inherited from AbstractElement (commons namespace) -->
+					<!-- variables are inherited from AbstractElement (commons namespace) -->
 					<variable name="basePackage" value="a.b.c" />
-					<replacer name="noop" expression="(keep)" replacement="$1" />
 					<emf:artifact-factory artifact="abstractHello" class="org.fuin.srcgen4j.core.emf.AbstractHelloTstGen"
 					                      project="current" folder="testGenMainJava">
 						<variable name="package" value="a.b.c" />

@@ -21,11 +21,6 @@
 		</project>
 	</projects>
 
-	<replacers>
-		<replacer name="pkg" expression="org\.old\.(.*)" replacement="org.new.$1" />
-		<replacer name="header" extension="java" expression="(.*)" replacement="X$1" />
-	</replacers>
-
 	<parsers>
 		<variable name="pep" value="${project_example_path}/parsers" />
 		<parser name="parser1" class="org.fuin.srcgen4j.commons.TestParser">

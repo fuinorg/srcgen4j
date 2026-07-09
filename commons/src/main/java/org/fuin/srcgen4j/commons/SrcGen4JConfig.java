@@ -65,12 +65,6 @@ public class SrcGen4JConfig {
 
     @Nullable
     @Valid
-    @XmlElementWrapper(name = "replacers")
-    @XmlElement(name = "replacer")
-    private List<Replacer> replacers;
-
-    @Nullable
-    @Valid
     @XmlElement(name = "parsers")
     private Parsers parsers;
 
@@ -141,26 +135,6 @@ public class SrcGen4JConfig {
      */
     public final void setProjects(@Nullable final List<Project> projects) {
         this.projects = projects;
-    }
-
-    /**
-     * Returns a list of replacers.
-     *
-     * @return Replacers.
-     */
-    @Nullable
-    public final List<Replacer> getReplacers() {
-        return replacers;
-    }
-
-    /**
-     * Sets a list of replacers.
-     *
-     * @param replacers
-     *            Replacers.
-     */
-    public final void setReplacers(@Nullable final List<Replacer> replacers) {
-        this.replacers = replacers;
     }
 
     /**
@@ -269,11 +243,6 @@ public class SrcGen4JConfig {
         if (projects != null) {
             for (final Project project : projects) {
                 project.init(context, this, varMap);
-            }
-        }
-        if (replacers != null) {
-            for (final Replacer replacer : replacers) {
-                replacer.init(varMap);
             }
         }
         if (generators != null) {

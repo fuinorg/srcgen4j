@@ -57,21 +57,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:element name="replacer" type="replacerType" />
-
-  <xs:complexType name="replacerType">
-    <xs:attribute type="xs:string" name="name" use="required"/>
-    <xs:attribute type="xs:string" name="extension" use="optional"/>
-    <xs:attribute type="xs:string" name="expression" use="required"/>
-    <xs:attribute type="xs:string" name="replacement" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="replacersType">
-    <xs:sequence>
-      <xs:element ref="replacer" minOccurs="1" maxOccurs="unbounded" />
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="anyConfigType">
     <xs:sequence>
       <xs:any minOccurs="0" maxOccurs="unbounded">
@@ -85,7 +70,6 @@
   <xs:complexType name="parserType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element ref="replacer" minOccurs="0" maxOccurs="unbounded" />
       <xs:element type="anyConfigType" name="config" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute type="xs:string" name="name" use="required"/>
@@ -95,7 +79,6 @@
   <xs:complexType name="parsersType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element ref="replacer" minOccurs="0" maxOccurs="unbounded" />
       <xs:element type="parserType" minOccurs="1" maxOccurs="unbounded" name="parser" />
     </xs:sequence>
   </xs:complexType>
@@ -103,7 +86,6 @@
   <xs:complexType name="generatorType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element ref="replacer" minOccurs="0" maxOccurs="unbounded" />
       <xs:element type="anyConfigType" name="config" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute type="xs:string" name="name" use="required"/>
@@ -114,7 +96,6 @@
   <xs:complexType name="generatorsType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element ref="replacer" minOccurs="0" maxOccurs="unbounded" />
       <xs:element type="generatorType" name="generator" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
@@ -123,7 +104,6 @@
     <xs:sequence>
       <xs:element ref="variables" minOccurs="0" maxOccurs="1" />
       <xs:element type="projectsType" name="projects" minOccurs="1" maxOccurs="1" />
-      <xs:element type="replacersType" name="replacers" minOccurs="0" maxOccurs="1" />
       <xs:element type="parsersType" name="parsers"  minOccurs="1" maxOccurs="1" />
       <xs:element type="generatorsType" name="generators"  minOccurs="1" maxOccurs="1" />
     </xs:sequence>
@@ -132,7 +112,6 @@
     <xs:complexType name="artifactFactoryConfigType">
       <xs:sequence>
         <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element ref="replacer" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
     <xs:attribute type="xs:string" name="artifact" use="required" />
     <xs:attribute type="xs:string" name="class" use="required" />

@@ -16,7 +16,6 @@
     <xs:complexType name="emf-generatorConfigType">
         <xs:sequence>
           <xs:element ref="sg4jc:variable" minOccurs="0" maxOccurs="unbounded" />
-          <xs:element ref="sg4jc:replacer" minOccurs="0" maxOccurs="unbounded" />
           <xs:element type="sg4jc:artifactFactoryConfigType" name="artifact-factory" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
