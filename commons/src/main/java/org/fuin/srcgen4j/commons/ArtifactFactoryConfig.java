@@ -44,11 +44,11 @@ public final class ArtifactFactoryConfig extends AbstractElement {
     @XmlAttribute(name = "class")
     private String factoryClassName;
 
-    @NotNull
+    @Nullable
     @XmlAttribute(name = "project")
     private String project;
 
-    @NotNull
+    @Nullable
     @XmlAttribute(name = "folder")
     private String folder;
 
@@ -78,12 +78,12 @@ public final class ArtifactFactoryConfig extends AbstractElement {
      * @param factoryClassName
      *            Full qualified factory class name.
      * @param project
-     *            Name of the target project.
+     *            Name of the target project (optional).
      * @param folder
-     *            Name of the target folder inside the project.
+     *            Name of the target folder inside the project (optional).
      */
-    public ArtifactFactoryConfig(final String artifact, final String factoryClassName, final String project,
-            final String folder) {
+    public ArtifactFactoryConfig(final String artifact, final String factoryClassName, @Nullable final String project,
+            @Nullable final String folder) {
         this(artifact, factoryClassName, project, folder, null);
     }
 
@@ -95,14 +95,14 @@ public final class ArtifactFactoryConfig extends AbstractElement {
      * @param factoryClassName
      *            Full qualified factory class name.
      * @param project
-     *            Name of the target project.
+     *            Name of the target project (optional).
      * @param folder
-     *            Name of the target folder inside the project.
+     *            Name of the target folder inside the project (optional).
      * @param incremental
      *            If the factory executes on an incremental build TRUE (default), else FALSE.
      */
-    public ArtifactFactoryConfig(final String artifact, final String factoryClassName, final String project, // NOSONAR
-            final String folder, @Nullable final Boolean incremental) {
+    public ArtifactFactoryConfig(final String artifact, final String factoryClassName, @Nullable final String project, // NOSONAR
+            @Nullable final String folder, @Nullable final Boolean incremental) {
         super();
         this.artifact = artifact;
         this.factoryClassName = factoryClassName;
@@ -132,8 +132,9 @@ public final class ArtifactFactoryConfig extends AbstractElement {
     /**
      * Returns the name of the target project.
      *
-     * @return Project name.
+     * @return Project name or <code>null</code> if not set.
      */
+    @Nullable
     public final String getProject() {
         return project;
     }
@@ -141,8 +142,9 @@ public final class ArtifactFactoryConfig extends AbstractElement {
     /**
      * Returns the name of the target folder inside the project.
      *
-     * @return Folder name.
+     * @return Folder name or <code>null</code> if not set.
      */
+    @Nullable
     public final String getFolder() {
         return folder;
     }

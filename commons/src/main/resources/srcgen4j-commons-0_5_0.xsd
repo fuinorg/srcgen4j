@@ -115,8 +115,8 @@
       </xs:sequence>
     <xs:attribute type="xs:string" name="artifact" use="required" />
     <xs:attribute type="xs:string" name="class" use="required" />
-    <xs:attribute type="xs:string" name="project" use="required" />
-    <xs:attribute type="xs:string" name="folder" use="required" />
+    <xs:attribute type="xs:string" name="project" use="optional" />
+    <xs:attribute type="xs:string" name="folder" use="optional" />
     <xs:attribute type="xs:boolean" name="incremental" use="optional" />
   </xs:complexType>
 
