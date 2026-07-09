@@ -59,10 +59,12 @@
 
   <xs:complexType name="anyConfigType">
     <xs:sequence>
-      <xs:any minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax">
        <xs:annotation>
-          <xs:documentation>Specific configuration of unknown type</xs:documentation>
-        </xs:annotation>        
+          <xs:documentation>Specific configuration of unknown type. It is validated if a schema for its
+          namespace is on the classpath and skipped otherwise. This mirrors the Java binding, which uses
+          @XmlAnyElement(lax = true).</xs:documentation>
+        </xs:annotation>
       </xs:any>
     </xs:sequence>
   </xs:complexType>

@@ -29,9 +29,11 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.fuin.srcgen4j.commons.DefaultContext;
 import org.fuin.srcgen4j.commons.GenerateException;
+import org.fuin.srcgen4j.commons.InvalidConfigException;
 import org.fuin.srcgen4j.commons.ParseException;
 import org.fuin.srcgen4j.commons.SrcGen4J;
 import org.fuin.srcgen4j.commons.SrcGen4JConfig;
+import org.fuin.srcgen4j.commons.SrcGen4JConfigValidator;
 import org.fuin.srcgen4j.commons.SrcGen4JContext;
 import org.fuin.utils4j.Utils4J;
 import org.fuin.utils4j.jaxb.JaxbUtils;
@@ -132,6 +134,7 @@ public final class SrcGen4JMojo extends AbstractMojo {
      */
     public SrcGen4JConfig createAndInit(final SrcGen4JContext context, final File configFile) throws MojoExecutionException {
         try {
+            SrcGen4JConfigValidator.validate(configFile, context.getClassLoader());
             final Class<?>[] classes = getJaxbContextClasses(context.getClassLoader());
             final SrcGen4JConfig config = JaxbUtils
                     .unmarshal(new UnmarshallerBuilder()
@@ -139,6 +142,9 @@ public final class SrcGen4JMojo extends AbstractMojo {
                             .build(), configFile);
             config.init(context, Utils4J.getCanonicalFile(configFile.getParentFile()));
             return config;
+        } catch (final InvalidConfigException ex) {
+            // The message already names the file and lists every problem, so don't bury it in a stack trace
+            throw new MojoExecutionException(ex.getMessage());
         } catch (final JAXBException ex) {
             throw new MojoExecutionException("Error creating the JAXB context", ex);
         }
