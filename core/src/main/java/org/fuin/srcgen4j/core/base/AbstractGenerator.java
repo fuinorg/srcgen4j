@@ -23,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 import org.fuin.srcgen4j.commons.Config;
@@ -167,27 +165,25 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
      * Returns the target file for a given artifact type and filename. This method takes care about eventually creating non existing
      * directories or protect existing files to be overridden.
      * 
-     * @param artifactName
-     *            Type of the artifact to create - This has to refer to an existing entry in the configuration (Like '&lt;artifact
-     *            name="<i>artifactName</i>" ..&gt;').
-     * @param filename
-     *            Name of the target file (without a path).
+     * @param artifact
+     *            Artifact to create.
      * @param logInfo
      *            Addition information to log.
      * 
      * @return File to write to or NULL if nothing should be written.
      */
-    protected final GeneratedFile getTargetFile(final String artifactName, final String filename, @Nullable final String logInfo) {
+    protected final GeneratedFile getTargetFile(final GeneratedArtifact artifact, @Nullable final String logInfo) {
 
-        final Folder folder = getGeneratorConfig().findTargetFolder(artifactName);
+        final Folder folder = getGeneratorConfig().findFolder(artifact.getModule(), artifact.getFolder());
         if (folder == null) {
-            throw new IllegalStateException("Couldn't find target folder for artifact: " + artifactName);
+            throw new IllegalStateException("Couldn't find target folder '" + artifact.getFolder() + "' in module '"
+                    + artifact.getModule() + "' for artifact: " + artifact.getName());
         }
         final File dir = folder.getCanonicalDir();
         if (dir == null) {
             throw new IllegalStateException("Couldn't determine canonical directory for folder: " + folder.getName());
         }
-        final File file = new File(dir, filename);
+        final File file = new File(dir, artifact.getPathAndName());
 
         // Make sure the folder exists
         if (!dir.exists()) {
@@ -220,11 +216,11 @@ public abstract class AbstractGenerator<MODEL, CONFIG> implements Generator<MODE
      * @throws GenerateException
      *             Error writing the artifact.
      */
-    protected final void write(@NotNull final GeneratedArtifact artifact) throws GenerateException {
+    protected final void write(final GeneratedArtifact artifact) throws GenerateException {
 
         Contract.requireArgNotNull("artifact", artifact);
 
-        final GeneratedFile genFile = getTargetFile(artifact.getName(), artifact.getPathAndName(), null);
+        final GeneratedFile genFile = getTargetFile(artifact, null);
         if (genFile.isSkip()) {
             LOG.debug("Omitted already existing file: {} [{}]", genFile, artifact);
         } else {

@@ -42,7 +42,7 @@
     </xs:simpleContent>
   </xs:complexType>
   
-  <xs:complexType name="projectType">
+  <xs:complexType name="moduleType">
     <xs:sequence>
       <xs:element type="folderType" name="folder" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
@@ -51,31 +51,20 @@
     <xs:attribute type="xs:boolean" name="maven" use="optional" default="true"/>
   </xs:complexType>
   
-  <xs:complexType name="projectsType">
+  <xs:complexType name="modulesType">
     <xs:sequence>
-      <xs:element type="projectType" name="project" minOccurs="1" maxOccurs="unbounded" />
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="replacerType">
-    <xs:attribute type="xs:string" name="name" use="required"/>
-    <xs:attribute type="xs:string" name="extension" use="optional"/>
-    <xs:attribute type="xs:string" name="expression" use="required"/>
-    <xs:attribute type="xs:string" name="replacement" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="replacersType">
-    <xs:sequence>
-      <xs:element type="replacerType" name="replacer" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element type="moduleType" name="module" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="anyConfigType">
     <xs:sequence>
-      <xs:any minOccurs="0" maxOccurs="unbounded">
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax">
        <xs:annotation>
-          <xs:documentation>Specific configuration of unknown type</xs:documentation>
-        </xs:annotation>        
+          <xs:documentation>Specific configuration of unknown type. It is validated if a schema for its
+          namespace is on the classpath and skipped otherwise. This mirrors the Java binding, which uses
+          @XmlAnyElement(lax = true).</xs:documentation>
+        </xs:annotation>
       </xs:any>
     </xs:sequence>
   </xs:complexType>
@@ -88,46 +77,24 @@
     <xs:attribute type="xs:string" name="name" use="required"/>
     <xs:attribute type="xs:string" name="class" use="required"/>
   </xs:complexType>
-  
+
   <xs:complexType name="parsersType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
       <xs:element type="parserType" minOccurs="1" maxOccurs="unbounded" name="parser" />
     </xs:sequence>
   </xs:complexType>
-  
-  <xs:complexType name="targetType">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-        <xs:attribute type="xs:string" name="pattern" use="required"/>
-        <xs:attribute type="xs:string" name="project" use="optional"/>
-        <xs:attribute type="xs:string" name="folder" use="optional"/>
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-  
-  <xs:complexType name="artifactType" mixed="true">
-    <xs:sequence>
-      <xs:element type="targetType" name="target" minOccurs="0" />
-    </xs:sequence>
-    <xs:attribute type="xs:string" name="name" use="required"/>
-    <xs:attribute type="xs:string" name="project" use="optional"/>
-    <xs:attribute type="xs:string" name="folder" use="optional"/>
-  </xs:complexType>
-  
+
   <xs:complexType name="generatorType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
       <xs:element type="anyConfigType" name="config" minOccurs="0" maxOccurs="1" />
-      <xs:element type="artifactType" name="artifact" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute type="xs:string" name="name" use="required"/>
     <xs:attribute type="xs:string" name="class" use="required"/>
     <xs:attribute type="xs:string" name="parser" use="required"/>
-    <xs:attribute type="xs:string" name="project" use="optional"/>
-    <xs:attribute type="xs:string" name="folder" use="optional"/>
   </xs:complexType>
-  
+
   <xs:complexType name="generatorsType">
     <xs:sequence>
       <xs:element ref="variable" minOccurs="0" maxOccurs="unbounded" />
@@ -138,8 +105,7 @@
   <xs:complexType name="configType">
     <xs:sequence>
       <xs:element ref="variables" minOccurs="0" maxOccurs="1" />
-      <xs:element type="projectsType" name="projects" minOccurs="1" maxOccurs="1" />
-      <xs:element type="replacersType" name="replacers" minOccurs="0" maxOccurs="1" />
+      <xs:element type="modulesType" name="modules" minOccurs="1" maxOccurs="1" />
       <xs:element type="parsersType" name="parsers"  minOccurs="1" maxOccurs="1" />
       <xs:element type="generatorsType" name="generators"  minOccurs="1" maxOccurs="1" />
     </xs:sequence>
@@ -151,6 +117,8 @@
       </xs:sequence>
     <xs:attribute type="xs:string" name="artifact" use="required" />
     <xs:attribute type="xs:string" name="class" use="required" />
+    <xs:attribute type="xs:string" name="module" use="optional" />
+    <xs:attribute type="xs:string" name="folder" use="optional" />
     <xs:attribute type="xs:boolean" name="incremental" use="optional" />
   </xs:complexType>
 

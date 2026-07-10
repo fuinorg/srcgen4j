@@ -17,15 +17,12 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import static org.fuin.utils4j.Utils4J.replaceVars;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -39,7 +36,7 @@ import org.fuin.objects4j.common.Contract;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "generators")
-public class Generators extends AbstractTarget implements InitializableElement<Generators, SrcGen4JConfig> {
+public class Generators extends AbstractElement implements InitializableElement<Generators, SrcGen4JConfig> {
 
     @Nullable
     @Valid
@@ -52,20 +49,8 @@ public class Generators extends AbstractTarget implements InitializableElement<G
     /**
      * Package visible default constructor for deserialization.
      */
-    Generators() {
+    public Generators() {
         super();
-    }
-
-    /**
-     * Constructor with project and folder.
-     * 
-     * @param project
-     *            Project to set.
-     * @param folder
-     *            Folder to set.
-     */
-    public Generators(@Nullable final String project, @Nullable final String folder) {
-        super(project, folder);
     }
 
     /**
@@ -94,7 +79,7 @@ public class Generators extends AbstractTarget implements InitializableElement<G
      * @param generator
      *            Generator to add.
      */
-    public final void addGenerator(@NotNull final GeneratorConfig generator) {
+    public final void addGenerator(final GeneratorConfig generator) {
         Contract.requireArgNotNull("generator", generator);
         if (list == null) {
             list = new ArrayList<>();
@@ -116,8 +101,6 @@ public class Generators extends AbstractTarget implements InitializableElement<G
     public final Generators init(final SrcGen4JContext context, final SrcGen4JConfig parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
-        setProject(replaceVars(getProject(), getVarMap()));
-        setFolder(replaceVars(getFolder(), getVarMap()));
         if (list != null) {
             for (final GeneratorConfig generator : list) {
                 generator.init(context, this, getVarMap());
@@ -148,32 +131,6 @@ public class Generators extends AbstractTarget implements InitializableElement<G
             throw new GeneratorNotFoundException(generatorName);
         }
         return list.get(idx);
-    }
-
-    /**
-     * Returns the appropriate folder for a given artifact.
-     * 
-     * @param generatorName
-     *            Unique name of the generator to return a target folder for.
-     * @param artifactName
-     *            Unique name of the artifact to return a target folder for.
-     * 
-     * @return Target folder.
-     */
-    @Nullable
-    public final Folder findTargetFolder(@NotEmpty final String generatorName, @NotEmpty final String artifactName) {
-        Contract.requireArgNotEmpty("generatorName", generatorName);
-        Contract.requireArgNotEmpty("artifactName", artifactName);
-        if (parent == null) {
-            throw new IllegalStateException("Parent for generators is not set");
-        }
-        try {
-            return parent.findTargetFolder(generatorName, artifactName);
-        } catch (final ProjectNameNotDefinedException | ArtifactNotFoundException | FolderNameNotDefinedException
-                | GeneratorNotFoundException | ProjectNotFoundException | FolderNotFoundException ex) {
-            throw new RuntimeException(
-                    "Couldn't determine target folder for generator '" + generatorName + "' and artifact '" + artifactName + "'", ex);
-        }
     }
 
 }

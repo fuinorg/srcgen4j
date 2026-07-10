@@ -24,7 +24,6 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -145,7 +144,6 @@ public class ParserConfig extends AbstractNamedElement implements InitializableE
      * @return Parser of type {@link #className}.
      */
     @SuppressWarnings("unchecked")
-    @NotNull
     public final Parser<Object> getParser() {
         if (parser != null) {
             return parser;

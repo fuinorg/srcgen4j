@@ -10,7 +10,7 @@ The pipeline is configured using a single XML configuration file (full schema: [
    xmlns="http://www.fuin.org/srcgen4j/commons/0.5.0">
     
     <variables />
-    <projects />
+    <modules />
     <parsers />
     <generators />
     
@@ -46,18 +46,18 @@ Variables can be overwritten in the sub-sections:
 ```
 The result is only visible inside the defining section.
 
-## Projects
-A project is used to define the folders where the generated output can be placed.
+## Modules
+A module is used to define the folders where the generated output can be placed.
 ```xml
-<projects>
-  <project name="myprj" path="." maven="false">
+<modules>
+  <module name="myprj" path="." maven="false">
         <folder name="doc" path="doc" create="true" override="true" clean="true" />
-  </project>
-</projects>
+  </module>
+</modules>
 ```
 A Maven directory structure is assumed by default. This can be disabled with *maven="false"*.
 ```xml
-<project name="myprj" path=".">
+<module name="myprj" path=".">
     <!-- It's NOT necessary to add the following! It's just to show the default folder structure. -->
     <folder name="mainJava" path="src/main/java" create="false" override="false" clean="false" />
     <folder name="mainRes" path="src/main/resources" create="false" override="false" clean="false" />
@@ -67,9 +67,9 @@ A Maven directory structure is assumed by default. This can be disabled with *ma
     <folder name="testRes" path="src/test/resources" create="false" override="false" clean="false" />
     <folder name="genTestJava" path="src-gen/test/java" create="true" clean="true" />
     <folder name="genTestRes" path="src-gen/test/resources" create="true" clean="true" />
-</project>
+</module>
 ```
-A folder is defined by a name that is unique within the project and a path inside the project's directory.
+A folder is defined by a name that is unique within the module and a path inside the module's directory.
 ```xml
 <folder name="mainJava" 
         path="src/main/java" 
@@ -102,10 +102,10 @@ Every parser has a unique name and a full qualified class name that is used to i
 Some parsers might require a special configuration that can be added in the config section.
 
 ## Generators
-The generator section defines one or more generators that use the input of a parser and write their output to one of the projects.
+The generator section defines one or more generators that use the input of a parser and write their output to one of the modules.
 ```xml
 <generators>
-    <generator name="dddGenerator" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="dddParser" project="current">
+    <generator name="dddGenerator" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="dddParser" module="current">
         <config>
             <!-- Generator specific configuration -->
             <emf:artifact-factory artifact="AbstractAggregate" class="org.fuin.dsl.ddd.gen.aggregate.AbstractAggregateArtifactFactory" />
@@ -117,4 +117,4 @@ The generator section defines one or more generators that use the input of a par
 ```
 Every generator has a unique name and a full qualified class name that is used to instantiate the generator (using the default constructor).
 Some generators might require a special configuration that can be added in the config section.
-A generator creates one or more artifacts that are written to the configured folder of the project.
+A generator creates one or more artifacts that are written to the configured folder of the module.

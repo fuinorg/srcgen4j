@@ -32,7 +32,7 @@ A full blown example for the Xtext based [DDD DSL](https://github.com/fuinorg/dd
 ## EMFGenerator
 The EMF generator requires setting up the different [artifact factories](../commons/src/main/java/org/fuin/srcgen4j/commons/ArtifactFactory.java) that generate code for different EMF model elements.
 ```xml
-<generator name="gen1" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="ptp" project="current">
+<generator name="gen1" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="ptp" module="current">
     <config>
         <emf:emf-generator-config>
             <emf:artifact-factory artifact="abstractHello" class="org.fuin.srcgen4j.core.emf.AbstractHelloTstGen">
@@ -112,7 +112,7 @@ It's also possible to create the variable values programmatically (See [TestTFLP
 The generator is simply configured with the path to the velocity templates (See topic Resource Management / [file.resource.loader.path](http://velocity.apache.org/engine/2.0/configuration.html)).
 ```xml
 <generator name="gen1" class="org.fuin.srcgen4j.core.velocity.ParameterizedTemplateGenerator" 
-           parser="ptp" project="current" folder="testJava">
+           parser="ptp" module="current" folder="testJava">
     <config>
         <velo:parameterized-template-generator templatePath="${testRes}" />
     </config>

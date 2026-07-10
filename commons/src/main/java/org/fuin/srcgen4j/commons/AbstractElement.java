@@ -24,11 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.jspecify.annotations.Nullable;
@@ -45,12 +43,6 @@ public abstract class AbstractElement {
     @Valid
     @XmlElement(name = "variable")
     private List<Variable> variables;
-
-    @Nullable
-    @Valid
-    @XmlElementWrapper(name = "replacers")
-    @XmlElement(name = "replacer")
-    private List<Replacer> replacers;
 
     @Nullable
     @XmlTransient
@@ -79,11 +71,6 @@ public abstract class AbstractElement {
             }
             varMap = new VariableResolver(varMap).getResolved();
         }
-        if (replacers != null) {
-            for (final Replacer replacer : replacers) {
-                replacer.init(varMap);
-            }
-        }
     }
 
     /**
@@ -91,7 +78,6 @@ public abstract class AbstractElement {
      * 
      * @return Unmodifiable map of variables.
      */
-    @NotNull
     public final Map<String, String> getVarMap() {
         if (varMap == null) {
             return Collections.emptyMap();
@@ -105,7 +91,7 @@ public abstract class AbstractElement {
      * @param variable
      *            Variable to add.
      */
-    public final void addVariable(@NotNull final Variable variable) {
+    public final void addVariable(final Variable variable) {
         if (variables == null) {
             variables = new ArrayList<>();
         }
@@ -120,29 +106,6 @@ public abstract class AbstractElement {
     @Nullable
     public final List<Variable> getVariables() {
         return variables;
-    }
-
-    /**
-     * Adds a replacer to the element.
-     *
-     * @param replacer
-     *            Replacer to add.
-     */
-    public final void addReplacer(@NotNull final Replacer replacer) {
-        if (replacers == null) {
-            replacers = new ArrayList<>();
-        }
-        replacers.add(replacer);
-    }
-
-    /**
-     * Returns a list of replacers.
-     *
-     * @return Replacers.
-     */
-    @Nullable
-    public final List<Replacer> getReplacers() {
-        return replacers;
     }
 
 }

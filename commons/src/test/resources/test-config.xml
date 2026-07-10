@@ -7,8 +7,8 @@
 		<variable name="project_example_path" value="${root}/example" />
 	</variables>
 	
-	<projects>
-		<project name="example" path="${root}/example">
+	<modules>
+		<module name="example" path="${root}/example">
 			<!-- Maven default folder --> 
 			<folder name="mainJava" path="src/main/java" create="false" override="false" clean="false" />
 			<folder name="mainRes" path="src/main/resources" create="false" override="false" clean="false" />
@@ -18,13 +18,8 @@
 			<folder name="testRes" path="src/test/resources" create="false" override="false" clean="false" />
 			<folder name="genTestJava" path="src-gen/test/java" create="true" clean="true" />
 			<folder name="genTestRes" path="src-gen/test/resources" create="true" clean="true" />
-		</project>
-	</projects>
-
-	<replacers>
-		<replacer name="pkg" expression="org\.old\.(.*)" replacement="org.new.$1" />
-		<replacer name="header" extension="java" expression="(.*)" replacement="X$1" />
-	</replacers>
+		</module>
+	</modules>
 
 	<parsers>
 		<variable name="pep" value="${project_example_path}/parsers" />
@@ -37,15 +32,7 @@
 	
 	<generators>
 		<variable name="pep" value="${project_example_path}/generators" />
-		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1" project="example" folder="genMainJava">
-			<!-- Project and folder can be overridden in artifact -->
-			<artifact name="one" project="example" folder="genMainJava">
-				<!-- Example for changing the target folder or even the project based on a path/file regular expression --> 
-				<target pattern=".*//abc//def//ghi//.*//.java" project="example" folder="genMainJava" />				 
-			</artifact>
-			<artifact name="abstract" folder="genMainJava" />
-			<artifact name="manual" folder="mainJava" />
-		</generator>
+		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1" />
 	</generators>
 	
 </srcgen4j-config>

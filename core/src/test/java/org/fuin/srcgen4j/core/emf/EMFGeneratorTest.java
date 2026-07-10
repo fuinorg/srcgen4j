@@ -32,13 +32,13 @@ import org.fuin.srcgen4j.commons.GeneratorConfig;
 import org.fuin.srcgen4j.commons.ParseException;
 import org.fuin.srcgen4j.commons.ParserConfig;
 import org.fuin.srcgen4j.commons.SrcGen4JConfig;
+import org.fuin.srcgen4j.core.SchemaHelper;
 import org.fuin.srcgen4j.core.xtext.XtextParser;
 import org.fuin.srcgen4j.core.xtext.XtextParserConfig;
 import org.fuin.utils4j.classpath.Handler;
 import org.fuin.utils4j.jaxb.JaxbUtils;
 import org.fuin.utils4j.jaxb.UnmarshallerBuilder;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -62,7 +62,7 @@ class EMFGeneratorTest {
 
         final File file = new File(new File(RESOURCES_DIR, "domain"), "xtext-test-config.xml");
 
-        final Unmarshaller unmarshaller = createUnmarshallerBuilder().build();
+        final Unmarshaller unmarshaller = createUnmarshaller();
         final SrcGen4JConfig srcGen4JConfig = JaxbUtils.unmarshal(unmarshaller, file);
         srcGen4JConfig.init(CONTEXT, new File("."));
         final GeneratorConfig generatorConfig = srcGen4JConfig.getGenerators().findByName("gen1");
@@ -104,7 +104,6 @@ class EMFGeneratorTest {
     }
 
     @Test
-    @Disabled("TODO Fix error: Cannot resolve the name 'sg4jc:variableType' to a(n) 'type definition' component")
     void testParseError() throws Exception {
 
         final String xml = """
@@ -113,13 +112,13 @@ class EMFGeneratorTest {
                                  xmlns:xtext="http://www.fuin.org/srcgen4j/core/xtext/0.5.0"
                                  xmlns:emf="http://www.fuin.org/srcgen4j/core/emf/0.5.0">
                 
-                	<projects>
-                		<project name="current" path="." maven="false">
+                	<modules>
+                		<module name="current" path="." maven="false">
                 			<folder name="testGenMainJava" path="target/xtest-test" create="true" override="true" clean="false" />
                 			<folder name="testMainJava" path="target/xtest-test" create="true" override="true" clean="false" />
                 			<folder name="testGenMainRes" path="target/xtest-test" create="true" override="true" clean="false" />
-                		</project>
-                	</projects>
+                		</module>
+                	</modules>
                 
                 	<parsers>
                 		<parser name="ptp" class="org.fuin.srcgen4j.core.xtext.XtextParser">
@@ -131,26 +130,26 @@ class EMFGeneratorTest {
                 	</parsers>
                 
                 	<generators>
-                		<generator name="gen1" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="ptp" project="current">
+                		<generator name="gen1" class="org.fuin.srcgen4j.core.emf.EMFGenerator" parser="ptp">
                 		    <config>
                 				<emf:emf-generator-config>
-                					<emf:artifact-factory artifact="abstractHello" class="org.fuin.srcgen4j.core.emf.AbstractHelloTstGen">
+                					<emf:artifact-factory artifact="abstractHello" class="org.fuin.srcgen4j.core.emf.AbstractHelloTstGen"
+                					                      module="current" folder="testGenMainJava">
                 						<variable name="package" value="a.b.c" />
                 					</emf:artifact-factory>
-                					<emf:artifact-factory artifact="manualHello" class="org.fuin.srcgen4j.core.emf.ManualHelloTstGen" />
-                					<emf:artifact-factory artifact="helloProps" incremental="false" class="org.fuin.srcgen4j.core.emf.HelloPropertiesTstGen" />
+                					<emf:artifact-factory artifact="manualHello" class="org.fuin.srcgen4j.core.emf.ManualHelloTstGen"
+                					                      module="current" folder="testMainJava" />
+                					<emf:artifact-factory artifact="helloProps" incremental="false" class="org.fuin.srcgen4j.core.emf.HelloPropertiesTstGen"
+                					                      module="current" folder="testGenMainRes" />
                 				</emf:emf-generator-config>
                 			</config>
-                			<artifact name="abstractHello" folder="testGenMainJava" />
-                			<artifact name="manualHello" folder="testMainJava" />
-                			<artifact name="helloProps" folder="testGenMainRes" />
                 		</generator>
                 	</generators>
                 
                 </srcgen4j-config>                
                 """;
 
-        final Unmarshaller unmarshaller = createUnmarshallerBuilder().build();
+        final Unmarshaller unmarshaller = createUnmarshaller();
         final SrcGen4JConfig srcGen4JConfig = JaxbUtils .unmarshal(unmarshaller, xml);
         srcGen4JConfig.init(CONTEXT, new File("."));
         final ParserConfig parserConfig = srcGen4JConfig.getParsers().getList().get(0);
@@ -166,18 +165,13 @@ class EMFGeneratorTest {
 
     }
 
-    private static UnmarshallerBuilder createUnmarshallerBuilder() throws JAXBException {
-        return new UnmarshallerBuilder()
-                .withContext(JAXBContext.newInstance(SrcGen4JConfig.class, XtextParserConfig.class, EMFGeneratorConfig.class))
-/* TODO FIX: "Cannot resolve the name 'sg4jc:variableType' to a(n) 'type definition' component"
-   See: https://github.com/fuinorg/srcgen4j-core/issues/2
-                .addClasspathSchemas(
-                        "/srcgen4j-commons-0_5_0.xsd",
-                        "/srcgen4j-core-base-0_5_0.xsd",
-                        "/srcgen4j-core-emf-0_5_0.xsd",
-                        "/srcgen4j-core-xtext-0_5_0.xsd")
-*/
-        ;
+    private static Unmarshaller createUnmarshaller() throws JAXBException {
+        final Unmarshaller unmarshaller = new UnmarshallerBuilder()
+                .withContext(JAXBContext.newInstance(SrcGen4JConfig.class, XtextParserConfig.class, EMFGeneratorConfig.class)).build();
+        // Validate against the XSDs. The schema is built with a fixed source order (commons first) because the emf schema
+        // imports the commons schema - see SchemaHelper for details.
+        unmarshaller.setSchema(SchemaHelper.createCoreSchema());
+        return unmarshaller;
     }
 
 }

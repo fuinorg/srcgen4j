@@ -19,7 +19,6 @@ package org.fuin.srcgen4j.commons;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -33,7 +32,6 @@ import jakarta.xml.bind.JAXBContext;
 import org.fuin.utils4j.jaxb.JaxbUtils;
 import org.fuin.utils4j.jaxb.UnmarshallerBuilder;
 import org.junit.jupiter.api.Test;
-import org.xmlunit.assertj3.XmlAssert;
 
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.impl.PojoClassFactory;
@@ -96,9 +94,9 @@ public class SrcGen4JConfigTest extends AbstractTest {
             assertThat(var1.getName()).isEqualTo("project_example_path");
             assertThat(var1.getValue()).isEqualTo("${root}/example");
 
-            assertThat(testee.getProjects()).isNotNull();
-            assertThat(testee.getProjects()).hasSize(1);
-            final Project prj = testee.getProjects().get(0);
+            assertThat(testee.getModules()).isNotNull();
+            assertThat(testee.getModules()).hasSize(1);
+            final Module prj = testee.getModules().get(0);
             assertThat(prj.getName()).isEqualTo("example");
             assertThat(prj.getPath()).isEqualTo("${root}/example");
             assertThat(prj.getFolders()).hasSize(8);
@@ -109,89 +107,16 @@ public class SrcGen4JConfigTest extends AbstractTest {
             assertThat(idxGenMainJava).isNotNegative();
             assertThat(prj.getFolders().get(idxGenMainJava).getCleanExclude()).isEqualTo("\\..*");
 
-            final List<Replacer> replacers = testee.getReplacers();
-            assertThat(replacers).isNotNull();
-            assertThat(replacers).hasSize(2);
-            final Replacer replacer0 = replacers.get(0);
-            assertThat(replacer0.getName()).isEqualTo("pkg");
-            assertThat(replacer0.getExtension()).isNull();
-            assertThat(replacer0.getExpression()).isEqualTo("org\\.old\\.(.*)");
-            assertThat(replacer0.getReplacement()).isEqualTo("org.new.$1");
-            final Replacer replacer1 = replacers.get(1);
-            assertThat(replacer1.getName()).isEqualTo("header");
-            assertThat(replacer1.getExtension()).isEqualTo("java");
-            assertThat(replacer1.getExpression()).isEqualTo("(.*)");
-            assertThat(replacer1.getReplacement()).isEqualTo("X$1");
-
             assertThat(testee.getGenerators()).isNotNull();
             assertThat(testee.getGenerators().getList()).hasSize(1);
             final GeneratorConfig gen = testee.getGenerators().getList().get(0);
             assertThat(gen.getName()).isEqualTo("gen1");
-            assertThat(gen.getProject()).isEqualTo("example");
-            assertThat(gen.getFolder()).isEqualTo("genMainJava");
-            assertThat(gen.getArtifacts()).hasSize(3);
-            assertThat(gen.getArtifacts()).contains(new Artifact("one"), new Artifact("abstract"), new Artifact("manual"));
-            int idx = gen.getArtifacts().indexOf(new Artifact("one"));
-            assertThat(idx).isNotNegative();
-            final Artifact one = gen.getArtifacts().get(idx);
-            assertThat(one.getTargets()).isNotNull();
-            assertThat(one.getTargets()).hasSize(1);
-            final Target target = one.getTargets().get(0);
-            assertThat(target.getPattern()).isEqualTo(".*//abc//def//ghi//.*//.java");
-            assertThat(target.getProject()).isEqualTo("example");
-            assertThat(target.getFolder()).isEqualTo("genMainJava");
+            assertThat(gen.getClassName()).isEqualTo("org.fuin.srcgen4j.commons.TestGenerator");
+            assertThat(gen.getParser()).isEqualTo("parser1");
 
         } finally {
             reader.close();
         }
-    }
-
-    @Test
-    public final void testMarshalReplacers() throws Exception {
-
-        // PREPARE
-        final SrcGen4JConfig testee = new SrcGen4JConfig();
-        final List<Replacer> replacers = new ArrayList<>();
-        replacers.add(new Replacer("pkg", "org\\.old\\.(.*)", "org.new.$1"));
-        replacers.add(new Replacer("header", "java", "(.*)", "X$1"));
-        testee.setReplacers(replacers);
-
-        // TEST
-        final String result = JaxbUtils.marshal(testee, SrcGen4JConfig.class);
-
-        // VERIFY the list is wrapped in "replacers" and each element is named "replacer"
-        final Map<String, String> ns = Map.of("sg", NS_SG4JC);
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .nodesByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer").hasSize(2);
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[1]/@name").isEqualTo("pkg");
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[1]/@expression").isEqualTo("org\\.old\\.(.*)");
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[1]/@replacement").isEqualTo("org.new.$1");
-        XmlAssert.assertThat(result).withNamespaceContext(ns)
-                .valueByXPath("/sg:srcgen4j-config/sg:replacers/sg:replacer[2]/@extension").isEqualTo("java");
-
-    }
-
-    @Test
-    public final void testInitReplacers() throws Exception {
-
-        // PREPARE
-        final SrcGen4JConfig testee = load("test-replacers.xml");
-
-        // TEST
-        testee.init(new DefaultContext(), new File("."));
-
-        // VERIFY variables in the replacer's expression and replacement are resolved
-        final List<Replacer> replacers = testee.getReplacers();
-        assertThat(replacers).hasSize(2);
-        final Replacer rooted = replacers.get(1);
-        assertThat(rooted.getExtension()).isEqualTo("java");
-        assertThat(rooted.getExpression()).isEqualTo("/var/tmp/(.*)");
-        assertThat(rooted.getReplacement()).isEqualTo("/var/tmp/gen/$1");
-        assertThat(rooted.replace("/var/tmp/Foo")).isEqualTo("/var/tmp/gen/Foo");
-
     }
 
     @Test
@@ -201,31 +126,23 @@ public class SrcGen4JConfigTest extends AbstractTest {
         final SrcGen4JConfig testee = new SrcGen4JConfig();
 
         final Variables vars = new Variables(new Variable("project.name", "1"), new Variable("project.path", "2"),
-                new Variable("generator.name", "3"), new Variable("generator.project", "4"), new Variable("generator.folder", "5"),
-                new Variable("folder.name", "6"), new Variable("folder.path", "7"), new Variable("artifact.name", "8"),
-                new Variable("artifact.project", "9"), new Variable("artifact.folder", "10"), new Variable("target.pattern", "11"),
-                new Variable("target.project", "12"), new Variable("target.folder", "13"), new Variable("generators.project", "14"),
-                new Variable("generators.folder", "15"));
+                new Variable("generator.name", "3"), new Variable("folder.name", "6"), new Variable("folder.path", "7"));
 
-        final List<Project> projects = new ArrayList<Project>();
-        final Project project = new Project("${project.name}", "${project.path}");
-        projects.add(project);
-        project.addFolder(new Folder("${folder.name}", "${folder.path}"));
+        final List<Module> modules = new ArrayList<Module>();
+        final Module module = new Module("${project.name}", "${project.path}");
+        modules.add(module);
+        module.addFolder(new Folder("${folder.name}", "${folder.path}"));
 
         final List<GeneratorConfig> genList = new ArrayList<GeneratorConfig>();
-        final GeneratorConfig generator = new GeneratorConfig("${generator.name}", "CLASS", "PARSER", "${generator.project}",
-                "${generator.folder}");
+        final GeneratorConfig generator = new GeneratorConfig("${generator.name}", "CLASS", "PARSER");
         genList.add(generator);
-        final Artifact artifact = new Artifact("${artifact.name}", "${artifact.project}", "${artifact.folder}");
-        generator.addArtifact(artifact);
-        artifact.addTarget(new Target("${target.pattern}", "${target.project}", "${target.folder}"));
 
-        final Generators generators = new Generators("${generators.project}", "${generators.folder}");
+        final Generators generators = new Generators();
         generators.addVariable(new Variable("a", "1"));
         generators.setList(genList);
 
         testee.setVariables(vars);
-        testee.setProjects(projects);
+        testee.setModules(modules);
         testee.setGenerators(generators);
 
         // TEST
@@ -233,32 +150,20 @@ public class SrcGen4JConfigTest extends AbstractTest {
 
         // VERIFY
 
-        final Project resultProject = testee.getProjects().get(0);
-        assertThat(resultProject.getName()).isEqualTo("1");
-        assertThat(resultProject.getPath()).isEqualTo("2");
-        final Folder resultFolder = resultProject.getFolders().get(0);
+        final Module resultModule = testee.getModules().get(0);
+        assertThat(resultModule.getName()).isEqualTo("1");
+        assertThat(resultModule.getPath()).isEqualTo("2");
+        final Folder resultFolder = resultModule.getFolders().get(0);
         assertThat(resultFolder.getName()).isEqualTo("6");
         assertThat(resultFolder.getPath()).isEqualTo("7");
 
         assertThat(testee.getGenerators()).isNotNull();
         assertThat(testee.getGenerators().getVarMap()).contains(entry("a", "1"));
-        assertThat(testee.getGenerators().getProject()).isEqualTo("14");
-        assertThat(testee.getGenerators().getFolder()).isEqualTo("15");
         assertThat(testee.getGenerators().getList()).isNotNull();
         assertThat(testee.getGenerators().getList()).hasSize(1);
 
         final GeneratorConfig resultGenerator = testee.getGenerators().getList().get(0);
         assertThat(resultGenerator.getName()).isEqualTo("3");
-        assertThat(resultGenerator.getProject()).isEqualTo("4");
-        assertThat(resultGenerator.getFolder()).isEqualTo("5");
-        final Artifact resultArtifact = resultGenerator.getArtifacts().get(0);
-        assertThat(resultArtifact.getName()).isEqualTo("8");
-        assertThat(resultArtifact.getProject()).isEqualTo("9");
-        assertThat(resultArtifact.getFolder()).isEqualTo("10");
-        final Target resultTarget = resultArtifact.getTargets().get(0);
-        assertThat(resultTarget.getPattern()).isEqualTo("11");
-        assertThat(resultTarget.getProject()).isEqualTo("12");
-        assertThat(resultTarget.getFolder()).isEqualTo("13");
 
     }
 
@@ -324,75 +229,28 @@ public class SrcGen4JConfigTest extends AbstractTest {
     }
 
     @Test
-    public void testFindTargetPositive() throws Exception {
+    public void testCreateMavenStyleSingleModule() {
 
         // PREPARE
-        final SrcGen4JConfig testee = load("findTarget.xml");
-        testee.init(new DefaultContext(), new File("."));
+        final String moduleName = "NAME";
 
         // TEST
-        final Folder folder = testee.findTargetFolder("gen1", "arti1",
-                "a/b/c/MyClass.java");
+        SrcGen4JConfig config = SrcGen4JConfig.createMavenStyleSingleModule(
+                new DefaultContext(), moduleName, new File("."));
 
         // VERIFY
-        assertThat(folder.getPath()).isEqualTo("src/main/java");
-        assertThat(folder.getParent().getPath())
-                .isEqualTo("/var/tmp/myproject");
-
-    }
-
-    @Test
-    public void testFindTargetFolderNotFoundException() throws Exception {
-
-        // PREPARE
-        final SrcGen4JConfig testee = load("findTarget.xml");
-        testee.init(new DefaultContext(), new File("."));
-
-        // TEST
-        try {
-            testee.findTargetFolder("gen1", "arti1", "Unknown.java");
-            fail("The file should lead to arti1's folder 'folder3' that is not defined");
-        } catch (final FolderNotFoundException ex) {
-            // VERIFIED
-        }
-
-    }
-
-    @Test
-    public void testCreateMavenStyleSingleProject() {
-
-        // PREPARE
-        final String projectName = "NAME";
-
-        // TEST
-        SrcGen4JConfig config = SrcGen4JConfig.createMavenStyleSingleProject(
-                new DefaultContext(), projectName, new File("."));
-
-        // VERIFY
-        assertThat(config.getProjects()).hasSize(1);
-        final Project project = config.getProjects().get(0);
-        assertThat(project.getName()).isEqualTo(projectName);
-        assertThat(project.getPath()).isEqualTo(".");
-        assertThat(project.isMaven()).isTrue();
-        assertThat(project.getFolders()).hasSize(8);
-        assertThat(project.getFolders()).contains(new Folder("mainJava", ""),
+        assertThat(config.getModules()).hasSize(1);
+        final Module module = config.getModules().get(0);
+        assertThat(module.getName()).isEqualTo(moduleName);
+        assertThat(module.getPath()).isEqualTo(".");
+        assertThat(module.isMaven()).isTrue();
+        assertThat(module.getFolders()).hasSize(8);
+        assertThat(module.getFolders()).contains(new Folder("mainJava", ""),
                 new Folder("mainRes", ""), new Folder("genMainJava", ""),
                 new Folder("genMainRes", ""), new Folder("testJava", ""),
                 new Folder("testRes", ""), new Folder("genTestJava", ""),
                 new Folder("genTestRes", ""));
 
-    }
-
-    private SrcGen4JConfig load(final String resourceName) throws Exception {
-        final JAXBContext jaxbContext = JAXBContext
-                .newInstance(SrcGen4JConfig.class);
-        final Reader reader = new InputStreamReader(
-                getClass().getClassLoader().getResourceAsStream(resourceName));
-        try {
-            return JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(), reader);
-        } finally {
-            reader.close();
-        }
     }
 
 }

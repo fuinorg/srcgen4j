@@ -23,6 +23,10 @@ public final class AbstractHelloTstGen implements ArtifactFactory<Greeting> {
 
     private String artifact;
 
+    private String module;
+
+    private String folder;
+
     private boolean incremental = true;
 
     private Map<String, String> varMap;
@@ -35,6 +39,8 @@ public final class AbstractHelloTstGen implements ArtifactFactory<Greeting> {
     @Override
     public final void init(final ArtifactFactoryConfig config) {
         this.artifact = config.getArtifact();
+        this.module = config.getModule();
+        this.folder = config.getFolder();
         this.incremental = config.isIncremental();
         this.varMap = config.getVarMap();
     }
@@ -55,7 +61,7 @@ public final class AbstractHelloTstGen implements ArtifactFactory<Greeting> {
             final String path = pkg.replace('.', '/');
             vars.put("package", pkg);
             return Collections.singletonList(new GeneratedArtifact(artifact, path + "/AbstractHello" + greeting.getName() + ".java",
-                    Utils4J.replaceVars(src, vars).getBytes()));
+                    Utils4J.replaceVars(src, vars).getBytes(), module, folder));
         } catch (final IOException ex) {
             throw new RuntimeException(ex);
         }

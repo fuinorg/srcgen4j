@@ -45,7 +45,7 @@ class ParameterizedTemplateTest {
         final String name = "name";
         arg1 = new Argument("key1", "value1");
         arg2 = new Argument("key2", "value2");
-        targetFile1 = new TargetFile(path, name, arg1, arg2);
+        targetFile1 = new TargetFile("current", "testJava", path, name, arg1, arg2);
     }
 
     @AfterAll

@@ -11,9 +11,9 @@
 		<variable name="escapes" value="\r\n\t" />
 	</variables>
 	
-	<projects>
-		<project name="example" path="${root}/example" maven="true" />
-	</projects>
+	<modules>
+		<module name="example" path="${root}/example" maven="true" />
+	</modules>
 	
 	<parsers>
 		<variable name="a" value="${a}/parsers1" />
@@ -31,7 +31,7 @@
 	<generators>
 		<variable name="a" value="${a}/generators1" />
 		<variable name="b" value="${a}/generators2" />
-		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1" project="example" folder="genMainJava">
+		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1">
 			<variable name="a" value="${a}/generator1" />
 			<variable name="c" value="${a}/generator3" />
 		</generator>

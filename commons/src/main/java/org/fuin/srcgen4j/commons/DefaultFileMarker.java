@@ -50,7 +50,7 @@ public final class DefaultFileMarker implements FileMarker {
      * @param message
      *            Message.
      */
-    public DefaultFileMarker(@NotNull final FileMarkerSeverity severity, @NotNull final String message) {
+    public DefaultFileMarker(final FileMarkerSeverity severity, final String message) {
         super();
         Contract.requireArgNotNull("severity", severity);
         Contract.requireArgNotNull("message", message);
@@ -73,7 +73,7 @@ public final class DefaultFileMarker implements FileMarker {
      * @param line
      *            Line number.
      */
-    public DefaultFileMarker(@NotNull final FileMarkerSeverity severity, @NotNull final String message, @Min(0) final int line) {
+    public DefaultFileMarker(final FileMarkerSeverity severity, final String message, @Min(0) final int line) {
         super();
         Contract.requireArgNotNull("severity", severity);
         Contract.requireArgNotNull("message", message);
@@ -98,7 +98,7 @@ public final class DefaultFileMarker implements FileMarker {
      * @param length
      *            Length of the marked block.
      */
-    public DefaultFileMarker(@NotNull final FileMarkerSeverity severity, @NotNull final String message, @Min(0) final int start,
+    public DefaultFileMarker(final FileMarkerSeverity severity, final String message, @Min(0) final int start,
             @Min(1) final int length) {
         super();
         Contract.requireArgNotNull("severity", severity);
@@ -117,7 +117,6 @@ public final class DefaultFileMarker implements FileMarker {
      * 
      * @return Type.
      */
-    @NotNull
     public final DefaultFileMarkerType getType() {
         return type;
     }
@@ -127,7 +126,6 @@ public final class DefaultFileMarker implements FileMarker {
      * 
      * @return Severity indicator.
      */
-    @NotNull
     public final FileMarkerSeverity getSeverity() {
         return severity;
     }
@@ -137,7 +135,6 @@ public final class DefaultFileMarker implements FileMarker {
      * 
      * @return Message.
      */
-    @NotNull
     public final String getMessage() {
         return message;
     }

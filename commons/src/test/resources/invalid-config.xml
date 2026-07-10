@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srcgen4j-config xmlns="http://www.fuin.org/srcgen4j/commons/0.5.0">
+
+	<modules>
+		<!-- Wrong: the wrapper is "modules", but a single entry is a "module" -->
+		<modules name="example" path="." maven="false" />
+	</modules>
+
+	<parsers>
+		<parser name="parser1" class="org.fuin.srcgen4j.commons.TestParser" />
+	</parsers>
+
+	<generators>
+		<!-- Wrong: a "generator" has no "module" attribute -->
+		<generator name="gen1" class="org.fuin.srcgen4j.commons.TestGenerator" parser="parser1" module="example" />
+	</generators>
+
+</srcgen4j-config>

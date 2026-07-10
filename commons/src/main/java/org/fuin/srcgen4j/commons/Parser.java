@@ -17,8 +17,6 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -37,7 +35,7 @@ public interface Parser<MODEL> {
      * @param config
      *            Configuration to use.
      */
-    public void initialize(@NotNull SrcGen4JContext context, @Nullable ParserConfig config);
+    public void initialize(SrcGen4JContext context, @Nullable ParserConfig config);
 
     /**
      * Parses a model using the initially given configuration.
@@ -47,7 +45,6 @@ public interface Parser<MODEL> {
      * @throws ParseException
      *             Error during parse process.
      */
-    @NotNull
     public MODEL parse() throws ParseException;
 
 }

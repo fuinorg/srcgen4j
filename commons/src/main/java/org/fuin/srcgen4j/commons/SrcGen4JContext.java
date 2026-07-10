@@ -17,8 +17,6 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
  * Provides a context for the build process.
  */
@@ -29,7 +27,6 @@ public interface SrcGen4JContext {
      * 
      * @return Class loader.
      */
-    @NotNull
     public ClassLoader getClassLoader();
 
 }

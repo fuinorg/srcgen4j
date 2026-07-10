@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -86,7 +85,6 @@ public class EMFGeneratorConfig extends AbstractElement implements Initializable
      *            Type of the model to create an artifact for.
      */
     @SuppressWarnings("unchecked")
-    @NotNull
     public final <MODEL> List<ArtifactFactory<MODEL>> getFactories(final Class<MODEL> modelType) {
         final List<ArtifactFactory<MODEL>> list = new ArrayList<ArtifactFactory<MODEL>>();
         if (factories == null) {

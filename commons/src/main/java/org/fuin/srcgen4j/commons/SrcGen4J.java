@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
 import org.jspecify.annotations.Nullable;
@@ -53,7 +51,7 @@ public final class SrcGen4J {
      * @param context
      *            Build context.
      */
-    public SrcGen4J(@NotNull final SrcGen4JConfig config, @NotNull final SrcGen4JContext context) {
+    public SrcGen4J(final SrcGen4JConfig config, final SrcGen4JContext context) {
         super();
         Contract.requireArgNotNull("config", config);
         Contract.requireArgNotNull("context", context);
@@ -65,14 +63,14 @@ public final class SrcGen4J {
     }
 
     private void cleanFolders() {
-        final List<Project> projects = config.getProjects();
-        if ((projects == null) || (projects.isEmpty())) {
-            LOG.warn("No projects configured!");
+        final List<Module> modules = config.getModules();
+        if ((modules == null) || (modules.isEmpty())) {
+            LOG.warn("No modules configured!");
         } else {
-            for (final Project project : projects) {
-                final List<Folder> folders = project.getFolders();
+            for (final Module module : modules) {
+                final List<Folder> folders = module.getFolders();
                 if ((folders == null) || (folders.isEmpty())) {
-                    LOG.warn("No project folders configured for: {}", project.getName());
+                    LOG.warn("No module folders configured for: {}", module.getName());
                 } else {
                     for (final Folder folder : folders) {
                         final File dir = folder.getCanonicalDir();
@@ -169,7 +167,6 @@ public final class SrcGen4J {
      * 
      * @return File filter.
      */
-    @NotNull
     public FileFilter getFileFilter() {
         if (fileFilter == null) {
             final List<IOFileFilter> filters = new ArrayList<>();
@@ -202,7 +199,7 @@ public final class SrcGen4J {
      * @throws GenerateException
      *             Error during generation process.
      */
-    public final void execute(@NotNull final Set<File> files) throws ParseException, GenerateException {
+    public final void execute(final Set<File> files) throws ParseException, GenerateException {
 
         Contract.requireArgNotNull("files", files);
 

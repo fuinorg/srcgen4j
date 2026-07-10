@@ -1,0 +1,4 @@
+# Classpath resources of the XSDs contributed by this artifact.
+# Discovered by org.fuin.srcgen4j.commons.SrcGen4JSchemas to validate a "srcgen4j-config.xml".
+# One resource path per line, without a leading slash. Blank lines and '#' comments are ignored.
+srcgen4j-commons-0_5_0.xsd

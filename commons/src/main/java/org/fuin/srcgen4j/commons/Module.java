@@ -26,7 +26,6 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -37,11 +36,11 @@ import org.jspecify.annotations.Nullable;
 import org.fuin.objects4j.common.Contract;
 
 /**
- * Represents a target project.
+ * Represents a target module.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "project")
-public class Project extends AbstractNamedElement implements InitializableElement<Project, SrcGen4JConfig> {
+@XmlRootElement(name = "module")
+public class Module extends AbstractNamedElement implements InitializableElement<Module, SrcGen4JConfig> {
 
     @NotEmpty
     @XmlAttribute
@@ -63,7 +62,7 @@ public class Project extends AbstractNamedElement implements InitializableElemen
      * Package visible default constructor for deserialization.
      */
     @SuppressWarnings("NullAway.Init") // Fields are populated by JAXB after construction
-    Project() {
+    Module() {
         super();
     }
 
@@ -75,7 +74,7 @@ public class Project extends AbstractNamedElement implements InitializableElemen
      * @param path
      *            path to set.
      */
-    public Project(@NotEmpty final String name, @NotEmpty final String path) {
+    public Module(@NotEmpty final String name, @NotEmpty final String path) {
         super(name);
         Contract.requireArgNotNull("path", path);
         this.path = path;
@@ -149,7 +148,7 @@ public class Project extends AbstractNamedElement implements InitializableElemen
      * @param folder
      *            Folder to add.
      */
-    public final void addFolder(@NotNull final Folder folder) {
+    public final void addFolder(final Folder folder) {
         Contract.requireArgNotNull("folder", folder);
         if (folders == null) {
             folders = new ArrayList<>();
@@ -168,7 +167,7 @@ public class Project extends AbstractNamedElement implements InitializableElemen
     }
 
     @Override
-    public final Project init(final SrcGen4JContext context, final SrcGen4JConfig parent, @Nullable final Map<String, String> vars) {
+    public final Module init(final SrcGen4JContext context, final SrcGen4JConfig parent, @Nullable final Map<String, String> vars) {
         this.parent = parent;
         inheritVariables(vars);
         setName(requireNonNull(replaceVars(getName(), getVarMap())));

@@ -27,6 +27,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
+import org.fuin.srcgen4j.commons.GeneratedArtifact;
 import org.jspecify.annotations.Nullable;
 import org.fuin.srcgen4j.commons.GenerateException;
 import org.fuin.srcgen4j.core.base.AbstractGenerator;
@@ -106,14 +107,19 @@ public abstract class VelocityGenerator<MODEL> extends AbstractGenerator<MODEL, 
      *            Name of the template to use.
      * @param filename
      *            Filename relative to the target directory.
-     * 
+     * @param module
+     *            Name of the target module.
+     * @param folder
+     *            Name of the target folder inside the module.
+     *
      * @throws GenerateException
      *             Error merging the template
      */
-    protected final void merge(final VelocityContext context, final String artifactName, final String templateName, final String filename)
-            throws GenerateException {
+    protected final void merge(final VelocityContext context, final String artifactName, final String templateName, final String filename,
+            final String module, final String folder) throws GenerateException {
 
-        final GeneratedFile genFile = getTargetFile(artifactName, filename, templateName);
+        final GeneratedFile genFile = getTargetFile(new GeneratedArtifact(artifactName, filename, new byte[] {}, module, folder),
+                templateName);
         if (genFile.isSkip()) {
             LOG.debug("Omitted already existing file: {} [{}]", genFile, templateName);
         } else {

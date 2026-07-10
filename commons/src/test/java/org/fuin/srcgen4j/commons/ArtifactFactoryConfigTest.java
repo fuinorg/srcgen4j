@@ -38,14 +38,15 @@ public class ArtifactFactoryConfigTest extends AbstractTest {
 
         // PREPARE
         final JAXBContext jaxbContext = JAXBContext.newInstance(ArtifactFactoryConfig.class);
-        final ArtifactFactoryConfig testee = new ArtifactFactoryConfig("abc", "a.b.c.X");
+        final ArtifactFactoryConfig testee = new ArtifactFactoryConfig("abc", "a.b.c.X", "prj", "fld");
 
         // TEST
         final String result = new JaxbHelper(false).write(testee, jaxbContext);
 
         // VERIFY
         XmlAssert.assertThat(result)
-                .and(XML + "<sg4jc:artifact-factory artifact=\"abc\" class=\"a.b.c.X\"" + " xmlns:sg4jc=\"" + NS_SG4JC + "\"/>")
+                .and(XML + "<sg4jc:artifact-factory artifact=\"abc\" class=\"a.b.c.X\" module=\"prj\" folder=\"fld\"" + " xmlns:sg4jc=\""
+                        + NS_SG4JC + "\"/>")
                 .areIdentical();
 
     }
@@ -58,12 +59,33 @@ public class ArtifactFactoryConfigTest extends AbstractTest {
 
         // TEST
         final ArtifactFactoryConfig testee = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(),
-                "<artifact-factory artifact=\"abc\" class=\"a.b.c.X\"" + " xmlns=\"" + NS_SG4JC + "\"/>");
+                "<artifact-factory artifact=\"abc\" class=\"a.b.c.X\" module=\"prj\" folder=\"fld\"" + " xmlns=\"" + NS_SG4JC + "\"/>");
 
         // VERIFY
         assertThat(testee).isNotNull();
         assertThat(testee.getArtifact()).isEqualTo("abc");
         assertThat(testee.getFactoryClassName()).isEqualTo("a.b.c.X");
+        assertThat(testee.getModule()).isEqualTo("prj");
+        assertThat(testee.getFolder()).isEqualTo("fld");
+
+    }
+
+    @Test
+    public final void testUnmarshalWithoutModuleAndFolder() throws Exception {
+
+        // PREPARE
+        final JAXBContext jaxbContext = JAXBContext.newInstance(ArtifactFactoryConfig.class);
+
+        // TEST
+        final ArtifactFactoryConfig testee = JaxbUtils.unmarshal(new UnmarshallerBuilder().withContext(jaxbContext).build(),
+                "<artifact-factory artifact=\"abc\" class=\"a.b.c.X\"" + " xmlns=\"" + NS_SG4JC + "\"/>");
+
+        // VERIFY module and folder are optional
+        assertThat(testee).isNotNull();
+        assertThat(testee.getArtifact()).isEqualTo("abc");
+        assertThat(testee.getFactoryClassName()).isEqualTo("a.b.c.X");
+        assertThat(testee.getModule()).isNull();
+        assertThat(testee.getFolder()).isNull();
 
     }
 
@@ -71,7 +93,7 @@ public class ArtifactFactoryConfigTest extends AbstractTest {
     public final void testGetFactory() {
 
         // PREPARE
-        final ArtifactFactoryConfig testee = new ArtifactFactoryConfig("abc", "org.fuin.srcgen4j.commons.TestArtifactFactory");
+        final ArtifactFactoryConfig testee = new ArtifactFactoryConfig("abc", "org.fuin.srcgen4j.commons.TestArtifactFactory", "prj", "fld");
         testee.init(new SrcGen4JContext() {
             @Override
             public ClassLoader getClassLoader() {

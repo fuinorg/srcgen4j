@@ -17,8 +17,6 @@
  */
 package org.fuin.srcgen4j.commons;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
  * Error reading an object from XML.
  */
@@ -34,7 +32,7 @@ public final class UnmarshalObjectException extends Exception {
      * @param cause
      *            Cause.
      */
-    public UnmarshalObjectException(@NotNull final String message, @NotNull final Throwable cause) {
+    public UnmarshalObjectException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

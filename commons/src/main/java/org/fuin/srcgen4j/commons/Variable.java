@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.Map;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -94,7 +93,7 @@ public final class Variable {
      * @param encoding
      *            Encoding of the text resource the URL points to.
      */
-    public Variable(@NotEmpty final String name, @NotNull final URL url, @NotEmpty final String encoding) {
+    public Variable(@NotEmpty final String name, final URL url, @NotEmpty final String encoding) {
         super();
         Validate.notEmpty(name);
         Validate.notNull(url);

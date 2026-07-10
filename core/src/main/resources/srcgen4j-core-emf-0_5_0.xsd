@@ -5,7 +5,9 @@
    xmlns:sg4jc="http://www.fuin.org/srcgen4j/commons/0.5.0"
    targetNamespace="http://www.fuin.org/srcgen4j/core/emf/0.5.0">
 
-    <xs:import namespace="http://www.fuin.org/srcgen4j/commons/0.5.0" schemaLocation="http://www.fuin.org/xsd/srcgen4j-commons-0_5_0.xsd" />
+    <!-- No schemaLocation: the commons schema is provided by the processor (bundled jar / SchemaHelper / IDE catalog).
+         A schemaLocation pointing at the published http URL would be a stale, network-fetched hint. -->
+    <xs:import namespace="http://www.fuin.org/srcgen4j/commons/0.5.0" />
 
     <!-- Configuration for the generator -->
 
@@ -13,7 +15,7 @@
 
     <xs:complexType name="emf-generatorConfigType">
         <xs:sequence>
-           <xs:element type="sg4jc:variableType" name="variable" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element ref="sg4jc:variable" minOccurs="0" maxOccurs="unbounded" />
           <xs:element type="sg4jc:artifactFactoryConfigType" name="artifact-factory" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>

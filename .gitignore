@@ -6,4 +6,7 @@
 !.mvn
 target
 META-INF
+# ... but "META-INF" above matches at any depth, so keep the hand written resources
+!*/src/main/resources/META-INF/
+!*/src/test/resources/META-INF/
 *.log

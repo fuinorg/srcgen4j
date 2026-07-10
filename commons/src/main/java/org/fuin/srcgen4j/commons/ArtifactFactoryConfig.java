@@ -45,6 +45,14 @@ public final class ArtifactFactoryConfig extends AbstractElement {
     private String factoryClassName;
 
     @Nullable
+    @XmlAttribute(name = "module")
+    private String module;
+
+    @Nullable
+    @XmlAttribute(name = "folder")
+    private String folder;
+
+    @Nullable
     @XmlAttribute(name = "incremental")
     private Boolean incremental;
 
@@ -64,31 +72,42 @@ public final class ArtifactFactoryConfig extends AbstractElement {
 
     /**
      * Constructor without incremental value.
-     * 
+     *
      * @param artifact
      *            Artifact.
      * @param factoryClassName
      *            Full qualified factory class name.
+     * @param module
+     *            Name of the target module (optional).
+     * @param folder
+     *            Name of the target folder inside the module (optional).
      */
-    public ArtifactFactoryConfig(@NotNull final String artifact, @NotNull final String factoryClassName) {
-        this(artifact, factoryClassName, null);
+    public ArtifactFactoryConfig(final String artifact, final String factoryClassName, @Nullable final String module,
+            @Nullable final String folder) {
+        this(artifact, factoryClassName, module, folder, null);
     }
 
     /**
      * Constructor with all data.
-     * 
+     *
      * @param artifact
      *            Artifact.
      * @param factoryClassName
      *            Full qualified factory class name.
+     * @param module
+     *            Name of the target module (optional).
+     * @param folder
+     *            Name of the target folder inside the module (optional).
      * @param incremental
      *            If the factory executes on an incremental build TRUE (default), else FALSE.
      */
-    public ArtifactFactoryConfig(@NotNull final String artifact, @NotNull final String factoryClassName, // NOSONAR
-            @Nullable final Boolean incremental) {
+    public ArtifactFactoryConfig(final String artifact, final String factoryClassName, @Nullable final String module, // NOSONAR
+            @Nullable final String folder, @Nullable final Boolean incremental) {
         super();
         this.artifact = artifact;
         this.factoryClassName = factoryClassName;
+        this.module = module;
+        this.folder = folder;
         this.incremental = incremental;
     }
 
@@ -97,7 +116,6 @@ public final class ArtifactFactoryConfig extends AbstractElement {
      * 
      * @return Unique artifact name.
      */
-    @NotNull
     public final String getArtifact() {
         return artifact;
     }
@@ -107,9 +125,28 @@ public final class ArtifactFactoryConfig extends AbstractElement {
      * 
      * @return Full qualified class name.
      */
-    @NotNull
     public final String getFactoryClassName() {
         return factoryClassName;
+    }
+
+    /**
+     * Returns the name of the target module.
+     *
+     * @return Module name or <code>null</code> if not set.
+     */
+    @Nullable
+    public final String getModule() {
+        return module;
+    }
+
+    /**
+     * Returns the name of the target folder inside the module.
+     *
+     * @return Folder name or <code>null</code> if not set.
+     */
+    @Nullable
+    public final String getFolder() {
+        return folder;
     }
 
     /**
@@ -151,7 +188,6 @@ public final class ArtifactFactoryConfig extends AbstractElement {
      * 
      * @return Factory.
      */
-    @NotNull
     public final ArtifactFactory<?> getFactory() {
         if (factory == null) {
             if (factoryClassName == null) {
@@ -181,8 +217,7 @@ public final class ArtifactFactoryConfig extends AbstractElement {
      * 
      * @return This instance.
      */
-    @NotNull
-    public final ArtifactFactoryConfig init(@NotNull final SrcGen4JContext context, final Map<String, String> vars) {
+    public final ArtifactFactoryConfig init(final SrcGen4JContext context, final Map<String, String> vars) {
         Contract.requireArgNotNull("context", context);
         this.context = context;
         inheritVariables(vars);

@@ -20,8 +20,6 @@ package org.fuin.srcgen4j.commons;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
  * Creates one or more artifacts for a given model.
  * 
@@ -35,7 +33,6 @@ public interface ArtifactFactory<TYPE> {
      * 
      * @return Model class.
      */
-    @NotNull
     public Class<? extends TYPE> getModelType();
 
     /**
@@ -44,7 +41,7 @@ public interface ArtifactFactory<TYPE> {
      * @param config
      *            Configuration to use.
      */
-    public void init(@NotNull ArtifactFactoryConfig config);
+    public void init(ArtifactFactoryConfig config);
 
     /**
      * Determines if the factory supports an incremental build.
@@ -68,8 +65,7 @@ public interface ArtifactFactory<TYPE> {
      * @throws GenerateException
      *             Error when generating.
      */
-    @NotNull
-    public List<GeneratedArtifact> create(@NotNull TYPE modelObject, @NotNull Map<String, Object> context, boolean preparationRun)
+    public List<GeneratedArtifact> create(TYPE modelObject, Map<String, Object> context, boolean preparationRun)
             throws GenerateException;
 
 }

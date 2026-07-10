@@ -25,7 +25,6 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -71,7 +70,7 @@ public final class JaxbHelper {
      * 
      * @return If the file contains the start tag TRUE else FALSE.
      */
-    public boolean containsStartTag(@NotNull @FileExists @IsFile final File file, @NotNull final String tagName) {
+    public boolean containsStartTag(@FileExists @IsFile final File file, final String tagName) {
         Contract.requireArgNotNull("file", file);
         FileExistsValidator.requireArgValid("file", file);
         IsFileValidator.requireArgValid("file", file);
@@ -110,7 +109,7 @@ public final class JaxbHelper {
      * @param <TYPE>
      *            Type of the object.
      */
-    public <TYPE> void write(@NotNull final TYPE obj, @NotNull final File file, @NotNull final JAXBContext jaxbContext)
+    public <TYPE> void write(final TYPE obj, final File file, final JAXBContext jaxbContext)
             throws MarshalObjectException {
 
         Contract.requireArgNotNull("obj", obj);
@@ -142,7 +141,7 @@ public final class JaxbHelper {
      * @param <TYPE>
      *            Type of the object.
      */
-    public <TYPE> String write(@NotNull final TYPE obj, @NotNull final JAXBContext jaxbContext) throws MarshalObjectException {
+    public <TYPE> String write(final TYPE obj, final JAXBContext jaxbContext) throws MarshalObjectException {
 
         Contract.requireArgNotNull("obj", obj);
         Contract.requireArgNotNull("jaxbContext", jaxbContext);
@@ -168,7 +167,7 @@ public final class JaxbHelper {
      * @param <TYPE>
      *            Type of the object.
      */
-    public <TYPE> void write(@NotNull final TYPE obj, @NotNull final Writer writer, @NotNull final JAXBContext jaxbContext)
+    public <TYPE> void write(final TYPE obj, final Writer writer, final JAXBContext jaxbContext)
             throws MarshalObjectException {
 
         Contract.requireArgNotNull("obj", obj);

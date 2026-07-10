@@ -38,9 +38,11 @@ import javax.xml.xpath.XPathFactory;
 
 import org.fuin.srcgen4j.commons.DefaultContext;
 import org.fuin.srcgen4j.commons.GenerateException;
+import org.fuin.srcgen4j.commons.InvalidConfigException;
 import org.fuin.srcgen4j.commons.ParseException;
 import org.fuin.srcgen4j.commons.SrcGen4J;
 import org.fuin.srcgen4j.commons.SrcGen4JConfig;
+import org.fuin.srcgen4j.commons.SrcGen4JConfigValidator;
 import org.fuin.srcgen4j.commons.SrcGen4JContext;
 import org.fuin.utils4j.Utils4J;
 import org.fuin.utils4j.jaxb.JaxbUtils;
@@ -114,11 +116,15 @@ public final class SrcGen4JMavenApp {
     public static SrcGen4JConfig createAndInit(final SrcGen4JContext context, final File configFile,
             final List<String> jaxbClassesToBeBound) {
         try {
+            SrcGen4JConfigValidator.validate(configFile, context.getClassLoader());
             final Class<?>[] classes = getJaxbContextClasses(context.getClassLoader(), jaxbClassesToBeBound);
             final SrcGen4JConfig config = JaxbUtils
                     .unmarshal(new UnmarshallerBuilder().withContext(JAXBContext.newInstance(classes)).build(), configFile);
             config.init(context, Utils4J.getCanonicalFile(configFile.getParentFile()));
             return config;
+        } catch (final InvalidConfigException ex) {
+            // The message already names the file and lists every problem, so don't bury it in a stack trace
+            throw new RuntimeException(ex.getMessage());
         } catch (final JAXBException ex) {
             throw new RuntimeException("Error creating the JAXB context", ex);
         }

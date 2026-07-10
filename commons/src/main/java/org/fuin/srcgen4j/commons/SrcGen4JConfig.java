@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -43,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Configuration that maps generator output to projects.
+ * Configuration that maps generator output to modules.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "srcgen4j-config")
@@ -60,15 +59,9 @@ public class SrcGen4JConfig {
 
     @Nullable
     @Valid
-    @XmlElementWrapper(name = "projects")
-    @XmlElement(name = "project")
-    private List<Project> projects;
-
-    @Nullable
-    @Valid
-    @XmlElementWrapper(name = "replacers")
-    @XmlElement(name = "replacer")
-    private List<Replacer> replacers;
+    @XmlElementWrapper(name = "modules")
+    @XmlElement(name = "module")
+    private List<Module> modules;
 
     @Nullable
     @Valid
@@ -125,43 +118,23 @@ public class SrcGen4JConfig {
     }
 
     /**
-     * Returns a list of projects.
+     * Returns a list of modules.
      * 
-     * @return Projects.
+     * @return Modules.
      */
     @Nullable
-    public final List<Project> getProjects() {
-        return projects;
+    public final List<Module> getModules() {
+        return modules;
     }
 
     /**
-     * Sets a list of projects.
+     * Sets a list of modules.
      * 
-     * @param projects
-     *            Projects.
+     * @param modules
+     *            Modules.
      */
-    public final void setProjects(@Nullable final List<Project> projects) {
-        this.projects = projects;
-    }
-
-    /**
-     * Returns a list of replacers.
-     *
-     * @return Replacers.
-     */
-    @Nullable
-    public final List<Replacer> getReplacers() {
-        return replacers;
-    }
-
-    /**
-     * Sets a list of replacers.
-     *
-     * @param replacers
-     *            Replacers.
-     */
-    public final void setReplacers(@Nullable final List<Replacer> replacers) {
-        this.replacers = replacers;
+    public final void setModules(@Nullable final List<Module> modules) {
+        this.modules = modules;
     }
 
     /**
@@ -190,7 +163,7 @@ public class SrcGen4JConfig {
      * @param parser
      *            Parser to add.
      */
-    public final void addParser(@NotNull final ParserConfig parser) {
+    public final void addParser(final ParserConfig parser) {
         Contract.requireArgNotNull("parser", parser);
         if (parsers == null) {
             parsers = new Parsers();
@@ -256,7 +229,7 @@ public class SrcGen4JConfig {
      * 
      * @return This instance.
      */
-    public final SrcGen4JConfig init(@NotNull final SrcGen4JContext context, @NotNull @FileExists @IsDirectory final File rootDir) {
+    public final SrcGen4JConfig init(final SrcGen4JContext context, @FileExists @IsDirectory final File rootDir) {
 
         Contract.requireArgNotNull("context", context);
         Contract.requireArgNotNull(ROOT_DIR_VAR, rootDir);
@@ -267,14 +240,9 @@ public class SrcGen4JConfig {
         if (variables != null) {
             variables.init(varMap);
         }
-        if (projects != null) {
-            for (final Project project : projects) {
-                project.init(context, this, varMap);
-            }
-        }
-        if (replacers != null) {
-            for (final Replacer replacer : replacers) {
-                replacer.init(varMap);
+        if (modules != null) {
+            for (final Module module : modules) {
+                module.init(context, this, varMap);
             }
         }
         if (generators != null) {
@@ -288,127 +256,37 @@ public class SrcGen4JConfig {
     }
 
     /**
-     * Returns a target directory for a given combination of generator name and artifact name.
-     * 
-     * @param generatorName
-     *            Name of the generator.
-     * @param artifactName
-     *            Name of the artifact.
-     * 
-     * @return Target file based on the configuration.
-     * 
-     * @throws GeneratorNotFoundException
-     *             The given generator name was not found in the configuration.
-     * @throws ArtifactNotFoundException
-     *             The given artifact was not found in the generator.
-     * @throws ProjectNameNotDefinedException
-     *             No project name is bound to the given combination.
-     * @throws FolderNameNotDefinedException
-     *             No folder name is bound to the given combination.
-     * @throws ProjectNotFoundException
-     *             The project name based on the selection is unknown.
-     * @throws FolderNotFoundException
-     *             The folder in the project based on the selection is unknown.
+     * Resolves the folder for a given module name and folder name.
+     *
+     * @param moduleName
+     *            Name of the target module.
+     * @param folderName
+     *            Name of the target folder inside the module.
+     *
+     * @return Folder or NULL if the module or the folder could not be found.
      */
-    public final Folder findTargetFolder(@NotNull final String generatorName, @NotNull final String artifactName)
-            throws ProjectNameNotDefinedException, ArtifactNotFoundException, FolderNameNotDefinedException, GeneratorNotFoundException,
-            ProjectNotFoundException, FolderNotFoundException {
+    @Nullable
+    public final Folder findFolder(final String moduleName, final String folderName) {
 
-        Contract.requireArgNotNull("generatorName", generatorName);
-        Contract.requireArgNotNull("artifactName", artifactName);
+        Contract.requireArgNotNull("moduleName", moduleName);
+        Contract.requireArgNotNull("folderName", folderName);
 
-        return findTargetFolder(generatorName, artifactName, null);
-
-    }
-
-    /**
-     * Returns a target directory for a given combination of generator name, artifact name and target sub path.
-     * 
-     * @param generatorName
-     *            Name of the generator.
-     * @param artifactName
-     *            Name of the artifact.
-     * @param targetPath
-     *            Current path and file.
-     * 
-     * @return Target file based on the configuration.
-     * 
-     * @throws GeneratorNotFoundException
-     *             The given generator name was not found in the configuration.
-     * @throws ArtifactNotFoundException
-     *             The given artifact was not found in the generator.
-     * @throws ProjectNameNotDefinedException
-     *             No project name is bound to the given combination.
-     * @throws FolderNameNotDefinedException
-     *             No folder name is bound to the given combination.
-     * @throws ProjectNotFoundException
-     *             The project name based on the selection is unknown.
-     * @throws FolderNotFoundException
-     *             The folder in the project based on the selection is unknown.
-     */
-    public final Folder findTargetFolder(@NotNull final String generatorName, @NotNull final String artifactName,
-            @Nullable final String targetPath)
-            throws ProjectNameNotDefinedException, ArtifactNotFoundException, FolderNameNotDefinedException, GeneratorNotFoundException,
-            ProjectNotFoundException, FolderNotFoundException {
-
-        Contract.requireArgNotNull("generatorName", generatorName);
-        Contract.requireArgNotNull("artifactName", artifactName);
-
-        if (generators == null) {
-            throw new GeneratorNotFoundException(generatorName);
+        if (modules == null) {
+            return null;
         }
-        final GeneratorConfig generator = generators.findByName(generatorName);
-        if (generator == null) {
-            throw new GeneratorNotFoundException(generatorName);
-        }
-
-        final List<Artifact> artifacts = generator.getArtifacts();
-        if (artifacts == null) {
-            throw new ArtifactNotFoundException(generatorName, artifactName);
-        }
-        int idx = artifacts.indexOf(new Artifact(artifactName));
+        int idx = modules.indexOf(new Module(moduleName, "dummy"));
         if (idx < 0) {
-            throw new ArtifactNotFoundException(generatorName, artifactName);
+            return null;
         }
-        final Artifact artifact = artifacts.get(idx);
+        final Module module = modules.get(idx);
 
-        final String projectName;
-        final String folderName;
-        final String targetPattern;
-        final Target target = artifact.findTargetFor(targetPath);
-        if (target == null) {
-            projectName = artifact.getDefProject();
-            folderName = artifact.getDefFolder();
-            targetPattern = null;
-        } else {
-            projectName = target.getDefProject();
-            folderName = target.getDefFolder();
-            targetPattern = target.getPattern();
-        }
-
-        if (projectName == null) {
-            throw new ProjectNameNotDefinedException(generatorName, artifactName, targetPattern);
-        }
-        if (folderName == null) {
-            throw new FolderNameNotDefinedException(generatorName, artifactName, targetPattern);
-        }
-
-        if (projects == null) {
-            throw new ProjectNotFoundException(generatorName, artifactName, targetPattern, projectName);
-        }
-        idx = projects.indexOf(new Project(projectName, "dummy"));
-        if (idx < 0) {
-            throw new ProjectNotFoundException(generatorName, artifactName, targetPattern, projectName);
-        }
-        final Project project = projects.get(idx);
-
-        final List<Folder> folders = project.getFolders();
+        final List<Folder> folders = module.getFolders();
         if (folders == null) {
-            throw new FolderNotFoundException(generatorName, artifactName, targetPattern, projectName, folderName);
+            return null;
         }
         idx = folders.indexOf(new Folder(folderName, "NotUsed"));
         if (idx < 0) {
-            throw new FolderNotFoundException(generatorName, artifactName, targetPattern, projectName, folderName);
+            return null;
         }
         return folders.get(idx);
 
@@ -422,8 +300,7 @@ public class SrcGen4JConfig {
      * 
      * @return List of generators.
      */
-    @NotNull
-    public final List<GeneratorConfig> findGeneratorsForParser(@NotNull final String parserName) {
+    public final List<GeneratorConfig> findGeneratorsForParser(final String parserName) {
         Contract.requireArgNotNull("parserName", parserName);
 
         final List<GeneratorConfig> list = new ArrayList<>();
@@ -443,33 +320,32 @@ public class SrcGen4JConfig {
     }
 
     /**
-     * Creates a new configuration with a single project and a Maven directory structure.
+     * Creates a new configuration with a single module and a Maven directory structure.
      * 
      * @param context
      *            Current context.
-     * @param projectName
-     *            Name of the one and only project.
+     * @param moduleName
+     *            Name of the one and only module.
      * @param rootDir
      *            Root directory that is available as variable 'srcgen4jRootDir'.
      * 
      * @return New initialized configuration instance.
      */
-    @NotNull
-    public static SrcGen4JConfig createMavenStyleSingleProject(@NotNull final SrcGen4JContext context, @NotNull final String projectName,
-            @NotNull @FileExists @IsDirectory final File rootDir) {
+    public static SrcGen4JConfig createMavenStyleSingleModule(final SrcGen4JContext context, final String moduleName,
+            @FileExists @IsDirectory final File rootDir) {
 
         Contract.requireArgNotNull("context", context);
         Contract.requireArgNotNull(ROOT_DIR_VAR, rootDir);
         FileExistsValidator.requireArgValid(ROOT_DIR_VAR, rootDir);
         IsDirectoryValidator.requireArgValid(ROOT_DIR_VAR, rootDir);
-        Contract.requireArgNotNull("projectName", projectName);
+        Contract.requireArgNotNull("moduleName", moduleName);
 
         final SrcGen4JConfig config = new SrcGen4JConfig();
-        final List<Project> projects = new ArrayList<>();
-        final Project project = new Project(projectName, ".");
-        project.setMaven(true);
-        projects.add(project);
-        config.setProjects(projects);
+        final List<Module> modules = new ArrayList<>();
+        final Module module = new Module(moduleName, ".");
+        module.setMaven(true);
+        modules.add(module);
+        config.setModules(modules);
         config.init(context, rootDir);
         return config;
     }
