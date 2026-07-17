@@ -2,6 +2,11 @@
 Release notes for srcgen4j.
 
 ### [0.5.0]
+- [XtextParser](core/src/main/java/org/fuin/srcgen4j/core/xtext/XtextParser.java) now runs the DSL's semantic validation (the Xtext `@Check` rules)
+  - loading a model only reports syntax and linking problems, so a model violating its own DSL's rules used to be generated as if it were valid
+  - a validation error fails the build; the exception lists every problem with its file and line
+  - warnings are logged
+  - only the models of the current build are validated - resources loaded just to resolve cross references (cached dependency models, for example) are not
 - Uses **Java 17**
 - Switched to `jakarta` namespace
 - Use fuin.org BOM
